@@ -158,11 +158,12 @@ const App = () => {
 
     return (
         <div className={styles.app}>
-            <h1>iNat: Extract Taxonomy</h1>
+            <h1>iNat: Curated Species List</h1>
 
             <p style={{ marginBottom: 30 }}>
                 This tool queries iNat for all observations made by one or more users in a specific taxon and place.
-                It derives a list of all <i>unique taxons</i> and displays it along with the option to download the data.
+                It derives a curated list of all <i>unique species/subspecies</i> and displays it along with the option
+                to download the data. It also create a (single) cached version 
             </p>
             <Box className={styles.fieldsRow}>
                 <TextField
