@@ -1,8 +1,8 @@
 {
-  "name": "inat-extract-taxonomy",
-  "version": "0.1.0",
+  "name": "inat-curated-species-list",
+  "version": "1.0.0",
   "private": true,
-  "homepage": "https://benkeen.github.io/inat-extract-taxonomy",
+  "homepage": "https://benkeen.github.io/inat-curated-species-list",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
