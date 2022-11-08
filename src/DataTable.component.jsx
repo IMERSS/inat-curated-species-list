@@ -136,7 +136,7 @@ const DataTable = ({ data, usernames, placeId }) => {
                         ))}
                         <td>({row.count})</td>
                         <td style={{ display: 'flex'}}>
-                            <a href={`${baseSiteUrl}?ident_user_id=${usernames}&place_id=${placeId}&taxon_id=${row.taxonId}`} target="_blank" rel="noreferrer">
+                            <a href={`${baseSiteUrl}?ident_user_id=${usernames}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`} target="_blank" rel="noreferrer">
                                 <VisibilityIcon />
                             </a>
                         </td>
