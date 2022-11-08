@@ -68,9 +68,9 @@ const DataTable = ({ data, usernames, placeId }) => {
         const csvData = [];
         visibleCols.forEach((visibleCol) => {
             if (!sorted) {
-                sorted = firstBy((a) => a.data[visibleCol], { direction: 'asc' });
+                sorted = firstBy((a) => a.data[visibleCol] || 'Zzzzz', { direction: 'asc' });
             } else {
-                sorted = sorted.thenBy((a) => a.data[visibleCol], { direction: 'asc' });
+                sorted = sorted.thenBy((a) => a.data[visibleCol] || 'Zzzzz', { direction: 'asc' });
             }
         });
 
