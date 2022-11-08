@@ -6,9 +6,9 @@ A tool to query iNaturalist for all observations made by one or more users in a 
 
 You can [access the script here](https://imerss.github.io/inat-curated-species-list/), but if you're a dev, please download it and run it locally. 
 
-<div style="border: 1px solid #cccccc; padding: 10px">
+<kbd>
   <img src="./resources/screenshot.png" />
-</div>
+</kbd>
 
                                              
 ## Run locally
