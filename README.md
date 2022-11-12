@@ -17,3 +17,12 @@ The script requires npm and node. Run:
 
 - `npm install`
 - `npm run start`
+
+## Generate 
+
+To use this tool programmatically, do the following:
+
+- edit the root `./constants.js` file to change the usernames, place and taxon. Get these values from iNat.
+- Clone the repo,
+- In the root, run: `npm install`
+- Run `node generate.js`. That should generate a `./dist/data.json` file with the results of the query.
