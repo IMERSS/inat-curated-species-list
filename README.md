@@ -18,11 +18,58 @@ The script requires npm and node. Run:
 - `npm install`
 - `npm run start`
 
-## Generate 
+## Generate data file
 
 To use this tool programmatically, do the following:
 
+- Clone the repo
 - edit the root `./constants.js` file to change the usernames, place and taxon. Get these values from iNat.
-- Clone the repo,
 - In the root, run: `npm install`
-- Run `node generate.js`. That should generate a `./dist/data.json` file with the results of the query.
+- Run `node --harmony generate.js`. That should generate a `./dist/data.json` file with the results of the query.
+
+It's not the prettiest output right now, but it gets the job done. The messages were really inteneded for the UI version, 
+not the command line. But it works. :) 
+
+The data is of the following form. It's an unsorted object where the top level properties are the taxon of the
+species/subspecies. The count value represents the number of observations that have IDs by any of the users provided.
+
+```json
+{
+   "47153":{
+      "data":{
+         "kingdom":"Animalia",
+         "phylum":"Arthropoda",
+         "subphylum":"Hexapoda",
+         "class":"Insecta",
+         "subclass":"Pterygota",
+         "order":"Lepidoptera",
+         "superfamily":"Tortricoidea",
+         "family":"Tortricidae",
+         "subfamily":"Olethreutinae",
+         "tribe":"Grapholitini",
+         "genus":"Cydia",
+         "species":"Cydia pomonella"
+      },
+      "count":19
+   },
+   "47226":{
+      "data":{
+         "kingdom":"Animalia",
+         "phylum":"Arthropoda",
+         "subphylum":"Hexapoda",
+         "class":"Insecta",
+         "subclass":"Pterygota",
+         "order":"Lepidoptera",
+         "superfamily":"Papilionoidea",
+         "family":"Papilionidae",
+         "subfamily":"Papilioninae",
+         "tribe":"Papilionini",
+         "genus":"Papilio",
+         "subgenus":"Pterourus",
+         "species":"Papilio rutulus"
+      },
+      "count":7
+   },
+   ...
+}
+```
