@@ -2,6 +2,7 @@
   "name": "inat-curated-species-list",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "homepage": "https://imerss.github.io/inat-curated-species-list",
   "dependencies": {
     "@emotion/react": "^11.10.5",
