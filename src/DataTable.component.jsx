@@ -8,8 +8,8 @@ import { capitalizeFirstLetter } from './shared';
 
 const baseSiteUrl = 'https://www.inaturalist.org/observations';
 
-const ColControls = ({ cols, visibleCols, onChange, downloadData }) => (
-    <Box className={styles.controls}>
+const ColControls = ({ cols, visibleCols, onChange, downloadData, allowDownload }) => (
+    <Box className={`${styles.controls} inat-curated-species-table`}>
         <div>
             <h4>Visible Ranks</h4>
             {cols.map((col) => (
@@ -30,12 +30,14 @@ const ColControls = ({ cols, visibleCols, onChange, downloadData }) => (
                 </div>
             ))}
         </div>
-        <a href="#" title="Download data" onClick={(e) => {
-            e.preventDefault();
-            getCsvContent(downloadData);
-        }}>
-            <DownloadForOfflineIcon fontSize="large" />
-        </a>
+        {allowDownload && (
+            <a href="#" title="Download data" onClick={(e) => {
+                e.preventDefault();
+                getCsvContent(downloadData);
+            }}>
+                <DownloadForOfflineIcon fontSize="large" />
+            </a>
+        )}
     </Box>
 );
 
@@ -52,7 +54,17 @@ const getCsvContent = (rows) => {
     link.click();
 };
 
-const DataTable = ({ data, usernames, placeId }) => {
+const DataTable = ({
+    data,
+    usernames,
+    placeId,
+    allowedCols = [
+        'kingdom', 'phylum', 'subphylum', 'class', 'subclass', 'order', 'superfamily', 'family', 'subfamily', 'tribe',
+        'subtribe', 'genus', 'subgenus', 'species', 'subspecies'
+    ],
+    showCount = true,
+    allowDownload = true
+}) => {
     const [sortedData, setSortedData] = useState([]);
     const [downloadData, setDownloadData] = useState([]);
     const [visibleCols, setVisibleCols] = useState([
@@ -63,6 +75,7 @@ const DataTable = ({ data, usernames, placeId }) => {
         if (!data) {
             return;
         }
+
         const arr = Object.keys(data).map((taxonId) => ({ ...data[taxonId], taxonId }));
         let sorted = null;
         const csvData = [];
@@ -105,10 +118,7 @@ const DataTable = ({ data, usernames, placeId }) => {
         return null;
     }
 
-    const orderedCols = [
-        'kingdom', 'phylum', 'subphylum', 'class', 'subclass', 'order', 'superfamily', 'family', 'subfamily', 'tribe',
-        'subtribe', 'genus', 'subgenus', 'species', 'subspecies'
-    ];
+    const orderedCols = allowedCols;
 
     return (
         <>
@@ -117,13 +127,14 @@ const DataTable = ({ data, usernames, placeId }) => {
                 visibleCols={visibleCols}
                 onChange={onChange}
                 downloadData={downloadData}
+                allowDownload={allowDownload}
             />
-            <table className={styles.table} cellSpacing={0} cellPadding={2}>
+            <table className={`${styles.table} inat-curated-species-table`} cellSpacing={0} cellPadding={2}>
                 <thead>
                 <tr key="header">
                     <th></th>
                     {visibleCols.map((rank) => <th key={rank}>{rank}</th>)}
-                    <th></th>
+                    {showCount && <th></th>}
                     <th></th>
                 </tr>
                 </thead>
@@ -134,7 +145,7 @@ const DataTable = ({ data, usernames, placeId }) => {
                         {visibleCols.map((currentRank) => (
                             <td key={`${row.taxonId}-${currentRank}`}>{row.data[currentRank] ? row.data[currentRank] : ''}</td>
                         ))}
-                        <td>({row.count})</td>
+                        {showCount && <td>({row.count})</td>}
                         <td style={{ display: 'flex'}}>
                             <a href={`${baseSiteUrl}?ident_user_id=${usernames}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`} target="_blank" rel="noreferrer">
                                 <VisibilityIcon />

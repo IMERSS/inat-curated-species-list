@@ -18,8 +18,6 @@ const App = () => {
     const [data, setData] = useState(null);
     const loggerRef = useRef();
 
-    console.log(process.env);
-
     const onStart = () => {
         setLoading(true);
         resetData();
