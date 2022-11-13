@@ -16,14 +16,15 @@ const logger = {
 console.log("Pinging iNat for data.");
 
 let data = [];
+const cleanUsernames = C.USERS.split(',').map((username) => username.trim());
+
 downloadPacket({
     ident_user_id: C.USERS,
     place_id: C.PLACE_ID,
     taxon_id: C.TAXON_ID,
     verifiable: 'any'
-}, 1, logger,() => {
-    const cleanUsernames = C.USERS.split(',').map((username) => username.trim());
-    data = extractSpecies(cleanUsernames, logger);
+}, cleanUsernames,1, logger,(speciesData) => {
+    data = extractSpecies(speciesData, logger);
 
     const filename = `${C.GENERATED_FILENAME_FOLDER}/${C.GENERATED_FILENAME}`;
     if (!fs.existsSync(C.GENERATED_FILENAME_FOLDER)) {
