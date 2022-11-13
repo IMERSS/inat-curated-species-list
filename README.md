@@ -19,6 +19,7 @@ The script requires npm and node. Run:
 - `npm install`
 - `npm run start`
 
+
 ## Generate data file
 
 To use this tool programmatically, do the following:
@@ -26,6 +27,7 @@ To use this tool programmatically, do the following:
 - Clone the repo
 - edit the root `./src/constants.js` file to change the usernames, place and taxon. Get these values from iNat.
 - In the root, run: `npm install`
+- Add a `"type": "module"` property-value to the package.json file.
 - Run `npm run generate`. That should generate a `./dist/data.json` file with the results of the query.
 
 It's not the prettiest output right now, but it gets the job done. The messages were really intended for the UI version, 
