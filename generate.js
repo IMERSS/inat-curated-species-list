@@ -1,6 +1,6 @@
-import { downloadPacket, extractSpecies } from './src/shared.js';
 import fs from 'fs';
-import * as C from './constants.js';
+import { downloadPacket, extractSpecies } from './src/shared.js';
+import * as C from './src/constants.js';
 
 const logger = {
     current: {

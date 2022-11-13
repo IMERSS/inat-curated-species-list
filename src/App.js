@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
-import * as C from '../constants';
+import * as C from './constants';
 import { resetData, downloadPacket, extractSpecies } from './shared';
 
 import '@fontsource/roboto/300.css';
@@ -12,7 +12,6 @@ import '@fontsource/roboto/700.css';
 import styles from './App.module.css';
 import Logger from './Logger.component';
 import DataTable from './DataTable.component';
-
 
 const App = () => {
     const [usernames, setUsernames] = useState(C.USERS);

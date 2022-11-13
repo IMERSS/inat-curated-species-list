@@ -15,6 +15,7 @@ You can [access the script here](https://imerss.github.io/inat-curated-species-l
 
 The script requires npm and node. Run:
 
+- `nvm install` (or use the node version specified in `.nvmrc`)
 - `npm install`
 - `npm run start`
 
@@ -23,12 +24,12 @@ The script requires npm and node. Run:
 To use this tool programmatically, do the following:
 
 - Clone the repo
-- edit the root `./constants.js` file to change the usernames, place and taxon. Get these values from iNat.
+- edit the root `./src/constants.js` file to change the usernames, place and taxon. Get these values from iNat.
 - In the root, run: `npm install`
-- Run `node --harmony generate.js`. That should generate a `./dist/data.json` file with the results of the query.
+- Run `npm run generate`. That should generate a `./dist/data.json` file with the results of the query.
 
-It's not the prettiest output right now, but it gets the job done. The messages were really inteneded for the UI version, 
-not the command line. But it works. :) 
+It's not the prettiest output right now, but it gets the job done. The messages were really intended for the UI version, 
+not the command line. But hey, it works. :) 
 
 The data is of the following form. It's an unsorted object where the top level properties are the taxon of the
 species/subspecies. The count value represents the number of observations that have IDs by any of the users provided.

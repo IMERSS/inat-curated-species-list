@@ -1,0 +1,7 @@
+{
+  "name": "inat-curated-species-list-cli",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "homepage": "https://imerss.github.io/inat-curated-species-list"
+}

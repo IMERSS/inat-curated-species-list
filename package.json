@@ -4,6 +4,15 @@
   "private": true,
   "type": "module",
   "homepage": "https://imerss.github.io/inat-curated-species-list",
+  "scripts": {
+    "generate": "node --harmony generate.js --prefix=./scripts",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -20,14 +29,6 @@
     "react-scripts": "5.0.1",
     "thenby": "^1.3.4",
     "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
