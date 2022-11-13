@@ -9,7 +9,7 @@ const Standalone = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetch(`./${C.GENERATED_FILENAME}`, {
+        fetch(C.DATA_URL, {
             headers : {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
