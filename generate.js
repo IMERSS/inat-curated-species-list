@@ -15,7 +15,6 @@ const logger = {
 
 console.log("Pinging iNat for data.");
 
-let data = [];
 const cleanUsernames = C.USERS.split(',').map((username) => username.trim());
 
 downloadPacket({
@@ -24,8 +23,6 @@ downloadPacket({
     taxon_id: C.TAXON_ID,
     verifiable: 'any'
 }, cleanUsernames,1, logger,(speciesData) => {
-    data = extractSpecies(speciesData, logger);
-
     const filename = `${C.GENERATED_FILENAME_FOLDER}/${C.GENERATED_FILENAME}`;
     if (!fs.existsSync(C.GENERATED_FILENAME_FOLDER)) {
         fs.mkdirSync(C.GENERATED_FILENAME_FOLDER);
@@ -33,7 +30,7 @@ downloadPacket({
     if (fs.existsSync(filename)) {
         fs.unlinkSync(filename);
     }
-    fs.writeFileSync(filename, JSON.stringify(data));
+    fs.writeFileSync(filename, JSON.stringify(speciesData));
     console.log("__________________________________________");
     console.log(`Complete. File generated: ${filename}`);
 }, (e) => {
