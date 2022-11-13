@@ -4,14 +4,10 @@ import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
 import * as C from './constants';
 import { resetData, downloadPacket, extractSpecies } from './shared';
-
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 import styles from './App.module.css';
 import Logger from './Logger.component';
 import DataTable from './DataTable.component';
+
 
 const App = () => {
     const [usernames, setUsernames] = useState(C.USERS);
@@ -21,6 +17,8 @@ const App = () => {
     const [dataLoaded, setDataLoaded] = useState(false);
     const [data, setData] = useState(null);
     const loggerRef = useRef();
+
+    console.log(process.env);
 
     const onStart = () => {
         setLoading(true);
@@ -60,6 +58,7 @@ const App = () => {
                 It derives a curated list of all <i>unique species/subspecies</i> and displays it along with the option
                 to download the data.
             </p>
+
             <Box className={styles.fieldsRow}>
                 <TextField
                     label="iNat usernames (comma-delimited)"

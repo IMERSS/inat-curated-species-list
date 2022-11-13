@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import * as C from '../constants';
+import * as C from './constants';
 import DataTable from './DataTable.component';
 
 

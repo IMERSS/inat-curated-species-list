@@ -2,13 +2,13 @@
   "name": "inat-curated-species-list",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "homepage": "https://imerss.github.io/inat-curated-species-list",
   "scripts": {
     "generate": "node --harmony generate.js --prefix=./scripts",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
+    "standalone": "REACT_APP_BUILD_TARGET=standalone react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
