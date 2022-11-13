@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
 import * as C from './constants';
-import { resetData, downloadPacket, extractSpecies } from './shared';
+import { resetData, downloadPacket } from './shared';
 import styles from './App.module.css';
 import Logger from './Logger.component';
 import DataTable from './DataTable.component';
@@ -25,22 +25,24 @@ const App = () => {
         loggerRef.current.clear();
         loggerRef.current.addLogRow('Pinging iNat for observation data.', 'info');
 
+        const cleanUsernames = usernames.split(',').map((username) => username.trim());
+
         downloadPacket({
             ident_user_id: usernames,
             place_id: placeId,
             taxon_id: taxonId,
             verifiable: 'any'
-        }, 1, loggerRef,() => {
+        }, cleanUsernames, 1, loggerRef,(speciesData) => {
             setLoading(false);
             setDataLoaded(true);
 
             loggerRef.current.addLogRows([
                 ['Observation data all returned.', 'info'],
-                ['Parsing data.', 'info']
+                ['Parsing data.', 'info'],
+                [`Found <b>${Object.keys(speciesData).length}</b> unique species in observation results.`, 'success']
             ]);
-            const cleanUsernames = usernames.split(',').map((username) => username.trim());
-            setData(extractSpecies(cleanUsernames, loggerRef));
 
+            setData(speciesData);
         }, (e) => {
             loggerRef.current.addLogRow('Error pinging the iNat API.', 'error');
             setLoading(false);

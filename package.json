@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "https://imerss.github.io/inat-curated-species-list",
   "scripts": {
-    "generate": "node --harmony generate.js",
+    "generate": "node --max-old-space-size=31744 --harmony generate.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",

@@ -7,7 +7,7 @@ import reportWebVitals from './reportWebVitals';
 let Component = App;
 
 // for working on/building the standalone version, just change this boolean.
-const isStandalone = true;
+const isStandalone = false;
 if (isStandalone) {
     Component = Standalone;
 }
