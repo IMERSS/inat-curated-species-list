@@ -25,9 +25,9 @@ downloadPacket({
     const cleanUsernames = C.USERS.split(',').map((username) => username.trim());
     data = extractSpecies(cleanUsernames, logger);
 
-    const filename = `./dist/${C.GENERATED_FILENAME}`;
-    if (!fs.existsSync('./dist')) {
-        fs.mkdirSync('./dist');
+    const filename = `${C.GENERATED_FILENAME_FOLDER}/${C.GENERATED_FILENAME}`;
+    if (!fs.existsSync(C.GENERATED_FILENAME_FOLDER)) {
+        fs.mkdirSync(C.GENERATED_FILENAME_FOLDER);
     }
     if (fs.existsSync(filename)) {
         fs.unlinkSync(filename);

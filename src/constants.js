@@ -5,5 +5,6 @@
 export const USERS = 'dave328,gpohl,mothmaniac';
 export const TAXON_ID = '47157';
 export const PLACE_ID = '7085';
+export const GENERATED_FILENAME_FOLDER = './dist';
 export const GENERATED_FILENAME = 'data.json';
 export const DATA_URL = ''; // enter URL of generated data source here (for standalone version)
