@@ -76,3 +76,32 @@ species/subspecies. The count value represents the number of observations that h
    ...
 }
 ```
+
+## <DataTable /> component
+
+You'll need to be a developer for this bit.
+
+The DataTable component is designed to render the JSON structure listed in the previous section. That renders the information in a table with links back to iNat for the species observations. Take a look at the `src/Standalone.js` file for an illustration of how you can tie it all together. 
+
+Here's how you use it, and what each prop means:
+
+```
+<DataTable
+    data={data}
+    usernames={C.USERS}
+    placeId={C.PLACE_ID}
+    defaultVisibleCols={[ 'superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species']}
+    hideControls={true}
+    showCount={false}
+    allowDownload={false}
+/>
+```
+
+- **data**: the JSON structure as described in the previous section.
+- **usernames**: a comma-delimited list of iNat usernames. These are the user's you're treating as experts: they're the ones who have made the reviews in the given taxon.
+- **placeId**: the iNat place ID.
+- **defaultVisibleCols*: the raw JSON data contains information on all available ranks for each species/subspecies. But in most cases, that's probably superfluous information. Just pass the subset of strings for the available ranks. This is the full list of available ranks: `'kingdom', 'phylum', 'subphylum', 'class', 'subclass', 'order', 'superfamily', 'family', 'subfamily', 'tribe', 'subtribe', 'genus', 'subgenus', 'species', 'subspecies'`
+- **allowedCols**: if you haven't hidden the controls (see next prop), this controls which ranks should appear in the user interface.
+- **hideControls**: this hides the control section at the top of the table to allow users to choose what ranks to view.
+- **showCount**: this lets you hide a column that lists the number of observations that have been reviewed by the user list. 
+- **allowDownload**: this option controls whether an icon appears to let users download the full data.
