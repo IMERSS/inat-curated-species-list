@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import * as C from './constants';
 import DataTable from './DataTable.component';
 
-
 const Standalone = () => {
     const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState(false);
@@ -11,9 +10,8 @@ const Standalone = () => {
     useEffect(() => {
         fetch(C.DATA_URL, {
             headers : {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json'
-            }
+            },
         })
             .then((resp) => resp.json())
             .then((json) => {
@@ -40,9 +38,8 @@ const Standalone = () => {
             data={data}
             usernames={C.USERS}
             placeId={C.PLACE_ID}
-            allowedCols={[
-                'superfamily', 'family', 'subfamily', 'tribe', 'subtribe', 'genus', 'subgenus', 'species', 'subspecies'
-            ]}
+            defaultVisibleCols={[ 'superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species']}
+            hideControls={true}
             showCount={false}
             allowDownload={false}
         />

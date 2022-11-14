@@ -9,7 +9,7 @@ import { capitalizeFirstLetter } from './shared';
 const baseSiteUrl = 'https://www.inaturalist.org/observations';
 
 const ColControls = ({ cols, visibleCols, onChange, downloadData, allowDownload }) => (
-    <Box className={`${styles.controls} inat-curated-species-table`}>
+    <Box className={`${styles.controls} inat-curated-species-table-controls`}>
         <div>
             <h4>Visible Ranks</h4>
             {cols.map((col) => (
@@ -62,14 +62,14 @@ const DataTable = ({
         'kingdom', 'phylum', 'subphylum', 'class', 'subclass', 'order', 'superfamily', 'family', 'subfamily', 'tribe',
         'subtribe', 'genus', 'subgenus', 'species', 'subspecies'
     ],
+    defaultVisibleCols= ['superfamily', 'family', 'subfamily', 'tribe', 'subtribe', 'genus', 'subgenus', 'species', 'subspecies'],
     showCount = true,
-    allowDownload = true
+    allowDownload = true,
+    hideControls = false
 }) => {
     const [sortedData, setSortedData] = useState([]);
     const [downloadData, setDownloadData] = useState([]);
-    const [visibleCols, setVisibleCols] = useState([
-        'superfamily', 'family', 'subfamily', 'tribe', 'subtribe', 'genus', 'subgenus', 'species', 'subspecies'
-    ]);
+    const [visibleCols, setVisibleCols] = useState(defaultVisibleCols);
 
     useEffect(() => {
         if (!data) {
@@ -122,13 +122,15 @@ const DataTable = ({
 
     return (
         <>
-            <ColControls
-                cols={orderedCols}
-                visibleCols={visibleCols}
-                onChange={onChange}
-                downloadData={downloadData}
-                allowDownload={allowDownload}
-            />
+            {!hideControls && (
+                <ColControls
+                    cols={orderedCols}
+                    visibleCols={visibleCols}
+                    onChange={onChange}
+                    downloadData={downloadData}
+                    allowDownload={allowDownload}
+                />
+            )}
             <table className={`${styles.table} inat-curated-species-table`} cellSpacing={0} cellPadding={2}>
                 <thead>
                 <tr key="header">
