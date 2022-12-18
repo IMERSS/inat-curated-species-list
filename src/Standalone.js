@@ -1,11 +1,27 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 import * as C from './constants';
 import DataTable from './DataTable.component';
+import { debounce } from 'debounce';
 
 const Standalone = () => {
     const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState(false);
     const [data, setData] = useState([]);
+    const [filter, setFilter] = useState('');
+    const [debouncedFilter, setDebouncedFilter] = useState('');
+    const [filteredData, setFilteredData] = useState({});
+
+    const updateFilter = (e) => {
+        setFilter(e.target.value);
+        debounceVal(e.target.value);
+    }
+
+    const debounceVal = useCallback(
+        debounce((val) => {
+            setDebouncedFilter(val);
+        }, 200),
+        []
+    );
 
     useEffect(() => {
         fetch(C.DATA_URL, {
@@ -21,6 +37,30 @@ const Standalone = () => {
             .catch(() => setError(true));
     }, []);
 
+    useEffect(() => {
+        if (!debouncedFilter) {
+            setFilteredData(data);
+            return;
+        }
+
+        const newObj = {};
+        const re = new RegExp(debouncedFilter, 'i');
+        Object.keys(data).forEach((id) => {
+            let found = false;
+            Object.keys(data[id].data).forEach((taxon) => {
+                if (re.test(data[id].data[taxon])) {
+                    found = true;
+                }
+            });
+
+            if (found) {
+                newObj[id] = data[id];
+            }
+        });
+
+        setFilteredData(newObj);
+    }, [data, debouncedFilter]);
+
     if (!loaded) {
         return null;
     }
@@ -33,16 +73,34 @@ const Standalone = () => {
         );
     }
 
+    const numFilteredItems = Object.keys(filteredData).length;
+
     return (
-        <DataTable
-            data={data}
-            usernames={C.USERS}
-            placeId={C.PLACE_ID}
-            defaultVisibleCols={[ 'superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species']}
-            hideControls={true}
-            showCount={false}
-            allowDownload={false}
-        />
+        <>
+            <div className="inat-curated-species-filter">
+                <label>Filter:</label>
+                <input type="text" value={filter} onChange={updateFilter} />
+                <span className="inat-curated-species-filter-counts"><b>{numFilteredItems} / {Object.keys(data).length}</b></span>
+            </div>
+
+            {!numFilteredItems && !!debouncedFilter && (
+                <p>
+                    No species found.
+                </p>
+            )}
+
+            {numFilteredItems > 0 && (
+                <DataTable
+                    data={filteredData}
+                    usernames={C.USERS}
+                    placeId={C.PLACE_ID}
+                    defaultVisibleCols={[ 'superfamily', 'family', 'subfamily', 'genus', 'species']}
+                    hideControls={true}
+                    showCount={false}
+                    allowDownload={false}
+                />
+            )}
+        </>
     );
 }
 

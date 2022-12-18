@@ -7,4 +7,6 @@ export const TAXON_ID = '47157';
 export const PLACE_ID = '7085';
 export const GENERATED_FILENAME_FOLDER = './dist';
 export const GENERATED_FILENAME = 'data.json';
+
+// example: https://sisyphean.ca/inat/curated-bc-leps-list.json
 export const DATA_URL = ''; // enter URL of generated data source here (for standalone version)
