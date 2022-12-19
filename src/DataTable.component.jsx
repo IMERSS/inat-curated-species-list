@@ -60,9 +60,9 @@ const DataTable = ({
     placeId,
     allowedCols = [
         'kingdom', 'phylum', 'subphylum', 'class', 'subclass', 'order', 'superfamily', 'family', 'subfamily', 'tribe',
-        'subtribe', 'genus', 'subgenus', 'species', 'subspecies'
+        'subtribe', 'genus', 'subgenus', 'species'
     ],
-    defaultVisibleCols= ['superfamily', 'family', 'subfamily', 'tribe', 'subtribe', 'genus', 'subgenus', 'species', 'subspecies'],
+    defaultVisibleCols= ['superfamily', 'family', 'subfamily', 'tribe', 'subtribe', 'genus', 'subgenus', 'species'],
     showCount = true,
     allowDownload = true,
     hideControls = false

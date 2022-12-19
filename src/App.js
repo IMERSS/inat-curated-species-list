@@ -55,7 +55,7 @@ const App = () => {
 
             <p style={{ marginBottom: 30 }}>
                 This tool queries iNat for all observations made by one or more users in a specific taxon and place.
-                It derives a curated list of all <i>unique species/subspecies</i> and displays it along with the option
+                It derives a curated list of all <i>unique species</i> and displays it along with the option
                 to download the data.
             </p>
 

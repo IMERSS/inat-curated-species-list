@@ -36,7 +36,7 @@ It's not the prettiest output right now, but it gets the job done. The messages 
 not the command line. But hey, it works. :) 
 
 The data is of the following form. It's an unsorted object where the top level properties are the taxon of the
-species/subspecies. The count value represents the number of observations that have IDs by any of the users provided.
+species. The count value represents the number of observations that have IDs by any of the users provided.
 
 ```json
 {
@@ -102,7 +102,7 @@ Here's how you use it, and what each prop means:
 - **data**: the JSON structure as described in the previous section.
 - **usernames**: a comma-delimited list of iNat usernames. These are the user's you're treating as experts: they're the ones who have made the reviews in the given taxon.
 - **placeId**: the iNat place ID.
-- **defaultVisibleCols*: the raw JSON data contains information on all available ranks for each species/subspecies. But in most cases, that's probably superfluous information. Just pass the subset of strings for the available ranks. This is the full list of available ranks: `'kingdom', 'phylum', 'subphylum', 'class', 'subclass', 'order', 'superfamily', 'family', 'subfamily', 'tribe', 'subtribe', 'genus', 'subgenus', 'species', 'subspecies'`
+- **defaultVisibleCols*: the raw JSON data contains information on all available ranks for each species. But in most cases, that's probably superfluous information. Just pass the subset of strings for the available ranks. This is the full list of available ranks: `'kingdom', 'phylum', 'subphylum', 'class', 'subclass', 'order', 'superfamily', 'family', 'subfamily', 'tribe', 'subtribe', 'genus', 'subgenus', 'species'`
 - **allowedCols**: if you haven't hidden the controls (see next prop), this controls which ranks should appear in the user interface.
 - **hideControls**: this hides the control section at the top of the table to allow users to choose what ranks to view.
 - **showCount**: this lets you hide a column that lists the number of observations that have been reviewed by the user list. 

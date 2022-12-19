@@ -81,9 +81,10 @@ export const extractSpecies = (rawData, observers) => {
             //     console.log(obs);
             // }
 
-            if (ident.taxon.rank !== "species" && ident.taxon.rank !== "subspecies") {
+            if (ident.taxon.rank !== "species") {
                 return;
             }
+
             if (!parsedData[ident.taxon_id]) {
                 // add ancestors
                 const taxonomy = ident.taxon.ancestors.reduce((acc, curr) => {
