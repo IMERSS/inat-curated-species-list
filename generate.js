@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {downloadPacket, minifyData} from './src/shared.js';
+import { downloadPacket, minifyData } from './src/shared.js';
 import * as C from './src/constants.js';
 
 const logger = {
@@ -21,9 +21,10 @@ downloadPacket({
     ident_user_id: C.USERS,
     place_id: C.PLACE_ID,
     taxon_id: C.TAXON_ID,
-    verifiable: 'any'
-}, cleanUsernames,1, logger,(speciesData) => {
-    const minifiedSpeciesData = minifyData(speciesData);
+    verifiable: 'any',
+    taxons: ['superfamily', 'family', 'tribe', 'genus', 'species']
+}, cleanUsernames,1, logger,(speciesData, params) => {
+    const minifiedSpeciesData = minifyData(speciesData, params.taxons);
     const filename = `${C.GENERATED_FILENAME_FOLDER}/${C.GENERATED_FILENAME}`;
     if (!fs.existsSync(C.GENERATED_FILENAME_FOLDER)) {
         fs.mkdirSync(C.GENERATED_FILENAME_FOLDER);

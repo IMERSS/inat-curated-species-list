@@ -19,24 +19,24 @@ let parsedData = {};
 let numResults = 0;
 
 // used to reduce the size of the data structure
-export const taxonAbbreviationMap = {
-    kingdom: 'k',
-    phylum: 'p',
-    subphylum: 'h',
-    "class": 'c',
-    subclass: 'b',
-    order: 'o',
-    superfamily: 'u',
-    family: 'f',
-    subfamily: 'm',
-    section: 'r',
-    complex: 'q',
-    tribe: 't',
-    subtribe: 'j',
-    genus: 'g',
-    subgenus: 'v',
-    species: 's'
-};
+// export const taxonAbbreviationMap = {
+//     kingdom: 'k',
+//     phylum: 'p',
+//     subphylum: 'h',
+//     "class": 'c',
+//     subclass: 'b',
+//     order: 'o',
+//     superfamily: 'u',
+//     family: 'f',
+//     subfamily: 'm',
+//     section: 'r',
+//     complex: 'q',
+//     tribe: 't',
+//     subtribe: 'j',
+//     genus: 'g',
+//     subgenus: 'v',
+//     species: 's'
+// };
 
 const taxonsToMinify = {
     kingdom: true,
@@ -49,6 +49,8 @@ const taxonsToMinify = {
     family: true,
     subfamily: true,
     section: true,
+    tribe: true,
+    genus: true
 };
 
 const generatedKeys = {};
@@ -93,7 +95,7 @@ export const downloadPacket = (params, cleanUsernames, packetNum, logger, onSucc
         .then((resp) => {
             if (resp.total_results <= 0) {
                 logger.current.addLogRow(`No observations found.`, 'info');
-                onSuccess(parsedData);
+                onSuccess(parsedData, params);
                 return;
             } else {
                 // only the first request has the correct number of total results
@@ -104,7 +106,7 @@ export const downloadPacket = (params, cleanUsernames, packetNum, logger, onSucc
 
             // the data returned by iNat is enormous. I found on my server, loading everything into memory caused
             // memory issues (hard-disk space, I think). So instead, here we extract the necessary information right away
-            extractSpecies(resp, cleanUsernames);
+            extractSpecies(resp, cleanUsernames, params.taxons);
 
             lastId = resp.results[resp.results.length - 1].id;
 
@@ -119,13 +121,13 @@ export const downloadPacket = (params, cleanUsernames, packetNum, logger, onSucc
                 downloadPacket(params, cleanUsernames, packetNum+1, logger, onSuccess, onError);
             } else {
                 logger.current.replaceLogRow(packetLoggerRowId,`Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`, 'info');
-                onSuccess(parsedData);
+                onSuccess(parsedData, params);
             }
         }).catch(onError);
 };
 
 
-export const extractSpecies = (rawData, observers) => {
+export const extractSpecies = (rawData, observers, taxonsToReturn) => {
     rawData.results.forEach((obs) => {
         obs.identifications.forEach((ident) => {
             if (observers.indexOf(ident.user.login) === -1) {
@@ -144,7 +146,9 @@ export const extractSpecies = (rawData, observers) => {
             if (!parsedData[ident.taxon_id]) {
                 // add ancestors
                 const taxonomy = ident.taxon.ancestors.reduce((acc, curr) => {
-                    acc[curr.rank] = curr.name;
+                    if (taxonsToReturn.indexOf(curr.rank) !== -1) {
+                        acc[curr.rank] = curr.name;
+                    }
                     return acc;
                 }, {});
 
@@ -157,17 +161,17 @@ export const extractSpecies = (rawData, observers) => {
     });
 };
 
-const getTaxonNameAbbrev = (taxonName) => {
-    // secondly, switch out the keys too. That saves and extra 200KB with a 900KB data set
-    // add current taxon
-    if (!taxonAbbreviationMap[taxonName]) {
-        console.log("Missing!!! ", taxonName);
-        return;
-    }
-    return taxonAbbreviationMap[taxonName];
-};
+// const getTaxonNameAbbrev = (taxonName) => {
+//     // secondly, switch out the keys too. That saves and extra 200KB with a 900KB data set
+//     // add current taxon
+//     if (!taxonAbbreviationMap[taxonName]) {
+//         console.log("Missing! This is a bug. We need to add this taxonomic rank: ", taxonName);
+//         return;
+//     }
+//     return taxonAbbreviationMap[taxonName];
+// };
 
-export const minifyData = (data) => {
+export const minifyData = (data, targetTaxons) => {
     const minifiedData = {
         taxonMap: {},
         taxonData: {}
@@ -176,27 +180,28 @@ export const minifyData = (data) => {
     Object.keys(data).forEach((taxonId) => {
         const rowData = {};
 
-        // first, if this is a higher taxon, replace the taxon string value (Pterygota, or whatever) with a short code
-        // in taxonMap
+        // replace all non-species taxon strings (Pterygota, or whatever) with a short code in taxonMap
         Object.keys(data[taxonId].data).forEach((taxonName) => {
-            const abbrevKey = getTaxonNameAbbrev(taxonName);
+            // const abbrevKey = getTaxonNameAbbrev(taxonName);
 
             if (taxonsToMinify[taxonName]) {
                 if (minifiedData.taxonMap[taxonName]) {
-                    rowData[abbrevKey] = minifyData.taxonMap[taxonName];
+                    rowData[taxonName] = minifyData.taxonMap[taxonName];
                 } else {
                     const key = getNextKey();
                     minifiedData.taxonMap[data[taxonId].data[taxonName]] = key; // taxon name => key map
-                    rowData[abbrevKey] = key;
+                    rowData[taxonName] = key;
                 }
-
             } else {
-                rowData[abbrevKey] = data[taxonId].data[taxonName];
+                rowData[taxonName] = data[taxonId].data[taxonName];
             }
         });
 
+        // now reduce the data to an array of
+        const arr = targetTaxons.map((t) => rowData[t] ? rowData[t] : '');
+
         minifiedData.taxonData[taxonId] = {
-            data: rowData,
+            data: arr,
             count: data[taxonId].count
         };
     });
