@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import * as C from './constants';
 import DataTable from './DataTable.component';
-import { minifyData, unminifyData } from './shared';
+import { unminifyData } from './shared';
 import { debounce } from 'debounce';
-
-const d = require("./data.json");
 
 const Standalone = () => {
     const [loaded, setLoaded] = useState(false);
@@ -13,8 +11,6 @@ const Standalone = () => {
     const [filter, setFilter] = useState('');
     const [debouncedFilter, setDebouncedFilter] = useState('');
     const [filteredData, setFilteredData] = useState({});
-
-    minifyData(d);
 
     const updateFilter = (e) => {
         setFilter(e.target.value);

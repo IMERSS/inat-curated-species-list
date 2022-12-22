@@ -38,35 +38,34 @@ export const taxonAbbreviationMap = {
     species: 's'
 };
 
-const taxons = {
-    kingdom: { map: {}, count: 0 },
-    phylum: { map: {}, count: 0 },
-    subphylum: { map: {}, count: 0 },
-    "class": { map: {}, count: 0 },
-    subclass: { map: {}, count: 0 },
-    order: { map: {}, count: 0 }
+const taxonsToMinify = {
+    kingdom: true,
+    phylum: true,
+    subphylum: true,
+    "class": true,
+    subclass: true,
+    order: true,
+    superfamily: true,
+    family: true,
+    subfamily: true,
+    section: true,
 };
 
 const generatedKeys = {};
 let currKeyLength = 1;
 const getNextKey = () => {
     let key = '';
-
-    // try to get a unique key at the current length 10 times. If it fails, increase the length
     for (let i=0; i<20; i++) {
         let currKey = nanoid(currKeyLength);
-
         if (!generatedKeys[currKey]) {
             key = currKey;
             generatedKeys[currKey] = true;
             break;
         }
     }
-
     if (key) {
         return key;
     }
-
     currKeyLength++;
     return getNextKey();
 };
@@ -158,26 +157,51 @@ export const extractSpecies = (rawData, observers) => {
     });
 };
 
-// this
+const getTaxonNameAbbrev = (taxonName) => {
+    // secondly, switch out the keys too. That saves and extra 200KB with a 900KB data set
+    // add current taxon
+    if (!taxonAbbreviationMap[taxonName]) {
+        console.log("Missing!!! ", taxonName);
+        return;
+    }
+    return taxonAbbreviationMap[taxonName];
+};
+
 export const minifyData = (data) => {
     const minifiedData = {
         taxonMap: {},
-        data: {}
+        taxonData: {}
     };
 
     Object.keys(data).forEach((taxonId) => {
+        const rowData = {};
 
+        // first, if this is a higher taxon, replace the taxon string value (Pterygota, or whatever) with a short code
+        // in taxonMap
+        Object.keys(data[taxonId].data).forEach((taxonName) => {
+            const abbrevKey = getTaxonNameAbbrev(taxonName);
+
+            if (taxonsToMinify[taxonName]) {
+                if (minifiedData.taxonMap[taxonName]) {
+                    rowData[abbrevKey] = minifyData.taxonMap[taxonName];
+                } else {
+                    const key = getNextKey();
+                    minifiedData.taxonMap[data[taxonId].data[taxonName]] = key; // taxon name => key map
+                    rowData[abbrevKey] = key;
+                }
+
+            } else {
+                rowData[abbrevKey] = data[taxonId].data[taxonName];
+            }
+        });
+
+        minifiedData.taxonData[taxonId] = {
+            data: rowData,
+            count: data[taxonId].count
+        };
     });
 
-    /*
-        // add current taxon
-        if (!taxonAbbreviationMap[curr.rank]) {
-            console.log("Missing: ", curr.rank);
-            return;
-        }
-        const key = taxonAbbreviationMap[curr.rank];
-    */
-    // const key = taxonAbbreviationMap[];
+    return minifiedData;
 }
 
 export const unminifyData = (data) => {

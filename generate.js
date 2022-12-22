@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { downloadPacket } from './src/shared.js';
+import {downloadPacket, minifyData} from './src/shared.js';
 import * as C from './src/constants.js';
 
 const logger = {
@@ -23,6 +23,7 @@ downloadPacket({
     taxon_id: C.TAXON_ID,
     verifiable: 'any'
 }, cleanUsernames,1, logger,(speciesData) => {
+    const minifiedSpeciesData = minifyData(speciesData);
     const filename = `${C.GENERATED_FILENAME_FOLDER}/${C.GENERATED_FILENAME}`;
     if (!fs.existsSync(C.GENERATED_FILENAME_FOLDER)) {
         fs.mkdirSync(C.GENERATED_FILENAME_FOLDER);
@@ -30,7 +31,7 @@ downloadPacket({
     if (fs.existsSync(filename)) {
         fs.unlinkSync(filename);
     }
-    fs.writeFileSync(filename, JSON.stringify(speciesData));
+    fs.writeFileSync(filename, JSON.stringify(minifiedSpeciesData));
     console.log("__________________________________________");
     console.log(`Complete. File generated: ${filename}`);
 }, (e) => {
