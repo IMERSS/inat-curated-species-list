@@ -33,7 +33,7 @@ const Standalone = () => {
             .then((resp) => resp.json())
             .then((json) => {
                 setLoaded(true);
-                setData(unminifyData(json));
+                setData(unminifyData(json, C.VISIBLE_TAXONS));
             })
             .catch(() => setError(true));
     }, []);

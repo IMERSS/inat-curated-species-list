@@ -22,7 +22,7 @@ downloadPacket({
     place_id: C.PLACE_ID,
     taxon_id: C.TAXON_ID,
     verifiable: 'any',
-    taxons: ['superfamily', 'family', 'tribe', 'genus', 'species']
+    taxons: C.VISIBLE_TAXONS
 }, cleanUsernames,1, logger,(speciesData, params) => {
     const minifiedSpeciesData = minifyData(speciesData, params.taxons);
     const filename = `${C.GENERATED_FILENAME_FOLDER}/${C.GENERATED_FILENAME}`;

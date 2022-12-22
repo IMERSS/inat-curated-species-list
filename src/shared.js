@@ -18,26 +18,6 @@ let lastId = null;
 let parsedData = {};
 let numResults = 0;
 
-// used to reduce the size of the data structure
-// export const taxonAbbreviationMap = {
-//     kingdom: 'k',
-//     phylum: 'p',
-//     subphylum: 'h',
-//     "class": 'c',
-//     subclass: 'b',
-//     order: 'o',
-//     superfamily: 'u',
-//     family: 'f',
-//     subfamily: 'm',
-//     section: 'r',
-//     complex: 'q',
-//     tribe: 't',
-//     subtribe: 'j',
-//     genus: 'g',
-//     subgenus: 'v',
-//     species: 's'
-// };
-
 const taxonsToMinify = {
     kingdom: true,
     phylum: true,
@@ -71,8 +51,6 @@ const getNextKey = () => {
     currKeyLength++;
     return getNextKey();
 };
-
-const invertObj = (data) => Object.fromEntries(Object.entries(data).map(([key, value]) => [value, key]));
 
 export const resetData = () => {
     parsedData = {};
@@ -161,16 +139,6 @@ export const extractSpecies = (rawData, observers, taxonsToReturn) => {
     });
 };
 
-// const getTaxonNameAbbrev = (taxonName) => {
-//     // secondly, switch out the keys too. That saves and extra 200KB with a 900KB data set
-//     // add current taxon
-//     if (!taxonAbbreviationMap[taxonName]) {
-//         console.log("Missing! This is a bug. We need to add this taxonomic rank: ", taxonName);
-//         return;
-//     }
-//     return taxonAbbreviationMap[taxonName];
-// };
-
 export const minifyData = (data, targetTaxons) => {
     const minifiedData = {
         taxonMap: {},
@@ -197,31 +165,31 @@ export const minifyData = (data, targetTaxons) => {
             }
         });
 
-        // now reduce the data to an array of
-        const arr = targetTaxons.map((t) => rowData[t] ? rowData[t] : '');
+        const arr = targetTaxons.map((t) => rowData[t] ? rowData[t] : '').join('|');
 
         minifiedData.taxonData[taxonId] = {
-            data: arr,
-            count: data[taxonId].count
+            d: arr,
+            c: data[taxonId].count
         };
     });
 
     return minifiedData;
 }
 
-export const unminifyData = (data) => {
-    const map = invertObj(taxonAbbreviationMap);
-
+export const unminifyData = (data, visibleTaxons) => {
     const newData = {};
-    Object.keys(data).forEach((taxon) => {
-        const newTaxonData = {};
-        Object.keys(data[taxon].data).forEach((minKey) => {
-            newTaxonData[map[minKey]] = data[taxon].data[minKey];
-        })
-        newData[taxon] = {
-            data: newTaxonData,
-            count: data[taxon].count
-        }
-    });
+
+    console.log({ data, visibleTaxons });
+
+    // Object.keys(data).forEach((taxon) => {
+    //     const newTaxonData = {};
+    //     Object.keys(data[taxon].data).forEach((minKey) => {
+    //         newTaxonData[map[minKey]] = data[taxon].data[minKey];
+    //     })
+    //     newData[taxon] = {
+    //         data: newTaxonData,
+    //         count: data[taxon].count
+    //     }
+    // });
     return newData;
 }
