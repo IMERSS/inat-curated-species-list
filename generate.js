@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { downloadPacket, extractSpecies } from './src/shared.js';
+import { downloadPacket } from './src/shared.js';
 import * as C from './src/constants.js';
 
 const logger = {

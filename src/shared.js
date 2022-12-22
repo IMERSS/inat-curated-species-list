@@ -1,4 +1,11 @@
-import qs from "query-string";
+/**
+ * This file contains a bunch of code to parse out the necessary iNat data. We found it can get pretty bit - 900KB
+ * for around 2800 species for our BC Leps site - so I've added a few minification steps to the data. This helps
+ * when you're using the standalone file that loads the generated json file containing the data. Note: a bigger
+ * improvement would be to reduce all the unnecessary taxon info needed.
+ */
+import qs from 'query-string';
+import { nanoid } from 'nanoid'
 
 export const formatNum = (num) => new Intl.NumberFormat('en-US').format(num);
 export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
@@ -10,6 +17,61 @@ let packetLoggerRowId;
 let lastId = null;
 let parsedData = {};
 let numResults = 0;
+
+// used to reduce the size of the data structure
+export const taxonAbbreviationMap = {
+    kingdom: 'k',
+    phylum: 'p',
+    subphylum: 'h',
+    "class": 'c',
+    subclass: 'b',
+    order: 'o',
+    superfamily: 'u',
+    family: 'f',
+    subfamily: 'm',
+    section: 'r',
+    complex: 'q',
+    tribe: 't',
+    subtribe: 'j',
+    genus: 'g',
+    subgenus: 'v',
+    species: 's'
+};
+
+const taxons = {
+    kingdom: { map: {}, count: 0 },
+    phylum: { map: {}, count: 0 },
+    subphylum: { map: {}, count: 0 },
+    "class": { map: {}, count: 0 },
+    subclass: { map: {}, count: 0 },
+    order: { map: {}, count: 0 }
+};
+
+const generatedKeys = {};
+let currKeyLength = 1;
+const getNextKey = () => {
+    let key = '';
+
+    // try to get a unique key at the current length 10 times. If it fails, increase the length
+    for (let i=0; i<20; i++) {
+        let currKey = nanoid(currKeyLength);
+
+        if (!generatedKeys[currKey]) {
+            key = currKey;
+            generatedKeys[currKey] = true;
+            break;
+        }
+    }
+
+    if (key) {
+        return key;
+    }
+
+    currKeyLength++;
+    return getNextKey();
+};
+
+const invertObj = (data) => Object.fromEntries(Object.entries(data).map(([key, value]) => [value, key]));
 
 export const resetData = () => {
     parsedData = {};
@@ -42,7 +104,7 @@ export const downloadPacket = (params, cleanUsernames, packetNum, logger, onSucc
             }
 
             // the data returned by iNat is enormous. I found on my server, loading everything into memory caused
-            // memory issues (harddisk space, I think). So instead, here we extract the necessary information right away
+            // memory issues (hard-disk space, I think). So instead, here we extract the necessary information right away
             extractSpecies(resp, cleanUsernames);
 
             lastId = resp.results[resp.results.length - 1].id;
@@ -76,11 +138,6 @@ export const extractSpecies = (rawData, observers) => {
                 return;
             }
 
-            // weird, but category was null in one place: https://www.inaturalist.org/observations/22763866
-            // if (!ident.category) {
-            //     console.log(obs);
-            // }
-
             if (ident.taxon.rank !== "species") {
                 return;
             }
@@ -91,7 +148,7 @@ export const extractSpecies = (rawData, observers) => {
                     acc[curr.rank] = curr.name;
                     return acc;
                 }, {});
-                // add current taxon
+
                 taxonomy[ident.taxon.rank] = ident.taxon.name;
                 parsedData[ident.taxon_id] = { data: taxonomy, count: 1 };
             } else {
@@ -100,3 +157,42 @@ export const extractSpecies = (rawData, observers) => {
         });
     });
 };
+
+// this
+export const minifyData = (data) => {
+    const minifiedData = {
+        taxonMap: {},
+        data: {}
+    };
+
+    Object.keys(data).forEach((taxonId) => {
+
+    });
+
+    /*
+        // add current taxon
+        if (!taxonAbbreviationMap[curr.rank]) {
+            console.log("Missing: ", curr.rank);
+            return;
+        }
+        const key = taxonAbbreviationMap[curr.rank];
+    */
+    // const key = taxonAbbreviationMap[];
+}
+
+export const unminifyData = (data) => {
+    const map = invertObj(taxonAbbreviationMap);
+
+    const newData = {};
+    Object.keys(data).forEach((taxon) => {
+        const newTaxonData = {};
+        Object.keys(data[taxon].data).forEach((minKey) => {
+            newTaxonData[map[minKey]] = data[taxon].data[minKey];
+        })
+        newData[taxon] = {
+            data: newTaxonData,
+            count: data[taxon].count
+        }
+    });
+    return newData;
+}

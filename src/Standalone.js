@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import * as C from './constants';
 import DataTable from './DataTable.component';
+import { minifyData, unminifyData } from './shared';
 import { debounce } from 'debounce';
+
+const d = require("./data.json");
 
 const Standalone = () => {
     const [loaded, setLoaded] = useState(false);
@@ -10,6 +13,8 @@ const Standalone = () => {
     const [filter, setFilter] = useState('');
     const [debouncedFilter, setDebouncedFilter] = useState('');
     const [filteredData, setFilteredData] = useState({});
+
+    minifyData(d);
 
     const updateFilter = (e) => {
         setFilter(e.target.value);
@@ -32,7 +37,7 @@ const Standalone = () => {
             .then((resp) => resp.json())
             .then((json) => {
                 setLoaded(true);
-                setData(json);
+                setData(unminifyData(json));
             })
             .catch(() => setError(true));
     }, []);
@@ -94,7 +99,7 @@ const Standalone = () => {
                     data={filteredData}
                     usernames={C.USERS}
                     placeId={C.PLACE_ID}
-                    defaultVisibleCols={[ 'superfamily', 'family', 'subfamily', 'genus', 'species']}
+                    defaultVisibleCols={['superfamily', 'family', 'subfamily', 'tribe', 'species']}
                     hideControls={true}
                     showCount={false}
                     allowDownload={false}
