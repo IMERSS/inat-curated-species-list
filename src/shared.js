@@ -33,6 +33,8 @@ const taxonsToMinify = {
     genus: true
 };
 
+const invertObj = (data) => Object.fromEntries(Object.entries(data).map(([key, value]) => [value, key]));
+
 const generatedKeys = {};
 let currKeyLength = 1;
 const getNextKey = () => {
@@ -130,7 +132,7 @@ export const extractSpecies = (rawData, observers, taxonsToReturn) => {
                     return acc;
                 }, {});
 
-                taxonomy[ident.taxon.rank] = ident.taxon.name;
+                taxonomy.species = ident.taxon.name;
                 parsedData[ident.taxon_id] = { data: taxonomy, count: 1 };
             } else {
                 parsedData[ident.taxon_id].count++;
@@ -149,47 +151,60 @@ export const minifyData = (data, targetTaxons) => {
         const rowData = {};
 
         // replace all non-species taxon strings (Pterygota, or whatever) with a short code in taxonMap
-        Object.keys(data[taxonId].data).forEach((taxonName) => {
-            // const abbrevKey = getTaxonNameAbbrev(taxonName);
+        Object.keys(data[taxonId].data).forEach((taxonRank) => {
+            const taxonName = data[taxonId].data[taxonRank];
 
-            if (taxonsToMinify[taxonName]) {
+            if (taxonsToMinify[taxonRank]) {
                 if (minifiedData.taxonMap[taxonName]) {
                     rowData[taxonName] = minifyData.taxonMap[taxonName];
                 } else {
                     const key = getNextKey();
-                    minifiedData.taxonMap[data[taxonId].data[taxonName]] = key; // taxon name => key map
+                    minifiedData.taxonMap[taxonName] = key;
                     rowData[taxonName] = key;
                 }
             } else {
-                rowData[taxonName] = data[taxonId].data[taxonName];
+                rowData[taxonName] = taxonName;
             }
         });
 
-        const arr = targetTaxons.map((t) => rowData[t] ? rowData[t] : '').join('|');
-
-        minifiedData.taxonData[taxonId] = {
-            d: arr,
-            c: data[taxonId].count
-        };
+        const row = targetTaxons.map((t) => rowData[t] ? rowData[t] : '').join('|');
+        minifiedData.taxonData[taxonId] = `${row}|${data[taxonId].count}`;
     });
 
     return minifiedData;
 }
 
 export const unminifyData = (data, visibleTaxons) => {
-    const newData = {};
+    const map = invertObj(data.taxonMap);
 
-    console.log({ data, visibleTaxons });
+    const fullData = {};
+    Object.keys(data.taxonData).forEach((taxonId) => {
+        // Assumes that this is now an ordered array of the taxons specified in visibleTaxons. The user should
+        // have supplied the same list of taxons used in creating the minified file
+        const rowData = data.taxonData[taxonId].split('|');
+        const expandedTaxonData = {};
 
-    // Object.keys(data).forEach((taxon) => {
-    //     const newTaxonData = {};
-    //     Object.keys(data[taxon].data).forEach((minKey) => {
-    //         newTaxonData[map[minKey]] = data[taxon].data[minKey];
-    //     })
-    //     newData[taxon] = {
-    //         data: newTaxonData,
-    //         count: data[taxon].count
-    //     }
-    // });
-    return newData;
+        for (let i=0; i<visibleTaxons.length; i++) {
+            const visibleTaxon = visibleTaxons[i];
+            // only the species row isn't minified. Everything else is found in the map
+            if (visibleTaxon === 'species') {
+                expandedTaxonData[visibleTaxon] = rowData[i];
+            } else {
+                // not every taxon will be filled for each row
+                if (rowData[i] && !map[rowData[i]]) {
+                    console.log("missing", i, rowData);
+                }
+                expandedTaxonData[visibleTaxon] = rowData[i] ? map[rowData[i]] : '';
+            }
+        }
+
+        fullData[taxonId] = {
+            data: expandedTaxonData,
+            count: rowData[rowData.length-1]
+        };
+    });
+
+    console.log(map);
+
+    return fullData;
 }
