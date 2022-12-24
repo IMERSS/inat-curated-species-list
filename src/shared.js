@@ -155,8 +155,10 @@ export const minifyData = (data, targetTaxons) => {
             const taxonName = data[taxonId].data[taxonRank];
 
             if (taxonsToMinify[taxonRank]) {
+                // if we've already minified this particular taxon name (note: no reason this might be a totally
+                // different rank from the original minification - it doesn't matter - point is that the STRING is identical)
                 if (minifiedData.taxonMap[taxonName]) {
-                    rowData[taxonName] = minifyData.taxonMap[taxonName];
+                    rowData[taxonName] = minifiedData.taxonMap[taxonName];
                 } else {
                     const key = getNextKey();
                     minifiedData.taxonMap[taxonName] = key;

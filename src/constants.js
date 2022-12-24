@@ -6,8 +6,8 @@ export const USERS = 'dave328,gpohl,crispinguppy';
 export const TAXON_ID = '47157';
 export const PLACE_ID = '7085';
 export const GENERATED_FILENAME_FOLDER = './dist';
-export const GENERATED_FILENAME = 'data7.json';
+export const GENERATED_FILENAME = 'data8.json';
 
 // export const DATA_URL = 'https://sisyphean.ca/inat/curated-bc-leps-list.json'; // enter URL of generated data source here (for standalone version)
-export const DATA_URL = './data7.json';
+export const DATA_URL = './data8.json';
 export const VISIBLE_TAXONS = ['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species'];
