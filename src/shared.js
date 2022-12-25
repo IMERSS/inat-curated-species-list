@@ -148,6 +148,8 @@ export const minifyData = (data, targetTaxons) => {
     };
 
     Object.keys(data).forEach((taxonId) => {
+
+        // keyed by rank
         const rowData = {};
 
         // replace all non-species taxon strings (Pterygota, or whatever) with a short code in taxonMap
@@ -158,14 +160,14 @@ export const minifyData = (data, targetTaxons) => {
                 // if we've already minified this particular taxon name (note: no reason this might be a totally
                 // different rank from the original minification - it doesn't matter - point is that the STRING is identical)
                 if (minifiedData.taxonMap[taxonName]) {
-                    rowData[taxonName] = minifiedData.taxonMap[taxonName];
+                    rowData[taxonRank] = minifiedData.taxonMap[taxonName];
                 } else {
                     const key = getNextKey();
                     minifiedData.taxonMap[taxonName] = key;
-                    rowData[taxonName] = key;
+                    rowData[taxonRank] = key;
                 }
             } else {
-                rowData[taxonName] = taxonName;
+                rowData[taxonRank] = taxonName;
             }
         });
 
@@ -206,7 +208,7 @@ export const unminifyData = (data, visibleTaxons) => {
         };
     });
 
-    console.log(map);
+    console.log(fullData);
 
     return fullData;
 }

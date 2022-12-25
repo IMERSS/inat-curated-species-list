@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import Loader from './Loader';
 import * as C from './constants';
 import DataTable from './DataTable.component';
 import { unminifyData } from './shared';
@@ -63,7 +64,11 @@ const Standalone = () => {
     }, [data, debouncedFilter]);
 
     if (!loaded) {
-        return null;
+        return (
+            <div style={{ position: 'relative' }}>
+                <Loader />
+            </div>
+        );
     }
 
     if (error) {
