@@ -65,7 +65,7 @@ const Standalone = () => {
 
     if (!loaded) {
         return (
-            <div style={{ position: 'relative' }}>
+            <div className="inat-curated-species-standalone-loader">
                 <Loader />
             </div>
         );
