@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Loader from './Loader';
 import * as C from './constants';
 import DataTable from './DataTable.component';
-import { unminifyData } from './shared';
+import { unminifySpeciesData } from './shared';
 import { debounce } from 'debounce';
 
 const Standalone = () => {
@@ -34,7 +34,7 @@ const Standalone = () => {
             .then((resp) => resp.json())
             .then((json) => {
                 setLoaded(true);
-                setData(unminifyData(json, C.VISIBLE_TAXONS));
+                setData(unminifySpeciesData(json, C.VISIBLE_TAXONS));
             })
             .catch(() => setError(true));
     }, []);

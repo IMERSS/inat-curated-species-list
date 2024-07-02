@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
 import * as C from './constants';
-import { resetData, downloadPacket } from './shared';
+import { resetData, downloadDataByPacket } from './shared';
 import styles from './App.module.css';
 import Logger from './Logger.component';
 import DataTable from './DataTable.component';
@@ -27,7 +27,7 @@ const App = () => {
 
         const cleanUsernames = usernames.split(',').map((username) => username.trim());
 
-        downloadPacket({
+        downloadDataByPacket({
             ident_user_id: usernames,
             place_id: placeId,
             taxon_id: taxonId,

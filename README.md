@@ -87,7 +87,7 @@ The DataTable component is designed to render the JSON structure listed in the p
 
 Here's how you use it, and what each prop means:
 
-```
+```jsx
 <DataTable
     data={data}
     usernames={C.USERS}

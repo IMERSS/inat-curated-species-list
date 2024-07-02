@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { downloadPacket, minifyData } from './src/shared.js';
+import { downloadDataByPacket, minifySpeciesData } from './src/shared.js';
 import * as C from './src/constants.js';
 
 const logger = {
@@ -17,14 +17,15 @@ console.log("Pinging iNat for data.");
 
 const cleanUsernames = C.USERS.split(',').map((username) => username.trim());
 
-downloadPacket({
+downloadDataByPacket({
     ident_user_id: C.USERS,
     place_id: C.PLACE_ID,
     taxon_id: C.TAXON_ID,
     verifiable: 'any',
     taxons: C.VISIBLE_TAXONS
-}, cleanUsernames,1, logger,(speciesData, params) => {
-    const minifiedSpeciesData = minifyData(speciesData, params.taxons);
+}, cleanUsernames, 1, logger, (speciesData, params) => {
+    const minifiedSpeciesData = minifySpeciesData(speciesData, params.taxons);
+
     const filename = `${C.GENERATED_FILENAME_FOLDER}/${C.GENERATED_FILENAME}`;
     if (!fs.existsSync(C.GENERATED_FILENAME_FOLDER)) {
         fs.mkdirSync(C.GENERATED_FILENAME_FOLDER);

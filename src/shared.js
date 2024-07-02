@@ -59,7 +59,7 @@ export const resetData = () => {
     numResults = 0;
 }
 
-export const downloadPacket = (params, cleanUsernames, packetNum, logger, onSuccess, onError) => {
+export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, onSuccess, onError) => {
     params.order = 'asc';
     params.order_by = 'id';
     params.per_page = perPage;
@@ -98,7 +98,7 @@ export const downloadPacket = (params, cleanUsernames, packetNum, logger, onSucc
                 } else {
                     logger.current.replaceLogRow(packetLoggerRowId, `Retrieved ${formatNum(perPage*packetNum)}/${numResultsFormatted} observations.`, 'info');
                 }
-                downloadPacket(params, cleanUsernames, packetNum+1, logger, onSuccess, onError);
+                downloadDataByPacket(params, cleanUsernames, packetNum+1, logger, onSuccess, onError);
             } else {
                 logger.current.replaceLogRow(packetLoggerRowId,`Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`, 'info');
                 onSuccess(parsedData, params);
@@ -141,7 +141,7 @@ export const extractSpecies = (rawData, observers, taxonsToReturn) => {
     });
 };
 
-export const minifyData = (data, targetTaxons) => {
+export const minifySpeciesData = (data, targetTaxons) => {
     const minifiedData = {
         taxonMap: {},
         taxonData: {}
@@ -178,7 +178,19 @@ export const minifyData = (data, targetTaxons) => {
     return minifiedData;
 }
 
-export const unminifyData = (data, visibleTaxons) => {
+/**
+ * Added in 1.1.0. This examines the raw data and returns a sorted list of species observations that were most recently 
+ * approved by a curator; i.e. this figures out what new species have been added to the list and returns the most recent first. 
+ * 
+ * [
+ *   {
+ *     ... 
+ *   }
+ * ]
+ */
+export const getSortedConfirmedIdentifications = () => null;
+
+export const unminifySpeciesData = (data, visibleTaxons) => {
     const map = invertObj(data.taxonMap);
 
     const fullData = {};
