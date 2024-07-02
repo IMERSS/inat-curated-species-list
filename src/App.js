@@ -31,7 +31,8 @@ const App = () => {
             ident_user_id: usernames,
             place_id: placeId,
             taxon_id: taxonId,
-            verifiable: 'any'
+            verifiable: 'any',
+            taxons: C.VISIBLE_TAXONS
         }, cleanUsernames, 1, loggerRef,(speciesData) => {
             setLoading(false);
             setDataLoaded(true);

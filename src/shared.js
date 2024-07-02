@@ -16,6 +16,7 @@ const perPage = 200;
 let packetLoggerRowId;
 let lastId = null;
 let parsedData = {};
+let newAdditionsByYear = {};
 let numResults = 0;
 
 const taxonsToMinify = {
@@ -56,6 +57,7 @@ const getNextKey = () => {
 
 export const resetData = () => {
     parsedData = {};
+    newAdditionsByYear = {};
     numResults = 0;
 }
 
@@ -84,10 +86,13 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
                 }
             }
 
+            console.log('Ben 1', params.taxons);
+
             // the data returned by iNat is enormous. I found on my server, loading everything into memory caused
             // memory issues (hard-disk space, I think). So instead, here we extract the necessary information right away
             extractSpecies(resp, cleanUsernames, params.taxons);
 
+            console.log('Ben 2', newAdditionsByYear);
             lastId = resp.results[resp.results.length - 1].id;
 
             const numResultsFormatted = formatNum(numResults);
@@ -99,6 +104,7 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
                     logger.current.replaceLogRow(packetLoggerRowId, `Retrieved ${formatNum(perPage*packetNum)}/${numResultsFormatted} observations.`, 'info');
                 }
                 downloadDataByPacket(params, cleanUsernames, packetNum+1, logger, onSuccess, onError);
+                
             } else {
                 logger.current.replaceLogRow(packetLoggerRowId,`Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`, 'info');
                 onSuccess(parsedData, params);
@@ -107,10 +113,10 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
 };
 
 
-export const extractSpecies = (rawData, observers, taxonsToReturn) => {
+export const extractSpecies = (rawData, curators, taxonsToReturn) => {
     rawData.results.forEach((obs) => {
         obs.identifications.forEach((ident) => {
-            if (observers.indexOf(ident.user.login) === -1) {
+            if (curators.indexOf(ident.user.login) === -1) {
                 return;
             }
 
@@ -124,7 +130,7 @@ export const extractSpecies = (rawData, observers, taxonsToReturn) => {
             }
 
             if (!parsedData[ident.taxon_id]) {
-                // add ancestors
+                // add ancestor taxons
                 const taxonomy = ident.taxon.ancestors.reduce((acc, curr) => {
                     if (taxonsToReturn.indexOf(curr.rank) !== -1) {
                         acc[curr.rank] = curr.name;
@@ -134,6 +140,21 @@ export const extractSpecies = (rawData, observers, taxonsToReturn) => {
 
                 taxonomy.species = ident.taxon.name;
                 parsedData[ident.taxon_id] = { data: taxonomy, count: 1 };
+
+                const confirmationDate = new Date(ident.created_at);
+                const confirmationYear = confirmationDate.getFullYear();
+
+                // TODO once it's all working, add a param to control where users want to start looking at additions + nothing before
+
+                if (!newAdditionsByYear[confirmationYear]) {
+                    newAdditionsByYear[confirmationYear] = [];
+                }
+
+                // TODO add original observer + image URL
+                newAdditionsByYear[confirmationYear].push({
+                    taxonomy,
+                    dateAdded: confirmationDate
+                });
             } else {
                 parsedData[ident.taxon_id].count++;
             }
@@ -178,17 +199,6 @@ export const minifySpeciesData = (data, targetTaxons) => {
     return minifiedData;
 }
 
-/**
- * Added in 1.1.0. This examines the raw data and returns a sorted list of species observations that were most recently 
- * approved by a curator; i.e. this figures out what new species have been added to the list and returns the most recent first. 
- * 
- * [
- *   {
- *     ... 
- *   }
- * ]
- */
-export const getSortedConfirmedIdentifications = () => null;
 
 export const unminifySpeciesData = (data, visibleTaxons) => {
     const map = invertObj(data.taxonMap);
@@ -219,8 +229,6 @@ export const unminifySpeciesData = (data, visibleTaxons) => {
             count: rowData[rowData.length-1]
         };
     });
-
-    console.log(fullData);
 
     return fullData;
 }
