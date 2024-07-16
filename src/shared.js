@@ -86,13 +86,10 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
                 }
             }
 
-            console.log('Ben 1', params.taxons);
-
             // the data returned by iNat is enormous. I found on my server, loading everything into memory caused
             // memory issues (hard-disk space, I think). So instead, here we extract the necessary information right away
             extractSpecies(resp, cleanUsernames, params.taxons);
 
-            console.log('Ben 2', newAdditionsByYear);
             lastId = resp.results[resp.results.length - 1].id;
 
             const numResultsFormatted = formatNum(numResults);
@@ -144,16 +141,19 @@ export const extractSpecies = (rawData, curators, taxonsToReturn) => {
                 const confirmationDate = new Date(ident.created_at);
                 const confirmationYear = confirmationDate.getFullYear();
 
-                // TODO once it's all working, add a param to control where users want to start looking at additions + nothing before
-
                 if (!newAdditionsByYear[confirmationYear]) {
                     newAdditionsByYear[confirmationYear] = [];
                 }
 
-                // TODO add original observer + image URL
+                // note: the results are sorted by ID (incrementing - oldest to newest)
                 newAdditionsByYear[confirmationYear].push({
                     taxonomy,
-                    dateAdded: confirmationDate
+                    observerUsername: obs.user.login,
+                    observerName: obs.user.name,
+                    obsDate: obs.updated_at,
+                    obsId: ident.taxon_id,
+                    url: obs.uri,
+                    confirmationDate,
                 });
             } else {
                 parsedData[ident.taxon_id].count++;
