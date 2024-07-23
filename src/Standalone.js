@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Loader from './Loader';
 import * as C from './constants';
-import DataTable from './DataTable.component';
+import DataTable from './components/DataTable.component';
 import { unminifySpeciesData } from './shared';
 import { debounce } from 'debounce';
 

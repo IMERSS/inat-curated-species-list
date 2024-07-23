@@ -15,7 +15,7 @@ const perPage = 200;
 
 let packetLoggerRowId;
 let lastId = null;
-let parsedData = {};
+let curatedData = {};
 let newAdditionsByYear = {};
 let numResults = 0;
 
@@ -56,7 +56,7 @@ const getNextKey = () => {
 };
 
 export const resetData = () => {
-    parsedData = {};
+    curatedData = {};
     newAdditionsByYear = {};
     numResults = 0;
 }
@@ -77,7 +77,7 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
         .then((resp) => {
             if (resp.total_results <= 0) {
                 logger.current.addLogRow(`No observations found.`, 'info');
-                onSuccess(parsedData, params);
+                onSuccess(curatedData, newAdditionsByYear, params);
                 return;
             } else {
                 // only the first request has the correct number of total results
@@ -104,7 +104,7 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
                 
             } else {
                 logger.current.replaceLogRow(packetLoggerRowId,`Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`, 'info');
-                onSuccess(parsedData, params);
+                onSuccess(curatedData, newAdditionsByYear, params);
             }
         }).catch(onError);
 };
@@ -112,6 +112,11 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
 
 export const extractSpecies = (rawData, curators, taxonsToReturn) => {
     rawData.results.forEach((obs) => {
+        // obs                - the full observation data
+        // obs.user           - user info about who made the observation
+        // obs.taxon          - the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made on the osb
+        // obs.identification - an array of identifications made on this observation
+
         obs.identifications.forEach((ident) => {
             if (curators.indexOf(ident.user.login) === -1) {
                 return;
@@ -122,12 +127,16 @@ export const extractSpecies = (rawData, curators, taxonsToReturn) => {
                 return;
             }
 
+            // ignore anything that isn't a species. Currently we're ignoring subspecies data and anything in a more general
+            // rank isn't of use
             if (ident.taxon.rank !== "species") {
                 return;
             }
 
-            if (!parsedData[ident.taxon_id]) {
-                // add ancestor taxons
+            // the data from the server is sorted by ID - oldest to newest - so here we've found the first observation of a species 
+            // that meets our curated reviewer requirements. This tracks when the species was *first confirmed* by a reviewer, which
+            // might be vastly different from when the sighting was actually made
+            if (!curatedData[ident.taxon_id]) {
                 const taxonomy = ident.taxon.ancestors.reduce((acc, curr) => {
                     if (taxonsToReturn.indexOf(curr.rank) !== -1) {
                         acc[curr.rank] = curr.name;
@@ -136,27 +145,29 @@ export const extractSpecies = (rawData, curators, taxonsToReturn) => {
                 }, {});
 
                 taxonomy.species = ident.taxon.name;
-                parsedData[ident.taxon_id] = { data: taxonomy, count: 1 };
+                curatedData[ident.taxon_id] = { data: taxonomy, count: 1 };
 
-                const confirmationDate = new Date(ident.created_at);
-                const confirmationYear = confirmationDate.getFullYear();
+                const curatorConfirmationDate = new Date(ident.created_at);
+                const curatorConfirmationYear = curatorConfirmationDate.getFullYear();
 
-                if (!newAdditionsByYear[confirmationYear]) {
-                    newAdditionsByYear[confirmationYear] = [];
+                if (!newAdditionsByYear[curatorConfirmationYear]) {
+                    newAdditionsByYear[curatorConfirmationYear] = [];
                 }
 
-                // note: the results are sorted by ID (incrementing - oldest to newest)
-                newAdditionsByYear[confirmationYear].push({
+                newAdditionsByYear[curatorConfirmationYear].push({
                     taxonomy,
                     observerUsername: obs.user.login,
                     observerName: obs.user.name,
                     obsDate: obs.updated_at,
                     obsId: ident.taxon_id,
+                    obsPhoto: obs.photos && obs.photos.length > 0 ? obs.photos[0].url : null,
                     url: obs.uri,
-                    confirmationDate,
+                    curatorConfirmationDate,
                 });
+
+            // note: count just tracks how many observations have been reviewed and confirmed by our curators, not by anyone
             } else {
-                parsedData[ident.taxon_id].count++;
+                curatedData[ident.taxon_id].count++;
             }
         });
     });

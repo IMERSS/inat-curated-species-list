@@ -19,12 +19,14 @@ const cleanUsernames = C.USERS.split(',').map((username) => username.trim());
 
 downloadDataByPacket({
     ident_user_id: C.USERS,
-    place_id: C.PLACE_ID,
+    place_id: C.PLACE_ID, 
     taxon_id: C.TAXON_ID,
     verifiable: 'any',
     taxons: C.VISIBLE_TAXONS
-}, cleanUsernames, 1, logger, (speciesData, params) => {
-    const minifiedSpeciesData = minifySpeciesData(speciesData, params.taxons);
+}, cleanUsernames, 1, logger, (curatedSpeciesData, newAdditionsByYear, params) => {
+    const minifiedSpeciesData = minifySpeciesData(curatedSpeciesData, params.taxons);
+
+    // TODO generate minified version of the newAdditionsByYear data here
 
     const filename = `${C.GENERATED_FILENAME_FOLDER}/${C.GENERATED_FILENAME}`;
     if (!fs.existsSync(C.GENERATED_FILENAME_FOLDER)) {

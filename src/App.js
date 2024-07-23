@@ -2,11 +2,15 @@ import { useRef, useState } from "react";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+
 import * as C from './constants';
 import { resetData, downloadDataByPacket } from './shared';
 import styles from './App.module.css';
-import Logger from './Logger.component';
-import DataTable from './DataTable.component';
+import Logger from './components/Logger.component';
+import DataTable from './components/DataTable.component';
+import NewAdditions from './components/NewAdditions.component';
 
 
 const App = () => {
@@ -15,8 +19,14 @@ const App = () => {
     const [taxonId, setTaxonId] = useState(C.TAXON_ID);
     const [loading, setLoading] = useState(false);
     const [dataLoaded, setDataLoaded] = useState(false);
-    const [data, setData] = useState(null);
+    const [curatedSpeciesData, setCuratedSpeciesData] = useState(null);
+    const [newAdditionsData, setNewAdditionsData] = useState(null);
+    const [tabIndex, setTabIndex] = useState(0);
     const loggerRef = useRef();
+
+    const onChangeTab = (_e, newValue) => {
+        setTabIndex(newValue);
+    };
 
     const onStart = () => {
         setLoading(true);
@@ -33,17 +43,18 @@ const App = () => {
             taxon_id: taxonId,
             verifiable: 'any',
             taxons: C.VISIBLE_TAXONS
-        }, cleanUsernames, 1, loggerRef,(speciesData) => {
+        }, cleanUsernames, 1, loggerRef, (curatedSpeciesData, newAdditionsData) => {
             setLoading(false);
             setDataLoaded(true);
 
             loggerRef.current.addLogRows([
                 ['Observation data all returned.', 'info'],
                 ['Parsing data.', 'info'],
-                [`Found <b>${Object.keys(speciesData).length}</b> unique species in observation results.`, 'success']
+                [`Found <b>${Object.keys(curatedSpeciesData).length}</b> unique species in observation results.`, 'success']
             ]);
 
-            setData(speciesData);
+            setCuratedSpeciesData(curatedSpeciesData);
+            setNewAdditionsData(newAdditionsData);
         }, (e) => {
             loggerRef.current.addLogRow('Error pinging the iNat API.', 'error');
             setLoading(false);
@@ -92,10 +103,20 @@ const App = () => {
                 </LoadingButton>
             </Box>
 
-            <Box sx={{ display: 'flex', visibility: loading || dataLoaded ? 'visible' : 'hidden', height: loading || dataLoaded ? 'auto' : 0 }}>
-                <Logger ref={loggerRef} />
-            </Box>
-            <DataTable data={data} usernames={usernames} placeId={placeId} />
+            <Tabs value={tabIndex} onChange={onChangeTab}>
+                <Tab label="Curated Species" />
+                <Tab label="Latest Additions" />
+            </Tabs>
+
+            {tabIndex === 0 && (
+                <>
+                    <Box sx={{ display: 'flex', visibility: loading || dataLoaded ? 'visible' : 'hidden', height: loading || dataLoaded ? 'auto' : 0 }}>
+                        <Logger ref={loggerRef} />
+                    </Box>
+                    <DataTable data={curatedSpeciesData} usernames={usernames} placeId={placeId} />
+                </>
+            )}
+            {tabIndex === 1 && <NewAdditions data={newAdditionsData} />}
         </div>
     );
 }
