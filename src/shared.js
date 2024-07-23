@@ -61,7 +61,7 @@ export const resetData = () => {
     numResults = 0;
 }
 
-export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, onSuccess, onError) => {
+export const downloadDataByPacket = (params, newAdditionsUserIgnoreList, cleanUsernames, packetNum, logger, onSuccess, onError) => {
     params.order = 'asc';
     params.order_by = 'id';
     params.per_page = perPage;
@@ -88,7 +88,7 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
 
             // the data returned by iNat is enormous. I found on my server, loading everything into memory caused
             // memory issues (hard-disk space, I think). So instead, here we extract the necessary information right away
-            extractSpecies(resp, cleanUsernames, params.taxons);
+            extractSpecies(resp, cleanUsernames, newAdditionsUserIgnoreList, params.taxons);
 
             lastId = resp.results[resp.results.length - 1].id;
 
@@ -100,7 +100,7 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
                 } else {
                     logger.current.replaceLogRow(packetLoggerRowId, `Retrieved ${formatNum(perPage*packetNum)}/${numResultsFormatted} observations.`, 'info');
                 }
-                downloadDataByPacket(params, cleanUsernames, packetNum+1, logger, onSuccess, onError);
+                downloadDataByPacket(params, newAdditionsUserIgnoreList, cleanUsernames, packetNum+1, logger, onSuccess, onError);
                 
             } else {
                 logger.current.replaceLogRow(packetLoggerRowId,`Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`, 'info');
@@ -110,7 +110,7 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
 };
 
 
-export const extractSpecies = (rawData, curators, taxonsToReturn) => {
+export const extractSpecies = (rawData, curators, newAdditionsUserIgnoreList, taxonsToReturn) => {
     rawData.results.forEach((obs) => {
         // obs                - the full observation data
         // obs.user           - user info about who made the observation
@@ -130,6 +130,11 @@ export const extractSpecies = (rawData, curators, taxonsToReturn) => {
             // ignore anything that isn't a species. Currently we're ignoring subspecies data and anything in a more general
             // rank isn't of use
             if (ident.taxon.rank !== "species") {
+                return;
+            }
+
+            // **** TODO BUG - nope! This only applies to the new additions section!
+            if (newAdditionsUserIgnoreList.indexOf(obs.user.login) !== -1) {
                 return;
             }
 

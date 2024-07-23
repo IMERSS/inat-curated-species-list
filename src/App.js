@@ -43,7 +43,7 @@ const App = () => {
             taxon_id: taxonId,
             verifiable: 'any',
             taxons: C.VISIBLE_TAXONS
-        }, cleanUsernames, 1, loggerRef, (curatedSpeciesData, newAdditionsData) => {
+        }, C.NEW_ADDITIONS_USER_IGNORE_LIST, cleanUsernames, 1, loggerRef, (curatedSpeciesData, newAdditionsData) => {
             setLoading(false);
             setDataLoaded(true);
 
@@ -59,6 +59,34 @@ const App = () => {
             loggerRef.current.addLogRow('Error pinging the iNat API.', 'error');
             setLoading(false);
         });
+    };
+
+    const getTabs = () => {
+        if (!curatedSpeciesData) {
+            return;
+        }
+
+        const getTab = () => {
+            if (tabIndex === 0) {
+                return (
+                    <DataTable data={curatedSpeciesData} usernames={usernames} placeId={placeId} />
+                );
+            }
+
+            return (
+                <NewAdditions data={newAdditionsData} />
+            );
+        };
+
+        return (
+            <>
+                <Tabs value={tabIndex} onChange={onChangeTab}>
+                    <Tab label="Curated Species" />
+                    <Tab label="Latest Additions" />
+                </Tabs>
+                {getTab()}
+            </>
+        );
     };
 
     return (
@@ -103,20 +131,11 @@ const App = () => {
                 </LoadingButton>
             </Box>
 
-            <Tabs value={tabIndex} onChange={onChangeTab}>
-                <Tab label="Curated Species" />
-                <Tab label="Latest Additions" />
-            </Tabs>
+            <Box sx={{ display: 'flex', visibility: loading || dataLoaded ? 'visible' : 'hidden', height: loading || dataLoaded ? 'auto' : 0 }}>
+                <Logger ref={loggerRef} />
+            </Box>
 
-            {tabIndex === 0 && (
-                <>
-                    <Box sx={{ display: 'flex', visibility: loading || dataLoaded ? 'visible' : 'hidden', height: loading || dataLoaded ? 'auto' : 0 }}>
-                        <Logger ref={loggerRef} />
-                    </Box>
-                    <DataTable data={curatedSpeciesData} usernames={usernames} placeId={placeId} />
-                </>
-            )}
-            {tabIndex === 1 && <NewAdditions data={newAdditionsData} />}
+            {getTabs()}
         </div>
     );
 }
