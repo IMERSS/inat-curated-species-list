@@ -15,8 +15,9 @@ const perPage = 200;
 
 let packetLoggerRowId;
 let lastId = null;
-let curatedData = {};
+let curatedSpeciesData = {};
 let newAdditionsByYear = {};
+let newAdditions = {};
 let numResults = 0;
 
 const taxonsToMinify = {
@@ -35,6 +36,13 @@ const taxonsToMinify = {
 };
 
 const invertObj = (data) => Object.fromEntries(Object.entries(data).map(([key, value]) => [value, key]));
+
+const getTaxonomy = (ancestors, taxonsToReturn) => ancestors.reduce((acc, curr) => {
+    if (taxonsToReturn.indexOf(curr.rank) !== -1) {
+        acc[curr.rank] = curr.name;
+    }
+    return acc;
+}, {});
 
 const generatedKeys = {};
 let currKeyLength = 1;
@@ -56,8 +64,9 @@ const getNextKey = () => {
 };
 
 export const resetData = () => {
-    curatedData = {};
+    curatedSpeciesData = {};
     newAdditionsByYear = {};
+    newAdditions = {};
     numResults = 0;
 }
 
@@ -77,7 +86,7 @@ export const downloadDataByPacket = (params, newAdditionsUserIgnoreList, cleanUs
         .then((resp) => {
             if (resp.total_results <= 0) {
                 logger.current.addLogRow(`No observations found.`, 'info');
-                onSuccess(curatedData, newAdditionsByYear, params);
+                onSuccess(curatedSpeciesData, newAdditionsByYear, params);
                 return;
             } else {
                 // only the first request has the correct number of total results
@@ -104,7 +113,7 @@ export const downloadDataByPacket = (params, newAdditionsUserIgnoreList, cleanUs
                 
             } else {
                 logger.current.replaceLogRow(packetLoggerRowId,`Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`, 'info');
-                onSuccess(curatedData, newAdditionsByYear, params);
+                onSuccess(curatedSpeciesData, newAdditionsByYear, params);
             }
         }).catch(onError);
 };
@@ -116,6 +125,8 @@ export const extractSpecies = (rawData, curators, newAdditionsUserIgnoreList, ta
         // obs.user           - user info about who made the observation
         // obs.taxon          - the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made on the osb
         // obs.identification - an array of identifications made on this observation
+
+        console.log(obs);
 
         obs.identifications.forEach((ident) => {
             if (curators.indexOf(ident.user.login) === -1) {
@@ -133,24 +144,25 @@ export const extractSpecies = (rawData, curators, newAdditionsUserIgnoreList, ta
                 return;
             }
 
-            // **** TODO BUG - nope! This only applies to the new additions section!
-            if (newAdditionsUserIgnoreList.indexOf(obs.user.login) !== -1) {
-                return;
-            }
-
             // the data from the server is sorted by ID - oldest to newest - so here we've found the first observation of a species 
             // that meets our curated reviewer requirements. This tracks when the species was *first confirmed* by a reviewer, which
             // might be vastly different from when the sighting was actually made
-            if (!curatedData[ident.taxon_id]) {
-                const taxonomy = ident.taxon.ancestors.reduce((acc, curr) => {
-                    if (taxonsToReturn.indexOf(curr.rank) !== -1) {
-                        acc[curr.rank] = curr.name;
-                    }
-                    return acc;
-                }, {});
-
+            if (!curatedSpeciesData[ident.taxon_id]) {
+                const taxonomy = getTaxonomy(ident.taxon.ancestors, taxonsToReturn);
                 taxonomy.species = ident.taxon.name;
-                curatedData[ident.taxon_id] = { data: taxonomy, count: 1 };
+                curatedSpeciesData[ident.taxon_id] = { data: taxonomy, count: 1 };
+
+            // note: count just tracks how many observations have been reviewed and confirmed by our curators, not by anyone
+            } else {
+                curatedSpeciesData[ident.taxon_id].count++;
+            }
+
+            if (!newAdditions[obs.taxon.id]) {
+                // ignore any new observations made by any usernames in the ignore list. See NEW_ADDITIONS_USER_IGNORE_LIST in
+                // constants.js
+                if (newAdditionsUserIgnoreList.indexOf(obs.user.login) !== -1) {
+                    return;
+                }
 
                 const curatorConfirmationDate = new Date(ident.created_at);
                 const curatorConfirmationYear = curatorConfirmationDate.getFullYear();
@@ -159,20 +171,21 @@ export const extractSpecies = (rawData, curators, newAdditionsUserIgnoreList, ta
                     newAdditionsByYear[curatorConfirmationYear] = [];
                 }
 
+                const taxonomy = getTaxonomy(ident.taxon.ancestors, taxonsToReturn);
+
                 newAdditionsByYear[curatorConfirmationYear].push({
                     taxonomy,
+                    species: ident.taxon.name,
                     observerUsername: obs.user.login,
                     observerName: obs.user.name,
-                    obsDate: obs.updated_at,
+                    obsDate: obs.updated_at, // TODO looks wrong
                     obsId: ident.taxon_id,
                     obsPhoto: obs.photos && obs.photos.length > 0 ? obs.photos[0].url : null,
                     url: obs.uri,
                     curatorConfirmationDate,
                 });
 
-            // note: count just tracks how many observations have been reviewed and confirmed by our curators, not by anyone
-            } else {
-                curatedData[ident.taxon_id].count++;
+                newAdditions[ident.taxon_id] = true;
             }
         });
     });

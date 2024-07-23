@@ -2,7 +2,7 @@
  * These are the default values that appear in the interface after running `npm run start`. They're also used by the
  * script to generate the static results, when running `node generate.js`.
  */
-export const USERS = 'gpohl,oneofthedavesiknow,gpohl,crispinguppy';
+export const USERS = 'gpohl,crispinguppy,oneofthedavesiknow';
 export const TAXON_ID = '47157';
 export const PLACE_ID = '7085';
 export const GENERATED_FILENAME_FOLDER = './dist';

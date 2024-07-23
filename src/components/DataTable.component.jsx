@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import styles from './DataTable.module.css';
 import Box from '@mui/material/Box';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import { firstBy } from 'thenby';
 import { capitalizeFirstLetter } from '../shared';
+import styles from './DataTable.module.css';
 
 const baseSiteUrl = 'https://www.inaturalist.org/observations';
 
