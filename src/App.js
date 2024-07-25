@@ -43,7 +43,7 @@ const App = () => {
             taxon_id: taxonId,
             verifiable: 'any',
             taxons: C.VISIBLE_TAXONS
-        }, C.NEW_ADDITIONS_USER_IGNORE_LIST, cleanUsernames, 1, loggerRef, (curatedSpeciesData, newAdditionsData) => {
+        }, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY, cleanUsernames, 1, loggerRef, (curatedSpeciesData, newAdditionsData) => {
             setLoading(false);
             setDataLoaded(true);
 
@@ -89,6 +89,9 @@ const App = () => {
         );
     };
 
+    const showLogs = loading || dataLoaded ? 'visible' : 'hidden';
+    const logsHeight = loading || dataLoaded ? 'auto' : 0;
+
     return (
         <div className={styles.app}>
             <h1>iNat: Curated Species List</h1>
@@ -131,7 +134,7 @@ const App = () => {
                 </LoadingButton>
             </Box>
 
-            <Box sx={{ display: 'flex', visibility: loading || dataLoaded ? 'visible' : 'hidden', height: loading || dataLoaded ? 'auto' : 0 }}>
+            <Box sx={{ display: 'flex', visibility: showLogs, height: logsHeight }}>
                 <Logger ref={loggerRef} />
             </Box>
 

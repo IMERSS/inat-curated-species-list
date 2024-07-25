@@ -2,7 +2,7 @@
  * These are the default values that appear in the interface after running `npm run start`. They're also used by the
  * script to generate the static results, when running `node generate.js`.
  */
-export const USERS = 'gpohl,crispinguppy,oneofthedavesiknow';
+export const USERS = 'gpohl,crispinguppy,oneofthedavesiknow'; // TODO use array for consistency
 export const TAXON_ID = '47157';
 export const PLACE_ID = '7085';
 export const GENERATED_FILENAME_FOLDER = './dist';
@@ -15,5 +15,7 @@ export const ALL_TAXONS = [
     'subtribe', 'genus', 'subgenus', 'species'
 ];
 
-// used for the new additions feature, this filters out any observations made by these users
-export const NEW_ADDITIONS_USER_IGNORE_LIST = ['cfs-nfrc'];
+// used for the new additions feature. If your data input process involved defining initial stub iNat observations for species known to be in the 
+// region, but haven't been actually observed yet, this option filters those results out. So any species added by this inat username will be omitted 
+// from the "New Additions" section, and only more recent confirmations by the curators will be listed
+export const NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY = ['cfs-nfrc'];

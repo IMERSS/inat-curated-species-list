@@ -70,7 +70,7 @@ export const resetData = () => {
     numResults = 0;
 }
 
-export const downloadDataByPacket = (params, newAdditionsUserIgnoreList, cleanUsernames, packetNum, logger, onSuccess, onError) => {
+export const downloadDataByPacket = (params, newAdditionsIgnoreSpeciesObservedBy, cleanUsernames, packetNum, logger, onSuccess, onError) => {
     params.order = 'asc';
     params.order_by = 'id';
     params.per_page = perPage;
@@ -97,7 +97,7 @@ export const downloadDataByPacket = (params, newAdditionsUserIgnoreList, cleanUs
 
             // the data returned by iNat is enormous. I found on my server, loading everything into memory caused
             // memory issues (hard-disk space, I think). So instead, here we extract the necessary information right away
-            extractSpecies(resp, cleanUsernames, newAdditionsUserIgnoreList, params.taxons);
+            extractSpecies(resp, cleanUsernames, newAdditionsIgnoreSpeciesObservedBy, params.taxons);
 
             lastId = resp.results[resp.results.length - 1].id;
 
@@ -109,7 +109,7 @@ export const downloadDataByPacket = (params, newAdditionsUserIgnoreList, cleanUs
                 } else {
                     logger.current.replaceLogRow(packetLoggerRowId, `Retrieved ${formatNum(perPage*packetNum)}/${numResultsFormatted} observations.`, 'info');
                 }
-                downloadDataByPacket(params, newAdditionsUserIgnoreList, cleanUsernames, packetNum+1, logger, onSuccess, onError);
+                downloadDataByPacket(params, newAdditionsIgnoreSpeciesObservedBy, cleanUsernames, packetNum+1, logger, onSuccess, onError);
                 
             } else {
                 logger.current.replaceLogRow(packetLoggerRowId,`Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`, 'info');
@@ -119,14 +119,14 @@ export const downloadDataByPacket = (params, newAdditionsUserIgnoreList, cleanUs
 };
 
 
-export const extractSpecies = (rawData, curators, newAdditionsUserIgnoreList, taxonsToReturn) => {
+export const extractSpecies = (rawData, curators, newAdditionsIgnoreSpeciesObservedBy, taxonsToReturn) => {
     rawData.results.forEach((obs) => {
         // obs                - the full observation data
         // obs.user           - user info about who made the observation
         // obs.taxon          - the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made on the osb
         // obs.identification - an array of identifications made on this observation
 
-        console.log(obs);
+        // console.log('Ben ---->', obs);
 
         obs.identifications.forEach((ident) => {
             if (curators.indexOf(ident.user.login) === -1) {
@@ -144,6 +144,8 @@ export const extractSpecies = (rawData, curators, newAdditionsUserIgnoreList, ta
                 return;
             }
 
+            // console.log(ident);
+
             // the data from the server is sorted by ID - oldest to newest - so here we've found the first observation of a species 
             // that meets our curated reviewer requirements. This tracks when the species was *first confirmed* by a reviewer, which
             // might be vastly different from when the sighting was actually made
@@ -157,14 +159,16 @@ export const extractSpecies = (rawData, curators, newAdditionsUserIgnoreList, ta
                 curatedSpeciesData[ident.taxon_id].count++;
             }
 
-            if (!newAdditions[obs.taxon.id]) {
-                // ignore any new observations made by any usernames in the ignore list. See NEW_ADDITIONS_USER_IGNORE_LIST in
+            if (!newAdditions[ident.taxon.id]) {
+                
+                // ignore any new observations made by any usernames in the ignore list. See NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY in
                 // constants.js
-                if (newAdditionsUserIgnoreList.indexOf(obs.user.login) !== -1) {
+                if (newAdditionsIgnoreSpeciesObservedBy.indexOf(obs.user.login) !== -1) {
+                    newAdditions[ident.taxon.id] = true;
                     return;
                 }
 
-                const curatorConfirmationDate = new Date(ident.created_at);
+                const curatorConfirmationDate = new Date(ident.created_at); // TODO wrong
                 const curatorConfirmationYear = curatorConfirmationDate.getFullYear();
 
                 if (!newAdditionsByYear[curatorConfirmationYear]) {
@@ -178,8 +182,8 @@ export const extractSpecies = (rawData, curators, newAdditionsUserIgnoreList, ta
                     species: ident.taxon.name,
                     observerUsername: obs.user.login,
                     observerName: obs.user.name,
-                    obsDate: obs.updated_at, // TODO looks wrong
-                    obsId: ident.taxon_id,
+                    obsDate: obs.observed_on_string,
+                    obsId: ident.taxon_id, // TODO also looks wrong
                     obsPhoto: obs.photos && obs.photos.length > 0 ? obs.photos[0].url : null,
                     url: obs.uri,
                     curatorConfirmationDate,

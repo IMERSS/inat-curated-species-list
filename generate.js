@@ -23,7 +23,7 @@ downloadDataByPacket({
     taxon_id: C.TAXON_ID,
     verifiable: 'any',
     taxons: C.VISIBLE_TAXONS
-}, cleanUsernames, 1, logger, (curatedSpeciesData, newAdditionsByYear, params) => {
+}, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY, cleanUsernames, 1, logger, (curatedSpeciesData, newAdditionsByYear, params) => {
     const minifiedSpeciesData = minifySpeciesData(curatedSpeciesData, params.taxons);
 
     // TODO generate minified version of the newAdditionsByYear data here

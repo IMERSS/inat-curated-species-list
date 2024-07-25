@@ -45,7 +45,9 @@ const NewAdditions = ({ data }) => {
                             <td>{obs.obsDate.toString()}</td>
                             <td>{obs.curatorConfirmationDate.toString()}</td>
                             <td>
-                                <VisibilityIcon />
+                                <a href={obs.url} target="_blank" rel="noreferrer">
+                                    <VisibilityIcon />
+                                </a>
                             </td>
                         </tr>
                     ))}
