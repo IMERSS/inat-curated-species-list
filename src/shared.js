@@ -70,7 +70,7 @@ export const resetData = () => {
     numResults = 0;
 }
 
-export const downloadDataByPacket = (params, newAdditionsIgnoreSpeciesObservedBy, cleanUsernames, packetNum, logger, onSuccess, onError) => {
+export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, onSuccess, onError) => {
     params.order = 'asc';
     params.order_by = 'id';
     params.per_page = perPage;
@@ -97,7 +97,7 @@ export const downloadDataByPacket = (params, newAdditionsIgnoreSpeciesObservedBy
 
             // the data returned by iNat is enormous. I found on my server, loading everything into memory caused
             // memory issues (hard-disk space, I think). So instead, here we extract the necessary information right away
-            extractSpecies(resp, cleanUsernames, newAdditionsIgnoreSpeciesObservedBy, params.taxons);
+            extractSpecies(resp, cleanUsernames, params.taxons);
 
             lastId = resp.results[resp.results.length - 1].id;
 
@@ -109,7 +109,7 @@ export const downloadDataByPacket = (params, newAdditionsIgnoreSpeciesObservedBy
                 } else {
                     logger.current.replaceLogRow(packetLoggerRowId, `Retrieved ${formatNum(perPage*packetNum)}/${numResultsFormatted} observations.`, 'info');
                 }
-                downloadDataByPacket(params, newAdditionsIgnoreSpeciesObservedBy, cleanUsernames, packetNum+1, logger, onSuccess, onError);
+                downloadDataByPacket(params, cleanUsernames, packetNum+1, logger, onSuccess, onError);
                 
             } else {
                 logger.current.replaceLogRow(packetLoggerRowId,`Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`, 'info');
@@ -119,7 +119,7 @@ export const downloadDataByPacket = (params, newAdditionsIgnoreSpeciesObservedBy
 };
 
 
-export const extractSpecies = (rawData, curators, newAdditionsIgnoreSpeciesObservedBy, taxonsToReturn) => {
+export const extractSpecies = (rawData, curators, taxonsToReturn) => {
     rawData.results.forEach((obs) => {
         // obs                - the full observation data
         // obs.user           - user info about who made the observation
@@ -144,11 +144,9 @@ export const extractSpecies = (rawData, curators, newAdditionsIgnoreSpeciesObser
                 return;
             }
 
-            // console.log(ident);
-
-            // the data from the server is sorted by ID - oldest to newest - so here we've found the first observation of a species 
-            // that meets our curated reviewer requirements. This tracks when the species was *first confirmed* by a reviewer, which
-            // might be vastly different from when the sighting was actually made
+            // the data from the server is sorted by ID - oldest to newest - so here we've found the first *observation* of a species 
+            // that meets our curated reviewer requirements. This tracks when the species was *first confirmed* by a curated reviewer, 
+            // which might be vastly different from when the sighting was actually made
             if (!curatedSpeciesData[ident.taxon_id]) {
                 const taxonomy = getTaxonomy(ident.taxon.ancestors, taxonsToReturn);
                 taxonomy.species = ident.taxon.name;
@@ -159,15 +157,12 @@ export const extractSpecies = (rawData, curators, newAdditionsIgnoreSpeciesObser
                 curatedSpeciesData[ident.taxon_id].count++;
             }
 
-            if (!newAdditions[ident.taxon.id]) {
-                
-                // ignore any new observations made by any usernames in the ignore list. See NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY in
-                // constants.js
-                if (newAdditionsIgnoreSpeciesObservedBy.indexOf(obs.user.login) !== -1) {
-                    newAdditions[ident.taxon.id] = true;
-                    return;
-                }
+            // TODO here! To track new additions, we need different logic. Right now it could return a 20 year old observation that was
+            // reviewed last week. That's unlikely to be a new addition. Instead:
+            //    - check this `if` check to compare the curated identification date against the last tracked curated identification date
+            //      for this species. If it's older, update it. 
 
+            if (!newAdditions[ident.taxon.id]) {
                 const curatorConfirmationDate = new Date(ident.created_at); // TODO wrong
                 const curatorConfirmationYear = curatorConfirmationDate.getFullYear();
 
@@ -232,7 +227,6 @@ export const minifySpeciesData = (data, targetTaxons) => {
     return minifiedData;
 }
 
-
 export const unminifySpeciesData = (data, visibleTaxons) => {
     const map = invertObj(data.taxonMap);
 
@@ -264,4 +258,21 @@ export const unminifySpeciesData = (data, visibleTaxons) => {
     });
 
     return fullData;
-}
+};
+
+export const minifyNewAdditionsData = (newAdditionsByYear, newAdditionsIgnoreSpeciesObservedBy) => {
+    const years = Object.keys(newAdditionsByYear);
+
+    // ignore any first observations of a species made by any usernames in the ignore list. This allows people
+    // to initially input a curated list of species in a fake account with stub observations - regardless of the reality 
+    // of what's actually been logged on iNat. But for a "new additions" section, that information isn't useful: so 
+    // we strip it out here. 
+    const trimmedAdditionsByYear = {};
+    years.forEach((year) => {
+        trimmedAdditionsByYear[year] = newAdditionsByYear[year].filter(({ observerUsername }) => newAdditionsIgnoreSpeciesObservedBy.indexOf(observerUsername) === -1);
+    });
+
+    console.log({ before: newAdditionsByYear, after: trimmedAdditionsByYear })
+
+    return trimmedAdditionsByYear;
+};

@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { downloadDataByPacket, minifySpeciesData } from './src/shared.js';
+import { downloadDataByPacket, minifySpeciesData, minifiedNewAdditionsData } from './src/shared.js';
 import * as C from './src/constants.js';
 
 const logger = {
@@ -23,10 +23,9 @@ downloadDataByPacket({
     taxon_id: C.TAXON_ID,
     verifiable: 'any',
     taxons: C.VISIBLE_TAXONS
-}, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY, cleanUsernames, 1, logger, (curatedSpeciesData, newAdditionsByYear, params) => {
+}, cleanUsernames, 1, logger, (curatedSpeciesData, newAdditionsByYear, params) => {
     const minifiedSpeciesData = minifySpeciesData(curatedSpeciesData, params.taxons);
-
-    // TODO generate minified version of the newAdditionsByYear data here
+    const minifiedNewAdditionsData = minifyNewAdditionsData(newAdditionsByYear, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY);
 
     const filename = `${C.GENERATED_FILENAME_FOLDER}/${C.GENERATED_FILENAME}`;
     if (!fs.existsSync(C.GENERATED_FILENAME_FOLDER)) {

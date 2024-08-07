@@ -6,7 +6,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 import * as C from './constants';
-import { resetData, downloadDataByPacket } from './shared';
+import { resetData, downloadDataByPacket, minifyNewAdditionsData } from './shared';
 import styles from './App.module.css';
 import Logger from './components/Logger.component';
 import DataTable from './components/DataTable.component';
@@ -43,7 +43,7 @@ const App = () => {
             taxon_id: taxonId,
             verifiable: 'any',
             taxons: C.VISIBLE_TAXONS
-        }, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY, cleanUsernames, 1, loggerRef, (curatedSpeciesData, newAdditionsData) => {
+        }, cleanUsernames, 1, loggerRef, (curatedSpeciesData, newAdditionsData) => {
             setLoading(false);
             setDataLoaded(true);
 
@@ -54,7 +54,7 @@ const App = () => {
             ]);
 
             setCuratedSpeciesData(curatedSpeciesData);
-            setNewAdditionsData(newAdditionsData);
+            setNewAdditionsData(minifyNewAdditionsData(newAdditionsData, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY));
         }, (e) => {
             loggerRef.current.addLogRow('Error pinging the iNat API.', 'error');
             setLoading(false);

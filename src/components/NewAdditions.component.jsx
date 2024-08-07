@@ -8,8 +8,6 @@ const NewAdditions = ({ data }) => {
     const [selectedYear, setSelectedYear] = useState(years.length ? years[years.length-1] : null);
     const [selectedYearData, setSelectedYearData] = useState(data[selectedYear]);
 
-    console.log(data);
-
     if (!years.length) {
         return null;
     }
