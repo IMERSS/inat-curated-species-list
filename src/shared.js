@@ -160,29 +160,34 @@ export const extractSpecies = (rawData, curators, taxonsToReturn) => {
             // TODO here! To track new additions, we need different logic. Right now it could return a 20 year old observation that was
             // reviewed last week. That's unlikely to be a new addition. Instead:
             //    - check this `if` check to compare the curated identification date against the last tracked curated identification date
-            //      for this species. If it's older, update it. 
+            //      for this species. If it's earlier, update it. 
+            const curatorConfirmationDate = new Date(ident.created_at);
+            const curatorConfirmationYear = curatorConfirmationDate.getFullYear();
 
-            if (!newAdditions[ident.taxon.id]) {
-                const curatorConfirmationDate = new Date(ident.created_at); // TODO wrong
-                const curatorConfirmationYear = curatorConfirmationDate.getFullYear();
+            // this logic is still incorrect. We neefd to remove older observations from other years
+
+            if (!newAdditions[ident.taxon.id] || newAdditionsByYear[curatorConfirmationYear][ident.taxon.id].curatorConfirmationDate > ident.created_at) {
+                if (newAdditions[ident.taxon.id] ) {
+                    console.log("earlier record found for ", ident.taxon.id, ident.created_at);
+                }
 
                 if (!newAdditionsByYear[curatorConfirmationYear]) {
-                    newAdditionsByYear[curatorConfirmationYear] = [];
+                    newAdditionsByYear[curatorConfirmationYear] = {};
                 }
 
                 const taxonomy = getTaxonomy(ident.taxon.ancestors, taxonsToReturn);
 
-                newAdditionsByYear[curatorConfirmationYear].push({
+                newAdditionsByYear[curatorConfirmationYear][ident.taxon.id] = {
                     taxonomy,
                     species: ident.taxon.name,
                     observerUsername: obs.user.login,
                     observerName: obs.user.name,
-                    obsDate: obs.observed_on_string,
+                    obsDate: ident.created_at,
                     obsId: ident.taxon_id, // TODO also looks wrong
                     obsPhoto: obs.photos && obs.photos.length > 0 ? obs.photos[0].url : null,
                     url: obs.uri,
-                    curatorConfirmationDate,
-                });
+                    curatorConfirmationDate: ident.created_at,
+                };
 
                 newAdditions[ident.taxon_id] = true;
             }
@@ -269,7 +274,14 @@ export const minifyNewAdditionsData = (newAdditionsByYear, newAdditionsIgnoreSpe
     // we strip it out here. 
     const trimmedAdditionsByYear = {};
     years.forEach((year) => {
-        trimmedAdditionsByYear[year] = newAdditionsByYear[year].filter(({ observerUsername }) => newAdditionsIgnoreSpeciesObservedBy.indexOf(observerUsername) === -1);
+        Object.keys(newAdditionsByYear[year]).forEach((taxonId) => {
+            if (!trimmedAdditionsByYear[year]) {
+                trimmedAdditionsByYear[year] = [];
+            }
+            if (newAdditionsIgnoreSpeciesObservedBy.indexOf(newAdditionsByYear[year][taxonId].observerUsername) === -1) {
+                trimmedAdditionsByYear[year].push(newAdditionsByYear[year][taxonId]);
+            }
+        });
     });
 
     console.log({ before: newAdditionsByYear, after: trimmedAdditionsByYear })

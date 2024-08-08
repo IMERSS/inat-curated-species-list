@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { downloadDataByPacket, minifySpeciesData, minifiedNewAdditionsData } from './src/shared.js';
+import { downloadDataByPacket, minifySpeciesData, minifyNewAdditionsData } from './src/shared.js';
 import * as C from './src/constants.js';
 
 const logger = {
