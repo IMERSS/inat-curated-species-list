@@ -6,7 +6,7 @@
  */
 import qs from 'query-string';
 import { nanoid } from 'nanoid'
-
+import { NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY } from './constants';
 export const formatNum = (num) => new Intl.NumberFormat('en-US').format(num);
 export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
@@ -16,7 +16,6 @@ const perPage = 200;
 let packetLoggerRowId;
 let lastId = null;
 let curatedSpeciesData = {};
-let newAdditionsByYear = {};
 let newAdditions = {};
 let numResults = 0;
 
@@ -65,7 +64,6 @@ const getNextKey = () => {
 
 export const resetData = () => {
     curatedSpeciesData = {};
-    newAdditionsByYear = {};
     newAdditions = {};
     numResults = 0;
 }
@@ -86,7 +84,7 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
         .then((resp) => {
             if (resp.total_results <= 0) {
                 logger.current.addLogRow(`No observations found.`, 'info');
-                onSuccess(curatedSpeciesData, newAdditionsByYear, params);
+                onSuccess(curatedSpeciesData, newAdditions, params);
                 return;
             } else {
                 // only the first request has the correct number of total results
@@ -113,11 +111,18 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
                 
             } else {
                 logger.current.replaceLogRow(packetLoggerRowId,`Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`, 'info');
-                onSuccess(curatedSpeciesData, newAdditionsByYear, params);
+                onSuccess(curatedSpeciesData, newAdditions, params);
             }
         }).catch(onError);
 };
 
+export const removeExistingNewAddition = (taxonId, data) => {
+    Object.keys(data).forEach((year) => {
+        if (data[year][taxonId]) {
+            delete data[year][taxonId];
+        }
+    });
+}
 
 export const extractSpecies = (rawData, curators, taxonsToReturn) => {
     rawData.results.forEach((obs) => {
@@ -157,39 +162,29 @@ export const extractSpecies = (rawData, curators, taxonsToReturn) => {
                 curatedSpeciesData[ident.taxon_id].count++;
             }
 
-            // TODO here! To track new additions, we need different logic. Right now it could return a 20 year old observation that was
-            // reviewed last week. That's unlikely to be a new addition. Instead:
-            //    - check this `if` check to compare the curated identification date against the last tracked curated identification date
-            //      for this species. If it's earlier, update it. 
-            const curatorConfirmationDate = new Date(ident.created_at);
-            const curatorConfirmationYear = curatorConfirmationDate.getFullYear();
+            // now onto the New Additions section
 
-            // this logic is still incorrect. We neefd to remove older observations from other years
+            if (NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY.indexOf(ident.user.login) !== -1) {
+                return;
+            }
 
-            if (!newAdditions[ident.taxon.id] || newAdditionsByYear[curatorConfirmationYear][ident.taxon.id].curatorConfirmationDate > ident.created_at) {
-                if (newAdditions[ident.taxon.id] ) {
-                    console.log("earlier record found for ", ident.taxon.id, ident.created_at);
-                }
+            // const curatorConfirmationDate = new Date(ident.created_at);
+            // const curatorConfirmationYear = curatorConfirmationDate.getFullYear();
 
-                if (!newAdditionsByYear[curatorConfirmationYear]) {
-                    newAdditionsByYear[curatorConfirmationYear] = {};
-                }
-
+            if (!newAdditions[ident.taxon.id] || newAdditions[ident.taxon.id].curatorConfirmationDate < ident.created_at) {
                 const taxonomy = getTaxonomy(ident.taxon.ancestors, taxonsToReturn);
 
-                newAdditionsByYear[curatorConfirmationYear][ident.taxon.id] = {
+                newAdditions[ident.taxon.id] = {
                     taxonomy,
                     species: ident.taxon.name,
                     observerUsername: obs.user.login,
                     observerName: obs.user.name,
                     obsDate: ident.created_at,
-                    obsId: ident.taxon_id, // TODO also looks wrong
+                    // obsId: ident.taxon_id,
                     obsPhoto: obs.photos && obs.photos.length > 0 ? obs.photos[0].url : null,
                     url: obs.uri,
                     curatorConfirmationDate: ident.created_at,
                 };
-
-                newAdditions[ident.taxon_id] = true;
             }
         });
     });
@@ -265,26 +260,26 @@ export const unminifySpeciesData = (data, visibleTaxons) => {
     return fullData;
 };
 
-export const minifyNewAdditionsData = (newAdditionsByYear, newAdditionsIgnoreSpeciesObservedBy) => {
-    const years = Object.keys(newAdditionsByYear);
+export const minifyNewAdditionsData = (newAdditions, newAdditionsIgnoreSpeciesObservedBy) => {
+    // const years = Object.keys(newAdditionsByYear);
 
     // ignore any first observations of a species made by any usernames in the ignore list. This allows people
     // to initially input a curated list of species in a fake account with stub observations - regardless of the reality 
     // of what's actually been logged on iNat. But for a "new additions" section, that information isn't useful: so 
     // we strip it out here. 
-    const trimmedAdditionsByYear = {};
-    years.forEach((year) => {
-        Object.keys(newAdditionsByYear[year]).forEach((taxonId) => {
-            if (!trimmedAdditionsByYear[year]) {
-                trimmedAdditionsByYear[year] = [];
-            }
-            if (newAdditionsIgnoreSpeciesObservedBy.indexOf(newAdditionsByYear[year][taxonId].observerUsername) === -1) {
-                trimmedAdditionsByYear[year].push(newAdditionsByYear[year][taxonId]);
-            }
-        });
-    });
+    // const trimmedAdditionsByYear = {};
+    // years.forEach((year) => {
+    //     Object.keys(newAdditionsByYear[year]).forEach((taxonId) => {
+    //         if (!trimmedAdditionsByYear[year]) {
+    //             trimmedAdditionsByYear[year] = [];
+    //         }
+    //         if (newAdditionsIgnoreSpeciesObservedBy.indexOf(newAdditionsByYear[year][taxonId].observerUsername) === -1) {
+    //             trimmedAdditionsByYear[year].push(newAdditionsByYear[year][taxonId]);
+    //         }
+    //     });
+    // });
 
-    console.log({ before: newAdditionsByYear, after: trimmedAdditionsByYear })
+    console.log({ before: newAdditions, after: null })
 
-    return trimmedAdditionsByYear;
+    return newAdditions;
 };
