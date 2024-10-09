@@ -1,5 +1,6 @@
-import React, {useImperativeHandle, useState} from 'react';
+import React, {useImperativeHandle, useState } from 'react';
 import styles from './Logger.module.css';
+
 
 let logRows = [];
 const Logger = React.forwardRef((props, ref) => {

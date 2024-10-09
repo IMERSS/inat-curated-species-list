@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 
-export const YearDropdown = ({ years, onChange }) => {
+interface YearDropdownProps {
+    readonly years: string[]
+    readonly onChange: (year: string) => void;
+}
+
+export const YearDropdown: FC<YearDropdownProps> = ({ years, onChange }) => {
     const [sortedYears] = useState(() => years.sort().reverse());
 
     return (
