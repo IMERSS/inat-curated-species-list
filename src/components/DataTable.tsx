@@ -1,61 +1,10 @@
 import { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import { firstBy } from 'thenby';
 import { capitalizeFirstLetter } from '../shared';
 import styles from './DataTable.module.css';
 
 const baseSiteUrl = 'https://www.inaturalist.org/observations';
-
-const ColControls = ({ cols, visibleCols, onChange, downloadData, allowDownload }) => (
-  <Box className={`${styles.controls} inat-curated-species-table-controls`}>
-    <div>
-      <h4>Visible Ranks</h4>
-      {cols.map((col) => (
-        <div key={`col-${col}`} style={{ display: 'inline-block' }}>
-          <input
-            type="checkbox"
-            id={`control-${col}`}
-            checked={visibleCols.indexOf(col) !== -1}
-            onChange={(e) => {
-              if (e.target.checked) {
-                onChange([...visibleCols, col]);
-              } else {
-                onChange(visibleCols.filter((a) => a !== col));
-              }
-            }}
-          />
-          <label htmlFor={`control-${col}`}>{col}</label>
-        </div>
-      ))}
-    </div>
-    {allowDownload && (
-      <a
-        href="#"
-        title="Download data"
-        onClick={(e) => {
-          e.preventDefault();
-          getCsvContent(downloadData);
-        }}
-      >
-        <DownloadForOfflineIcon fontSize="large" />
-      </a>
-    )}
-  </Box>
-);
-
-const getCsvContent = (rows) => {
-  let csvContent = 'data:text/csv;charset=utf-8,' + rows.map((e) => e.join(',')).join('\n');
-
-  var encodedUri = encodeURI(csvContent);
-  var link = document.createElement('a');
-  link.setAttribute('href', encodedUri);
-  link.setAttribute('download', 'taxon-data.csv');
-  document.body.appendChild(link);
-
-  link.click();
-};
 
 const DataTable = ({
   data,

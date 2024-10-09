@@ -8,9 +8,9 @@ import Tab from '@mui/material/Tab';
 import * as C from './constants';
 import { resetData, downloadDataByPacket, minifyNewAdditionsData } from './shared';
 import styles from './App.module.css';
-import Logger from './components/Logger.component';
-import DataTable from './components/DataTable.component';
-import NewAdditions from './components/NewAdditions.component';
+import Logger from './components/Logger';
+import DataTable from './components/DataTable';
+import NewAdditions from './components/NewAdditions';
 
 const App = () => {
   const [usernames, setUsernames] = useState(C.USERS);

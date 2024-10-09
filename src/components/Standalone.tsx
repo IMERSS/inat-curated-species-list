@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import Loader from './Loader';
-import * as C from './constants';
-import DataTable from './components/DataTable.component';
-import { unminifySpeciesData } from './shared';
+import * as C from '../constants';
+import DataTable from './DataTable';
+import { unminifySpeciesData } from '../shared';
 import { debounce } from 'debounce';
 
 const Standalone = () => {

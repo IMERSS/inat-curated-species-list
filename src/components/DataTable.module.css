@@ -1,37 +1,13 @@
-.controls {
-    list-style-type: none;
-    margin: 20px 0 0;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    padding: 10px;
-    line-height: 30px;
-    display: flex;
-}
-
-.controls h4 {
-    flex: 0 0 auto;
-    margin: 0 20px 0 0;
-}
-
-.controls > div > div {
-    margin-right: 15px;
-    color: #666666;
-}
-
-.controls label {
-    text-transform: capitalize;
-}
-
 .table {
-    width: 100%;
-    margin-top: 20px;
-    flex: 1;
-    line-height: 25px;
-    font-size: 12px;
+  width: 100%;
+  margin-top: 20px;
+  flex: 1;
+  line-height: 25px;
+  font-size: 12px;
 }
 
 .table th {
-    text-transform: capitalize;
-    text-align: left;
-    font-size: 12px;
+  text-transform: capitalize;
+  text-align: left;
+  font-size: 12px;
 }

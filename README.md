@@ -92,14 +92,7 @@ Here's how you use it, and what each prop means:
   data={data}
   usernames={C.USERS}
   placeId={C.PLACE_ID}
-  defaultVisibleCols={[
-    'superfamily',
-    'family',
-    'subfamily',
-    'tribe',
-    'genus',
-    'species',
-  ]}
+  defaultVisibleCols={['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species']}
   hideControls={true}
   showCount={false}
   allowDownload={false}
