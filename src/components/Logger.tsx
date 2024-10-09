@@ -5,22 +5,29 @@ type LogType = 'info' | 'error' | 'success';
 type LogRow = [string, string];
 let logRows: LogRow[] = [];
 
-export const Logger = React.forwardRef((_props, ref) => {
+export type LoggerHandle = {
+  addLogRow: (str: string, logType: LogType) => number;
+  addLogRows: (arr: LogRow[]) => void;
+  replaceLogRow: (rowId: number, str: string, logType: LogType) => void;
+  clear: () => void;
+};
+
+export const Logger = React.forwardRef<LoggerHandle, unknown>((_props, ref) => {
   const [count, setCount] = useState(0);
 
   useImperativeHandle(
     ref,
     () => ({
-      addLogRow: (str: string, logType: LogType) => {
+      addLogRow: (str, logType) => {
         logRows = [...logRows, [str, logType]];
         setCount(count + 1);
         return logRows.length - 1;
       },
-      addLogRows: (arr: LogRow[]) => {
+      addLogRows: (arr) => {
         logRows = [...logRows, ...arr];
         setCount(count + 1);
       },
-      replaceLogRow: (rowId: number, str: string, logType: LogType) => {
+      replaceLogRow: (rowId, str, logType) => {
         const newData = [...logRows];
         newData[rowId] = [str, logType];
         logRows = newData;
@@ -44,5 +51,3 @@ export const Logger = React.forwardRef((_props, ref) => {
     </div>
   );
 });
-
-export default Logger;

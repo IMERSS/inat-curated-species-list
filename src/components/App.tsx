@@ -5,25 +5,25 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
-import * as C from './constants';
-import { resetData, downloadDataByPacket, minifyNewAdditionsData } from './shared';
+import * as C from '../constants';
+import { resetData, downloadDataByPacket } from '../utils/shared'; // minifyNewAdditionsData
 import styles from './App.module.css';
-import Logger from './components/Logger';
-import DataTable from './components/DataTable';
-import NewAdditions from './components/NewAdditions';
+import { Logger, LoggerHandle } from './Logger';
+import { DataTable } from './DataTable';
+import NewAdditions from './NewAdditions';
 
 const App = () => {
-  const [usernames, setUsernames] = useState(C.USERS);
+  const [curatorUsernames, setCuratorUsernames] = useState(() => C.CURATOR_INAT_USERNAMES.join(', '));
   const [placeId, setPlaceId] = useState(C.PLACE_ID);
   const [taxonId, setTaxonId] = useState(C.TAXON_ID);
   const [loading, setLoading] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [curatedSpeciesData, setCuratedSpeciesData] = useState(null);
-  const [newAdditionsData, setNewAdditionsData] = useState(null);
+  // const [newAdditionsData, setNewAdditionsData] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
-  const loggerRef = useRef();
+  const loggerRef = useRef<LoggerHandle>(null);
 
-  const onChangeTab = (_e, newValue) => {
+  const onChangeTab = (_e: React.ChangeEvent<HTMLButtonElement>, newValue: number) => {
     setTabIndex(newValue);
   };
 
@@ -31,14 +31,14 @@ const App = () => {
     setLoading(true);
     resetData();
 
-    loggerRef.current.clear();
-    loggerRef.current.addLogRow('Pinging iNat for observation data.', 'info');
+    loggerRef.current!.clear();
+    loggerRef.current!.addLogRow('Pinging iNat for observation data.', 'info');
 
-    const cleanUsernames = usernames.split(',').map((username) => username.trim());
+    const cleanUsernames = curatorUsernames.split(',').map((username) => username.trim());
 
     downloadDataByPacket(
       {
-        ident_user_id: usernames,
+        ident_user_id: curatorUsernames,
         place_id: placeId,
         taxon_id: taxonId,
         verifiable: 'any',
@@ -58,10 +58,10 @@ const App = () => {
         ]);
 
         setCuratedSpeciesData(curatedSpeciesData);
-        setNewAdditionsData(minifyNewAdditionsData(newAdditionsData, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY));
+        // setNewAdditionsData(minifyNewAdditionsData(newAdditionsData, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY));
       },
       (e) => {
-        loggerRef.current.addLogRow('Error pinging the iNat API.', 'error');
+        loggerRef.current!.addLogRow('Error pinging the iNat API.', 'error');
         setLoading(false);
       },
     );
@@ -77,7 +77,7 @@ const App = () => {
 
     const getTab = () => {
       if (tabIndex === 0) {
-        return <DataTable data={curatedSpeciesData} usernames={usernames} placeId={placeId} />;
+        return <DataTable data={curatedSpeciesData} curatorUsernames={curatorUsernames} placeId={placeId} />;
       }
 
       return <NewAdditions data={newAdditionsData} />;
@@ -111,9 +111,9 @@ const App = () => {
           label="iNat usernames (comma-delimited)"
           variant="outlined"
           className={styles.usernames}
-          value={usernames}
+          value={curatorUsernames}
           disabled={loading}
-          onChange={(e) => setUsernames(e.target.value)}
+          onChange={(e) => setCuratorUsernames(e.target.value)}
         />
         <TextField
           label="Place ID"
@@ -131,7 +131,7 @@ const App = () => {
         />
         <LoadingButton
           variant="contained"
-          disabled={!usernames || !placeId || !taxonId}
+          disabled={!curatorUsernames || !placeId || !taxonId}
           onClick={onStart}
           loading={loading}
         >

@@ -8,7 +8,7 @@ import qs from 'query-string';
 import path from 'path';
 import { nanoid } from 'nanoid';
 import fs from 'fs';
-import { ENABLE_DATA_BACKUP, LOAD_DATA_FROM_LOCAL_FILES } from './constants.js';
+import { ENABLE_DATA_BACKUP, LOAD_DATA_FROM_LOCAL_FILES } from '../constants.js';
 
 export const formatNum = (num: number) => new Intl.NumberFormat('en-US').format(num);
 export const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);

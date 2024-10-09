@@ -1,14 +1,24 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { firstBy } from 'thenby';
-import { capitalizeFirstLetter } from '../shared';
+import { capitalizeFirstLetter } from '../utils/shared';
 import styles from './DataTable.module.css';
+import { ColumnControls } from './ColumnControls';
+import { INAT_BASE_URL } from '../constants';
 
-const baseSiteUrl = 'https://www.inaturalist.org/observations';
+interface DataTableProps {
+  readonly data: []; // TODO
+  readonly curatorUsernames: string;
+  readonly placeId: number;
+  readonly allowedCols: string[];
+  readonly showCount: boolean;
+  readonly allowDownload: boolean;
+  readonly hideControls: boolean;
+}
 
-const DataTable = ({
+export const DataTable: FC<DataTableProps> = ({
   data,
-  usernames,
+  curatorUsernames,
   placeId,
   allowedCols = [
     'kingdom',
@@ -32,7 +42,7 @@ const DataTable = ({
   hideControls = false,
 }) => {
   const [sortedData, setSortedData] = useState([]);
-  const [downloadData, setDownloadData] = useState([]);
+  const [downloadData, setDownloadData] = useState<string[][]>([]);
   const [visibleCols, setVisibleCols] = useState(defaultVisibleCols);
 
   useEffect(() => {
@@ -44,6 +54,7 @@ const DataTable = ({
       ...data[taxonId],
       taxonId,
     }));
+
     let sorted = null;
     const csvData = [];
     visibleCols.forEach((visibleCol) => {
@@ -94,7 +105,7 @@ const DataTable = ({
   return (
     <>
       {!hideControls && (
-        <ColControls
+        <ColumnControls
           cols={orderedCols}
           visibleCols={visibleCols}
           onChange={onChange}
@@ -102,6 +113,7 @@ const DataTable = ({
           allowDownload={allowDownload}
         />
       )}
+
       <table className={`${styles.table} inat-curated-species-table`} cellSpacing={0} cellPadding={2}>
         <thead>
           <tr key="header">
@@ -125,7 +137,7 @@ const DataTable = ({
               {showCount && <td>({row.count})</td>}
               <td style={{ display: 'flex' }}>
                 <a
-                  href={`${baseSiteUrl}?ident_user_id=${usernames}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`}
+                  href={`${INAT_BASE_URL}?ident_user_id=${curatorUsernames}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -139,5 +151,3 @@ const DataTable = ({
     </>
   );
 };
-
-export default DataTable;

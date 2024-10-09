@@ -1,13 +1,13 @@
 .logPanel {
-    flex: 0 0 auto;
-    line-height: 25px;
+  flex: 0 0 auto;
+  line-height: 25px;
 }
 .logPanel .info {
-    color: #999999;
+  color: #999999;
 }
 .logPanel .error {
-    color: #ff0000;
+  color: #ff0000;
 }
 .logPanel .success {
-    color: green;
+  color: green;
 }

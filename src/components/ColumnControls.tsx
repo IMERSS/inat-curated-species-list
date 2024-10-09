@@ -4,7 +4,11 @@ import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import styles from './ColumnControls.module.css';
 
 interface ColumnControlsProps {
-  cols: [];
+  readonly cols: string[];
+  readonly visibleCols: string[];
+  readonly onChange: (cols: string[]) => void;
+  readonly downloadData: string[][];
+  readonly allowDownload: boolean;
 }
 
 export const ColumnControls: FC<ColumnControlsProps> = ({
@@ -36,6 +40,7 @@ export const ColumnControls: FC<ColumnControlsProps> = ({
         </div>
       ))}
     </div>
+
     {allowDownload && (
       <a
         href="#"
@@ -51,7 +56,7 @@ export const ColumnControls: FC<ColumnControlsProps> = ({
   </Box>
 );
 
-const getCsvContent = (rows) => {
+const getCsvContent = (rows: string[][]) => {
   const csvContent = 'data:text/csv;charset=utf-8,' + rows.map((e) => e.join(',')).join('\n');
 
   const encodedUri = encodeURI(csvContent);
