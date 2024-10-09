@@ -59,6 +59,10 @@ const App = () => {
             loggerRef.current.addLogRow('Error pinging the iNat API.', 'error');
             setLoading(false);
         });
+
+        // const d = require('./test-data.json');
+        // setNewAdditionsData(minifyNewAdditionsData(d));
+
     };
 
     const getTabs = () => {

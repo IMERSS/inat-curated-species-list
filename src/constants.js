@@ -18,4 +18,13 @@ export const ALL_TAXONS = [
 // used for the new additions feature. If your data input process involved defining initial stub iNat observations for species known to be in the 
 // region, but haven't been actually observed yet, this option filters those results out. So any species added by this inat username will be omitted 
 // from the "New Additions" section, and only more recent confirmations by the curators will be listed
-export const NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY = ['cfs-nfrc'];
+// export const NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY = ['cfs-nfrc'];
+
+
+// DEV / DEBUGGING SETTINGS
+
+// when this is enabled, it generates a copy of the raw responses from iNat into the dist/ folder, one for each package. 
+// This spares the iNat servers being unnecessarily pinged. After the files are generated, disable this again and set
+// LOAD_DATA_FROM_LOCAL_FILES to true to load the data locally
+export const ENABLE_DATA_BACKUP = false; 
+export const LOAD_DATA_FROM_LOCAL_FILES = true;

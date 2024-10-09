@@ -5,8 +5,15 @@
  * improvement would be to reduce all the unnecessary taxon info needed.
  */
 import qs from 'query-string';
-import { nanoid } from 'nanoid'
-import { NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY } from './constants';
+import path from 'path';
+import { nanoid } from 'nanoid';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { ENABLE_DATA_BACKUP, LOAD_DATA_FROM_LOCAL_FILES } from './constants.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export const formatNum = (num) => new Intl.NumberFormat('en-US').format(num);
 export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
@@ -69,19 +76,14 @@ export const resetData = () => {
 }
 
 export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, onSuccess, onError) => {
-    params.order = 'asc';
-    params.order_by = 'id';
-    params.per_page = perPage;
-
-    if (numResults) {
-        params.id_above = lastId;
-    }
-    const paramsStr = qs.stringify(params);
-    const apiUrl = `${baseApiUrl}?${paramsStr}`;
-
-    fetch(apiUrl)
-        .then((resp) => resp.json())
+    getPacket(packetNum, params)
         .then((resp) => {
+
+            // generate the files as backup so we don't have to ping iNat all the time while testing
+            if (ENABLE_DATA_BACKUP) {
+                fs.writeFileSync(path.resolve(__dirname, `../dist/packet-${packetNum}.json`), JSON.stringify(resp, null, '\t'), 'utf-8');
+            }
+
             if (resp.total_results <= 0) {
                 logger.current.addLogRow(`No observations found.`, 'info');
                 onSuccess(curatedSpeciesData, newAdditions, params);
@@ -116,6 +118,29 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
         }).catch(onError);
 };
 
+
+export const getPacket = (packetNum, params) => {
+    if (LOAD_DATA_FROM_LOCAL_FILES) {
+        return new Promise((resolve, reject) => {
+            const fileContent = fs.readFileSync(path.resolve(__dirname, `../dist/packet-${packetNum}.json`), 'utf-8');
+            resolve(JSON.parse(fileContent.toString()));    
+        });
+    }
+
+    params.order = 'asc';
+    params.order_by = 'id';
+    params.per_page = perPage;
+
+    if (numResults) {
+        params.id_above = lastId;
+    }
+    const paramsStr = qs.stringify(params);
+    const apiUrl = `${baseApiUrl}?${paramsStr}`;
+
+    return fetch(apiUrl).then((resp) => resp.json())
+};
+
+
 export const removeExistingNewAddition = (taxonId, data) => {
     Object.keys(data).forEach((year) => {
         if (data[year][taxonId]) {
@@ -130,9 +155,6 @@ export const extractSpecies = (rawData, curators, taxonsToReturn) => {
         // obs.user           - user info about who made the observation
         // obs.taxon          - the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made on the osb
         // obs.identification - an array of identifications made on this observation
-
-        // console.log('Ben ---->', obs);
-
         obs.identifications.forEach((ident) => {
             if (curators.indexOf(ident.user.login) === -1) {
                 return;
@@ -164,12 +186,9 @@ export const extractSpecies = (rawData, curators, taxonsToReturn) => {
 
             // now onto the New Additions section
 
-            if (NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY.indexOf(ident.user.login) !== -1) {
-                return;
-            }
-
-            // const curatorConfirmationDate = new Date(ident.created_at);
-            // const curatorConfirmationYear = curatorConfirmationDate.getFullYear();
+            // track the earliest confirmation of a species by any user on the ignore list. Once all the data is gathered up, we:
+            //    (a) ignore any records earlier than the earliest confirmation 
+            //    (b) 
 
             if (!newAdditions[ident.taxon.id] || newAdditions[ident.taxon.id].curatorConfirmationDate < ident.created_at) {
                 const taxonomy = getTaxonomy(ident.taxon.ancestors, taxonsToReturn);
@@ -260,26 +279,21 @@ export const unminifySpeciesData = (data, visibleTaxons) => {
     return fullData;
 };
 
-export const minifyNewAdditionsData = (newAdditions, newAdditionsIgnoreSpeciesObservedBy) => {
-    // const years = Object.keys(newAdditionsByYear);
+export const minifyNewAdditionsData = (newAdditions) => {
+    const newAdditionsByYear = {};
+    Object.keys(newAdditions).forEach((taxonId) => {
+        const row = newAdditions[taxonId];
+        const curatorConfirmationDate = new Date(row.curatorConfirmationDate);
+        const year = curatorConfirmationDate.getFullYear();
 
-    // ignore any first observations of a species made by any usernames in the ignore list. This allows people
-    // to initially input a curated list of species in a fake account with stub observations - regardless of the reality 
-    // of what's actually been logged on iNat. But for a "new additions" section, that information isn't useful: so 
-    // we strip it out here. 
-    // const trimmedAdditionsByYear = {};
-    // years.forEach((year) => {
-    //     Object.keys(newAdditionsByYear[year]).forEach((taxonId) => {
-    //         if (!trimmedAdditionsByYear[year]) {
-    //             trimmedAdditionsByYear[year] = [];
-    //         }
-    //         if (newAdditionsIgnoreSpeciesObservedBy.indexOf(newAdditionsByYear[year][taxonId].observerUsername) === -1) {
-    //             trimmedAdditionsByYear[year].push(newAdditionsByYear[year][taxonId]);
-    //         }
-    //     });
-    // });
+        if (!newAdditionsByYear[year]) {
+            newAdditionsByYear[year] = [];
+        }
 
-    console.log({ before: newAdditions, after: null })
+        newAdditionsByYear[year].push(newAdditions[taxonId]);
+    });
+
+    console.log({ before: newAdditions, newAdditionsByYear })
 
     return newAdditions;
 };
