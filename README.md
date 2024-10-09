@@ -16,18 +16,18 @@ You can [access the script here](https://imerss.github.io/inat-curated-species-l
 
 ## Run locally
 
-The script requires npm and node. Run:
+The script requires pnpm and node. Run:
 
 - `nvm install` (or use the node version specified in `.nvmrc`)
-- `npm install`
-- `npm run start`
+- `pnpm install`
+- `pnpm run dev`
 
 ## Generate data file
 
 To use this tool programmatically, do the following:
 
 - Clone the repo
-- edit the root `./src/constants.js` file to change the usernames, place and taxon. Get these values from iNat.
+- edit the root `./src/constants.ts` file to change the usernames, place and taxon. Get these values from iNat.
 - In the root, run: `npm install`
 - Add a `"type": "module"` property-value to the package.json file.
 - Run `npm run generate`. That should generate a `./dist/data.json` file with the results of the query.
@@ -92,7 +92,14 @@ Here's how you use it, and what each prop means:
   data={data}
   usernames={C.USERS}
   placeId={C.PLACE_ID}
-  defaultVisibleCols={['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species']}
+  defaultVisibleCols={[
+    'superfamily',
+    'family',
+    'subfamily',
+    'tribe',
+    'genus',
+    'species',
+  ]}
   hideControls={true}
   showCount={false}
   allowDownload={false}

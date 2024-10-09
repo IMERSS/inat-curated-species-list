@@ -4,22 +4,18 @@
  * when you're using the standalone file that loads the generated json file containing the data. Note: a bigger
  * improvement would be to reduce all the unnecessary taxon info needed.
  */
-import qs from "query-string";
-import path from "path";
-import { nanoid } from "nanoid";
-import fs from "fs";
-import { fileURLToPath } from "url";
-import { ENABLE_DATA_BACKUP, LOAD_DATA_FROM_LOCAL_FILES } from "./constants.js";
+import qs from 'query-string';
+import path from 'path';
+import { nanoid } from 'nanoid';
+import fs from 'fs';
+import { ENABLE_DATA_BACKUP, LOAD_DATA_FROM_LOCAL_FILES } from './constants.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export const formatNum = (num: number) => new Intl.NumberFormat("en-US").format(num);
+export const formatNum = (num: number) => new Intl.NumberFormat('en-US').format(num);
 export const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-export const baseApiUrl = "https://api.inaturalist.org/v1/observations";
-const perPage = 200;
+export const baseApiUrl = 'https://api.inaturalist.org/v1/observations';
 
+const perPage = 200;
 let packetLoggerRowId;
 let lastId = null;
 let curatedSpeciesData = {};
@@ -54,7 +50,7 @@ const getTaxonomy = (ancestors, taxonsToReturn) =>
 const generatedKeys = {};
 let currKeyLength = 1;
 const getNextKey = () => {
-  let key = "";
+  let key = '';
   for (let i = 0; i < 20; i++) {
     let currKey = nanoid(currKeyLength);
     if (!generatedKeys[currKey]) {
@@ -83,13 +79,13 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
       if (ENABLE_DATA_BACKUP) {
         fs.writeFileSync(
           path.resolve(__dirname, `../dist/packet-${packetNum}.json`),
-          JSON.stringify(resp, null, "\t"),
-          "utf-8",
+          JSON.stringify(resp, null, '\t'),
+          'utf-8',
         );
       }
 
       if (resp.total_results <= 0) {
-        logger.current.addLogRow(`No observations found.`, "info");
+        logger.current.addLogRow(`No observations found.`, 'info');
         onSuccess(curatedSpeciesData, newAdditions, params);
         return;
       } else {
@@ -109,18 +105,18 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
       if (packetNum * perPage < numResults) {
         if (!packetLoggerRowId) {
           logger.current.addLogRow(
-            `<b>${new Intl.NumberFormat("en-US").format(resp.total_results)}</b> observations found.`,
-            "info",
+            `<b>${new Intl.NumberFormat('en-US').format(resp.total_results)}</b> observations found.`,
+            'info',
           );
           packetLoggerRowId = logger.current.addLogRow(
             `Retrieved ${formatNum(perPage)}/${numResultsFormatted} observations.`,
-            "info",
+            'info',
           );
         } else {
           logger.current.replaceLogRow(
             packetLoggerRowId,
             `Retrieved ${formatNum(perPage * packetNum)}/${numResultsFormatted} observations.`,
-            "info",
+            'info',
           );
         }
         downloadDataByPacket(params, cleanUsernames, packetNum + 1, logger, onSuccess, onError);
@@ -128,7 +124,7 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
         logger.current.replaceLogRow(
           packetLoggerRowId,
           `Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`,
-          "info",
+          'info',
         );
         onSuccess(curatedSpeciesData, newAdditions, params);
       }
@@ -139,13 +135,13 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
 export const getPacket = (packetNum, params) => {
   if (LOAD_DATA_FROM_LOCAL_FILES) {
     return new Promise((resolve, reject) => {
-      const fileContent = fs.readFileSync(path.resolve(__dirname, `../dist/packet-${packetNum}.json`), "utf-8");
+      const fileContent = fs.readFileSync(path.resolve(__dirname, `../dist/packet-${packetNum}.json`), 'utf-8');
       resolve(JSON.parse(fileContent.toString()));
     });
   }
 
-  params.order = "asc";
-  params.order_by = "id";
+  params.order = 'asc';
+  params.order_by = 'id';
   params.per_page = perPage;
 
   if (numResults) {
@@ -183,7 +179,7 @@ export const extractSpecies = (rawData, curators, taxonsToReturn) => {
 
       // ignore anything that isn't a species. Currently we're ignoring subspecies data and anything in a more general
       // rank isn't of use
-      if (ident.taxon.rank !== "species") {
+      if (ident.taxon.rank !== 'species') {
         return;
       }
 
@@ -254,7 +250,7 @@ export const minifySpeciesData = (data, targetTaxons) => {
       }
     });
 
-    const row = targetTaxons.map((t) => (rowData[t] ? rowData[t] : "")).join("|");
+    const row = targetTaxons.map((t) => (rowData[t] ? rowData[t] : '')).join('|');
     minifiedData.taxonData[taxonId] = `${row}|${data[taxonId].count}`;
   });
 
@@ -268,20 +264,20 @@ export const unminifySpeciesData = (data, visibleTaxons) => {
   Object.keys(data.taxonData).forEach((taxonId) => {
     // Assumes that this is now an ordered array of the taxons specified in visibleTaxons. The user should
     // have supplied the same list of taxons used in creating the minified file
-    const rowData = data.taxonData[taxonId].split("|");
+    const rowData = data.taxonData[taxonId].split('|');
     const expandedTaxonData = {};
 
     for (let i = 0; i < visibleTaxons.length; i++) {
       const visibleTaxon = visibleTaxons[i];
       // only the species row isn't minified. Everything else is found in the map
-      if (visibleTaxon === "species") {
+      if (visibleTaxon === 'species') {
         expandedTaxonData[visibleTaxon] = rowData[i];
       } else {
         // not every taxon will be filled for each row
         if (rowData[i] && !map[rowData[i]]) {
-          console.log("missing", i, rowData);
+          console.log('missing', i, rowData);
         }
-        expandedTaxonData[visibleTaxon] = rowData[i] ? map[rowData[i]] : "";
+        expandedTaxonData[visibleTaxon] = rowData[i] ? map[rowData[i]] : '';
       }
     }
 

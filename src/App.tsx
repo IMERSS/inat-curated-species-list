@@ -6,11 +6,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 import * as C from './constants';
-import {
-  resetData,
-  downloadDataByPacket,
-  minifyNewAdditionsData,
-} from './shared';
+import { resetData, downloadDataByPacket, minifyNewAdditionsData } from './shared';
 import styles from './App.module.css';
 import Logger from './components/Logger.component';
 import DataTable from './components/DataTable.component';
@@ -38,9 +34,7 @@ const App = () => {
     loggerRef.current.clear();
     loggerRef.current.addLogRow('Pinging iNat for observation data.', 'info');
 
-    const cleanUsernames = usernames
-      .split(',')
-      .map((username) => username.trim());
+    const cleanUsernames = usernames.split(',').map((username) => username.trim());
 
     downloadDataByPacket(
       {
@@ -60,24 +54,16 @@ const App = () => {
         loggerRef.current.addLogRows([
           ['Observation data all returned.', 'info'],
           ['Parsing data.', 'info'],
-          [
-            `Found <b>${Object.keys(curatedSpeciesData).length}</b> unique species in observation results.`,
-            'success',
-          ],
+          [`Found <b>${Object.keys(curatedSpeciesData).length}</b> unique species in observation results.`, 'success'],
         ]);
 
         setCuratedSpeciesData(curatedSpeciesData);
-        setNewAdditionsData(
-          minifyNewAdditionsData(
-            newAdditionsData,
-            C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY
-          )
-        );
+        setNewAdditionsData(minifyNewAdditionsData(newAdditionsData, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY));
       },
       (e) => {
         loggerRef.current.addLogRow('Error pinging the iNat API.', 'error');
         setLoading(false);
-      }
+      },
     );
 
     // const d = require('./test-data.json');
@@ -91,13 +77,7 @@ const App = () => {
 
     const getTab = () => {
       if (tabIndex === 0) {
-        return (
-          <DataTable
-            data={curatedSpeciesData}
-            usernames={usernames}
-            placeId={placeId}
-          />
-        );
+        return <DataTable data={curatedSpeciesData} usernames={usernames} placeId={placeId} />;
       }
 
       return <NewAdditions data={newAdditionsData} />;
@@ -122,10 +102,8 @@ const App = () => {
       <h1>iNat: Curated Species List</h1>
 
       <p style={{ marginBottom: 30 }}>
-        This tool queries iNat for all observations made by one or more users in
-        a specific taxon and place. It derives a curated list of all{' '}
-        <i>unique species</i> and displays it along with the option to download
-        the data.
+        This tool queries iNat for all observations made by one or more users in a specific taxon and place. It derives
+        a curated list of all <i>unique species</i> and displays it along with the option to download the data.
       </p>
 
       <Box className={styles.fieldsRow}>
