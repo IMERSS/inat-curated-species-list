@@ -51,7 +51,7 @@ const App = () => {
         setLoading(false);
         setDataLoaded(true);
 
-        loggerRef.current.addLogRows([
+        loggerRef.current!.addLogRows([
           ['Observation data all returned.', 'info'],
           ['Parsing data.', 'info'],
           [`Found <b>${Object.keys(curatedSpeciesData).length}</b> unique species in observation results.`, 'success'],
@@ -60,7 +60,7 @@ const App = () => {
         setCuratedSpeciesData(curatedSpeciesData);
         // setNewAdditionsData(minifyNewAdditionsData(newAdditionsData, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY));
       },
-      (e) => {
+      () => {
         loggerRef.current!.addLogRow('Error pinging the iNat API.', 'error');
         setLoading(false);
       },

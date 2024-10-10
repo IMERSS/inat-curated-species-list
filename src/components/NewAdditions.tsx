@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { YearDropdown } from './YearDropdown';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import styles from './NewAdditions.module.css';
 
-const NewAdditions = ({ data }) => {
+interface NewAdditionsProps {
+  readonly data: object;
+}
+
+export const NewAdditions: FC<NewAdditionsProps> = ({ data }) => {
   const years = Object.keys(data);
   const [selectedYear, setSelectedYear] = useState(years.length ? years[years.length - 1] : null);
   const [selectedYearData, setSelectedYearData] = useState(data[selectedYear]);
@@ -12,7 +16,7 @@ const NewAdditions = ({ data }) => {
     return null;
   }
 
-  const onChangeYear = (year) => {
+  const onChangeYear = (year: string) => {
     setSelectedYear(year);
     setSelectedYearData(data[year]);
   };
@@ -56,5 +60,3 @@ const NewAdditions = ({ data }) => {
     </>
   );
 };
-
-export default NewAdditions;
