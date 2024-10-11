@@ -2,9 +2,11 @@
 
 > October 2024: this script is being rewritten and re-documented! Come back soon.
 
-This is a tool to query iNaturalist for all observations in a specific taxon and place that have been confirmed by one or more specific users. This allows you to create _tailored list of species_ that have been approved by a group of experts, rather than rely on the community "research grade" standard.
+This is a tool to query [iNaturalist](https://www.inaturalist.org/) for all observations in a specific taxon and place that have been confirmed by one or more specific users. This allows you to create _tailored list of species_ that have been approved by experts, rather than rely on the community "research grade" standard.
 
-For an example, [see the BC Leps site](https://bcleps.weebly.com/curated-species.html). That's contains a list of lepidoptera (butterflies and moths) confirmed in British Columbia by three experts: Greg Pohl, Dave Holden and Crispin Guppy. The list is kept up to date by relying on those individuals continuing to review and approve observations on iNat, then re-running a script on a periodic basis to update the website.
+As an example, [see this page on BC Leps site](https://bcleps.weebly.com/curated-species.html). That shows the definitive list of known lepidoptera (butterflies and moths) species for British Columbia. It's curated by three experts: Greg Pohl, Dave Holden and Crispin Guppy. The list is kept up to date by relying on those individuals continuing to review and approve observations on iNat, then re-running a script on a periodic basis to update the website.
+
+This tool is location and taxon agnostic. You can use it to create a curated list of any group of lifeforms for any region you need.
 
 ### Screenshot
 
@@ -28,7 +30,7 @@ See the [usage](./USAGE.md) document for instructions on how to use the script o
 
 #### 1. Decide on your curators
 
-In order for this script to work, you need one or more individuals with an iNat account that will be approving observations in the taxon and region of your choice. What they confirm to be correctly ID'd will end up the curated list: no other species will.
+In order for this script to work, you need one or more individuals with an iNat account that will be approving observations in the taxon and region of your choice. Only the observations they themselves ID will end up the curated list.
 
 #### 2. Providing the baseline iNat data
 
@@ -39,12 +41,14 @@ To solve this, we created an [iNaturalist account](https://www.inaturalist.org/p
 At this point, if you go to iNat with the following URL (replace the placeholder with your values) you'll see all the observations that will be processed when constructing the curated list.
 
 ```
-https://www.inaturalist.org/observations?ident_user_id=[COMMA DELIMITED LIST OF INAT USERNAMES]&place_id=[PLACE ID]&taxon_id=[]&verifiable=any
+https://www.inaturalist.org/observations?ident_user_id=[COMMA DELIMITED LIST OF INAT USERNAMES]&place_id=[PLACE ID]&taxon_id=[TAXON ID]&verifiable=any
 
 ```
 
-For BC Leps, [this looks like this](https://www.inaturalist.org/observations?ident_user_id=oneofthedavesiknow,gpohl,crispinguppy&place_id=7085&quality_grade=research&subview=map&taxon_id=1260224).
+For BC Leps, [this looks like this](https://www.inaturalist.org/observations?ident_user_id=oneofthedavesiknow,gpohl,crispinguppy&place_id=7085&taxon_id=47157&verifiable=any).
 
 #### 3. Curate!
 
 It's all set up! As long as people on the curator list continue to review and approve observations in the region, the system will automatically pick up new species and include them in the curated checklist.
+
+Now this part is done, see the [usage](./USAGE.md) document on how to integrate the script.
