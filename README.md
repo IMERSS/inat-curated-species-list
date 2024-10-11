@@ -1,109 +1,50 @@
 # inat-curated-species-list
 
-> October 2024: being completely rewritten! Come back soon.
+> October 2024: this script is being rewritten and re-documented! Come back soon.
 
-A tool to query iNaturalist for all observations made by one or more users in a specific taxon and place, and derive a curated list of all unique species, along with the option to download it. This allows you to create tailored list of species that have been approved by a group of experts, rather than rely on the community "research grade" standard.
+This is a tool to query iNaturalist for all observations in a specific taxon and place that have been confirmed by one or more specific users. This allows you to create _tailored list of species_ that have been approved by a group of experts, rather than rely on the community "research grade" standard.
 
-The script works as either a self-contained one-off script, where people can trigger it manually to get the data (note this takes time), or as a standalone script that simply outputs the result of an earlier request. For example, [see here on the BC Leps site](https://bcleps.weebly.com/curated-species.html).
+For an example, [see the BC Leps site](https://bcleps.weebly.com/curated-species.html). That's contains a list of lepidoptera (butterflies and moths) confirmed in British Columbia by three experts: Greg Pohl, Dave Holden and Crispin Guppy. The list is kept up to date by relying on those individuals continuing to review and approve observations on iNat, then re-running a script on a periodic basis to update the website.
 
-### Demo
-
-You can [access the script here](https://imerss.github.io/inat-curated-species-list/), but if you're a dev, please download it and run it locally.
+### Screenshot
 
 <kbd>
   <img src="./resources/screenshot.png" />
 </kbd>
 
-## Run locally
+### Features
 
-The script requires pnpm and node. Run:
+- Displays a searchable table of species
+- Control over what taxon ranks appear. Default: superfamily, family, subfamily, tribe, species (genus species) plus a link back to iNaturalist's site to see the actual observations made for that species.
+- Optional "New additions" table which shows species added to the list made since a date of your choosing.
+- Flexible in how many curators you want to associate, and can be changed as you see fit.
+- The logic to show the table is independent of the data set, so you can get it set up, then in future update the data however frequently you want.
 
-- `nvm install` (or use the node version specified in `.nvmrc`)
-- `pnpm install`
-- `pnpm run dev`
+### Usage
 
-## Generate data file
+See the [usage](./USAGE.md) document for instructions on how to use the script on your own sites.
 
-To use this tool programmatically, do the following:
+### Tips on getting it set up with iNat
 
-- Clone the repo
-- edit the root `./src/constants.ts` file to change the usernames, place and taxon. Get these values from iNat.
-- In the root, run: `npm install`
-- Add a `"type": "module"` property-value to the package.json file.
-- Run `npm run generate`. That should generate a `./dist/data.json` file with the results of the query.
+#### 1. Decide on your curators
 
-It's not the prettiest output right now, but it gets the job done. The messages were really intended for the UI version,
-not the command line. But hey, it works. :)
+In order for this script to work, you need one or more individuals with an iNat account that will be approving observations in the taxon and region of your choice. What they confirm to be correctly ID'd will end up the curated list: no other species will.
 
-The data is of the following form. It's an unsorted object where the top level properties are the taxon of the
-species. The count value represents the number of observations that have IDs by any of the users provided.
+#### 2. Providing the baseline iNat data
 
-```json
-{
-   "47153":{
-      "data":{
-         "kingdom":"Animalia",
-         "phylum":"Arthropoda",
-         "subphylum":"Hexapoda",
-         "class":"Insecta",
-         "subclass":"Pterygota",
-         "order":"Lepidoptera",
-         "superfamily":"Tortricoidea",
-         "family":"Tortricidae",
-         "subfamily":"Olethreutinae",
-         "tribe":"Grapholitini",
-         "genus":"Cydia",
-         "species":"Cydia pomonella"
-      },
-      "count":19
-   },
-   "47226":{
-      "data":{
-         "kingdom":"Animalia",
-         "phylum":"Arthropoda",
-         "subphylum":"Hexapoda",
-         "class":"Insecta",
-         "subclass":"Pterygota",
-         "order":"Lepidoptera",
-         "superfamily":"Papilionoidea",
-         "family":"Papilionidae",
-         "subfamily":"Papilioninae",
-         "tribe":"Papilionini",
-         "genus":"Papilio",
-         "subgenus":"Pterourus",
-         "species":"Papilio rutulus"
-      },
-      "count":7
-   },
-   ...
-}
+With BC Lepidoptera, we already had a history of published checklists such as the [2015 Checklist of the Lepidoptera of British Columbia](https://journal.entsocbc.ca/index.php/journal/issue/view/Occasional%20Paper%20%233) and the more recent, broader [2018 Annotated Checklist of the Moths and Butterflies (Lepidoptera) of Canada and Alaska](https://repository.naturalis.nl/pub/648850/Pohl_et_al_2018_Checklist_Lepidoptera_Canada_Alaska.pdf). That contained plenty of species that were known to be in the province, but not actually observed on iNaturalist yet. In order for the generated checklist to be of any value, we needed to start with that baseline of species.
+
+To solve this, we created an [iNaturalist account](https://www.inaturalist.org/people/cfs-nfrc) whose purpose was to create _placeholder observations_ (no image) for any species not yet observed in the province. We then had one or more of our curators _approve_ the observation.
+
+At this point, if you go to iNat with the following URL (replace the placeholder with your values) you'll see all the observations that will be processed when constructing the curated list.
+
+```
+https://www.inaturalist.org/observations?ident_user_id=[COMMA DELIMITED LIST OF INAT USERNAMES]&place_id=[PLACE ID]&taxon_id=[]&verifiable=any
+
 ```
 
-## <DataTable /> component
+For BC Leps, [this looks like this](https://www.inaturalist.org/observations?ident_user_id=oneofthedavesiknow,gpohl,crispinguppy&place_id=7085&quality_grade=research&subview=map&taxon_id=1260224).
 
-You'll need to be a developer for this bit.
+#### 3. Curate!
 
-The DataTable component is designed to render the JSON structure listed in the previous section. That renders the information in a table with links back to iNat for the species observations. Take a look at the `src/Standalone.js` file for an illustration of how you can tie it all together.
-
-Here's how you use it, and what each prop means:
-
-```jsx
-<DataTable
-  data={data}
-  usernames={C.USERS}
-  placeId={C.PLACE_ID}
-  defaultVisibleCols={['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species']}
-  hideControls={true}
-  showCount={false}
-  allowDownload={false}
-/>
-```
-
-- **data**: the JSON structure as described in the previous section.
-- **usernames**: a comma-delimited list of iNat usernames. These are the users you're treating as experts: they're the ones who have made the reviews in the given taxon.
-- **placeId**: the iNat place ID.
-- **defaultVisibleCols**: the raw JSON data contains information on all available ranks for each species. But in most cases that's probably superfluous information. Just pass the an array containing the ranks you want to show. This is the full list: `'kingdom', 'phylum', 'subphylum', 'class', 'subclass', 'order', 'superfamily', 'family', 'subfamily', 'tribe', 'subtribe', 'genus', 'subgenus', 'species'`
-- **allowedCols**: if you haven't hidden the controls (see next prop), this controls which ranks should appear in the user interface.
-- **hideControls**: this hides the control section at the top of the table to allow users to choose what ranks to view.
-- **showCount**: this lets you hide a column that lists the number of observations that have been reviewed by the user list.
-- **allowDownload**: this option controls whether an icon appears to let users download the full data.
+It's all set up! As long as people on the curator list continue to review and approve observations in the region, the system will automatically pick up new species and include them in the curated checklist.
