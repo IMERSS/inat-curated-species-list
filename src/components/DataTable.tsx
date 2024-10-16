@@ -5,12 +5,13 @@ import { capitalizeFirstLetter } from '../utils/shared';
 import styles from './DataTable.module.css';
 import { ColumnControls } from './ColumnControls';
 import { INAT_BASE_URL } from '../constants';
+import { Taxon } from '../types';
 
 interface DataTableProps {
   readonly data: []; // TODO
   readonly curatorUsernames: string;
   readonly placeId: number;
-  readonly allowedCols: string[];
+  readonly allowedCols: Taxon[];
   readonly showCount: boolean;
   readonly allowDownload: boolean;
   readonly hideControls: boolean;

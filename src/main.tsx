@@ -4,6 +4,9 @@ import App from './components/App.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <div>
+      <h1>iNat: Curated Species List</h1>
+      <App />
+    </div>
   </StrictMode>,
 );

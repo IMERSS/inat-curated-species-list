@@ -2,7 +2,7 @@
 
 > October 2024: this script is being rewritten and re-documented! Come back soon.
 
-This is a tool to query [iNaturalist](https://www.inaturalist.org/) for all observations in a specific taxon and place that have been confirmed by one or more specific users. This allows you to create _tailored list of species_ that have been approved by experts, rather than rely on the community "research grade" standard.
+This is a tool to query [iNaturalist](https://www.inaturalist.org/) for all observations in a specific taxon and place that have been confirmed by one or more specific users. It allows you to create _tailored list of species_ that have been approved by experts, rather than rely on the community "research grade" standard.
 
 As an example, [see this page on BC Leps site](https://bcleps.weebly.com/curated-species.html). That shows the definitive list of known lepidoptera (butterflies and moths) species for British Columbia. It's curated by three experts: Greg Pohl, Dave Holden and Crispin Guppy. The list is kept up to date by relying on those individuals continuing to review and approve observations on iNat, then re-running a script on a periodic basis to update the website.
 

@@ -1,33 +1,17 @@
 # Usage
 
-> This'll replace the README for instructions on how to use the package on your site.
+> October 2024: Also incomplete! Bear with me while I update the code and get it properly documented. Lots to explain!
 
 This `@imerss/inat-curated-species-list` package is separated into two areas:
 
 1. The code, used to render the HTML on your site
-2. A script to generate the data you want to display.
+2. A script to quewry iNaturalist's API and extract and condense the data you need.
 
 Please read over this full document to get an understanding of how to use it.
 
 ## Species data
 
-The idea of this script is that it boils down the mountain of information on iNaturalist, to display a concise list of species data for a particular area, as approved by a list of specific individuals who are knowledgeable
-
-This lets you create a custom list.
-
-So, the
-
-Instead, what this package offers is a way to ping iNat's API to find te.
-
-This takes time. For example,
-
-So, it's your responsibility to:
-
-- choose an appropriate frequency for how often you want the data set to be updated.
-- run the script to regenerate.
-
-1. On iNat, find the place, taxon and reviewers you want. To find those values, examine the query string when you search places and for particular people.
-   When you've found the values, replace the following values in this URL to confirm that that's the data you want to use for the curated species list.
+The idea of this script is that it boils down the mountain of information on iNaturalist, to display a concise list of species data for a particular area, as approved by a list of experts.
 
 ## The code
 
@@ -43,13 +27,7 @@ npm install @imerss/inat-curated-species-list
 
 ### Scenario 2: Standalone embedded HTML
 
-### Demo
-
-You can [access the script here](https://imerss.github.io/inat-curated-species-list/), but if you're a dev, please download it and run it locally.
-
-<kbd>
-  <img src="./resources/screenshot.png" />
-</kbd>
+---
 
 ## Run locally
 
