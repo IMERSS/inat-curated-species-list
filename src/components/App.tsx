@@ -12,13 +12,6 @@ import styles from './App.module.css';
 import { DataTable } from './DataTable';
 import { NewAdditions } from './NewAdditions';
 
-export type AppProps = {
-  readonly curatedSpeciesDataUrl: string;
-  readonly placeId: number;
-  readonly taxonId: number;
-  readonly curatorUsernames: string[];
-};
-
 const App: FC<AppProps> = ({ curatedSpeciesDataUrl, placeId, taxonId, curatorUsernames }) => {
   // const [curatorUsernames, setCuratorUsernames] = useState(() => C.CURATOR_INAT_USERNAMES.join(','));
   // const [placeId, setPlaceId] = useState(C.PLACE_ID);

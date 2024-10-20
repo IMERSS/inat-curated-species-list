@@ -13,7 +13,7 @@ import { ENABLE_DATA_BACKUP, LOAD_DATA_FROM_LOCAL_FILES } from '../constants.js'
 export const formatNum = (num: number) => new Intl.NumberFormat('en-US').format(num);
 export const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-export const baseApiUrl = 'https://api.inaturalist.org/v1/observations';
+export const baseApiUrl = 'https://api.inaturalist.org/v1/observations'; // MOVE to constants
 
 const perPage = 200;
 let packetLoggerRowId;
@@ -36,8 +36,6 @@ const taxonsToMinify = {
   tribe: true,
   genus: true,
 };
-
-const invertObj = (data) => Object.fromEntries(Object.entries(data).map(([key, value]) => [value, key]));
 
 const getTaxonomy = (ancestors, taxonsToReturn) =>
   ancestors.reduce((acc, curr) => {

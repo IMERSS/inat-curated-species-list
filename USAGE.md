@@ -1,17 +1,29 @@
 # Usage
 
-> October 2024: Also incomplete! Bear with me while I update the code and get it properly documented. Lots to explain!
+> October 2024: VERY incomplete! Bear with me while I rewrite the code and get it properly documented. Lots to explain!
 
 This `@imerss/inat-curated-species-list` package is separated into two areas:
 
 1. The code, used to render the HTML on your site
-2. A script to quewry iNaturalist's API and extract and condense the data you need.
+2. A script to quewry iNaturalist's API and create data files of the information you need.
 
 Please read over this full document to get an understanding of how to use it.
 
-## Species data
+## How it works
 
-The idea of this script is that it boils down the mountain of information on iNaturalist, to display a concise list of species data for a particular area, as approved by a list of experts.
+The diagram below gives an high-level overview of how the scripts works. Each step is explained below.
+
+<kbd>
+  <img src="./resources/architecture.png" />
+</kbd>
+
+### 1. Generate your data files
+
+In order to display your species list, first you need to generate the data. While the iNaturalist site contains all the source data, it's not possible to just query it directly. The problem is that a lot of computation is needed to locate, parse and reduce the data into a concise list of species. Secondly, we don't want to hammer their website. Thirdly, the dat.
+
+So what this step does
+
+The tooling to generate.
 
 ## The code
 

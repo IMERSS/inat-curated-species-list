@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { firstBy } from 'thenby';
-import { capitalizeFirstLetter } from '../utils/shared';
+import { capitalizeFirstLetter } from '../utils/generator';
 import styles from './DataTable.module.css';
 import { ColumnControls } from './ColumnControls';
 import { INAT_BASE_URL } from '../constants';
@@ -12,6 +12,7 @@ interface DataTableProps {
   readonly curatorUsernames: string;
   readonly placeId: number;
   readonly allowedCols: Taxon[];
+  readonly defaultVisibleCols: Taxon[];
   readonly showCount: boolean;
   readonly allowDownload: boolean;
   readonly hideControls: boolean;

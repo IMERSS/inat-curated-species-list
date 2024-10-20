@@ -1,8 +1,12 @@
-export const CURATOR_INAT_USERNAMES = ['gpohl', 'crispinguppy', 'oneofthedavesiknow'];
-export const TAXON_ID = '47157';
-export const PLACE_ID = '7085';
+// for the DemoTable settings
+export const DEMO_DEFAULT_CURATOR_INAT_USERNAMES = ['gpohl', 'crispinguppy', 'oneofthedavesiknow'];
+export const DEMO_DEFAULT_TAXON_ID = '47157';
+export const DEMO_DEFAULT_PLACE_ID = '7085';
+
+// nope! Drop these
 export const GENERATED_FILENAME_FOLDER = './dist';
 export const GENERATED_FILENAME = 'data9.json';
+
 export const INAT_BASE_URL = 'https://www.inaturalist.org/observations';
 
 // enter URL of generated data source here (for standalone version)

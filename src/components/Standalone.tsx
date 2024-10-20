@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import * as C from '../constants';
 import { DataTable } from './DataTable';
-import { unminifySpeciesData } from '../utils/shared';
+import { unminifySpeciesData } from '../utils/generator';
 import debounce from 'debounce';
 
 const Standalone = () => {
