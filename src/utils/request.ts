@@ -1,68 +1,39 @@
 /**
- * This file contains a bunch of code to parse out the necessary iNat data. We found it can get pretty bit - 900KB
- * for around 2800 species for our BC Leps site - so I've added a few minification steps to the data. This helps
- * when you're using the standalone file that loads the generated json file containing the data. Note: a bigger
- * improvement would be to reduce all the unnecessary taxon info needed.
+ * This file contains a various methods for parsing and minify iNat data.
  */
 import qs from 'query-string';
 import path from 'path';
-import { nanoid } from 'nanoid';
 import fs from 'fs';
-import { ENABLE_DATA_BACKUP, LOAD_DATA_FROM_LOCAL_FILES } from '../constants.js';
+import {
+  ENABLE_DATA_BACKUP,
+  LOAD_DATA_FROM_LOCAL_FILES,
+  INAT_API_URL,
+  INAT_REQUEST_RESULTS_PER_PAGE,
+} from '../constants';
+import { formatNum } from './helpers';
+import {
+  CuratedSpeciesData,
+  INatTaxonAncestor,
+  INatApiObsRequestParams,
+  LoggerHandle,
+  Taxon,
+  TaxonomyMap,
+} from '../types';
 
-export const formatNum = (num: number) => new Intl.NumberFormat('en-US').format(num);
-export const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+let packetLoggerRowId: number;
+let lastId: number | null = null;
 
-export const baseApiUrl = 'https://api.inaturalist.org/v1/observations'; // MOVE to constants
-
-const perPage = 200;
-let packetLoggerRowId;
-let lastId = null;
-let curatedSpeciesData = {};
+let curatedSpeciesData: CuratedSpeciesData = {};
 let newAdditions = {};
 let numResults = 0;
 
-const taxonsToMinify = {
-  kingdom: true,
-  phylum: true,
-  subphylum: true,
-  class: true,
-  subclass: true,
-  order: true,
-  superfamily: true,
-  family: true,
-  subfamily: true,
-  section: true,
-  tribe: true,
-  genus: true,
-};
-
-const getTaxonomy = (ancestors, taxonsToReturn) =>
+const getTaxonomy = (ancestors: INatTaxonAncestor[], taxonsToReturn: Taxon[]): TaxonomyMap =>
   ancestors.reduce((acc, curr) => {
     if (taxonsToReturn.indexOf(curr.rank) !== -1) {
       acc[curr.rank] = curr.name;
     }
     return acc;
-  }, {});
-
-const generatedKeys = {};
-let currKeyLength = 1;
-const getNextKey = () => {
-  let key = '';
-  for (let i = 0; i < 20; i++) {
-    let currKey = nanoid(currKeyLength);
-    if (!generatedKeys[currKey]) {
-      key = currKey;
-      generatedKeys[currKey] = true;
-      break;
-    }
-  }
-  if (key) {
-    return key;
-  }
-  currKeyLength++;
-  return getNextKey();
-};
+  }, {} as TaxonomyMap);
 
 export const resetData = () => {
   curatedSpeciesData = {};
@@ -70,8 +41,35 @@ export const resetData = () => {
   numResults = 0;
 };
 
-export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, onSuccess, onError) => {
-  getPacket(packetNum, params)
+type GetDataPacketParams = {
+  readonly curators: string;
+  readonly placeId: number;
+  readonly taxonId: number;
+  readonly visibleTaxons: Taxon[];
+};
+
+interface DownloadDataByPacket {
+  (
+    params: GetDataPacketParams,
+    cleanUsernames: string[],
+    packageNum: number,
+    logger: {
+      current: LoggerHandle;
+    },
+    onSuccess: (data: CuratedSpeciesData, newAdditions: any, params: GetDataPacketParams) => void,
+    onError: () => void,
+  ): void;
+}
+
+export const downloadDataByPacket: DownloadDataByPacket = (
+  params,
+  cleanUsernames,
+  packetNum,
+  logger,
+  onSuccess,
+  onError,
+) => {
+  getDataPacket(packetNum, params)
     .then((resp) => {
       // generate the files as backup so we don't have to ping iNat all the time while testing
       if (ENABLE_DATA_BACKUP) {
@@ -95,25 +93,25 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
 
       // the data returned by iNat is enormous. I found on my server, loading everything into memory caused
       // memory issues (hard-disk space, I think). So instead, here we extract the necessary information right away
-      extractSpecies(resp, cleanUsernames, params.taxons);
+      extractSpecies(resp, cleanUsernames, params.visibleTaxons);
 
       lastId = resp.results[resp.results.length - 1].id;
 
       const numResultsFormatted = formatNum(numResults);
-      if (packetNum * perPage < numResults) {
+      if (packetNum * INAT_REQUEST_RESULTS_PER_PAGE < numResults) {
         if (!packetLoggerRowId) {
           logger.current.addLogRow(
             `<b>${new Intl.NumberFormat('en-US').format(resp.total_results)}</b> observations found.`,
             'info',
           );
           packetLoggerRowId = logger.current.addLogRow(
-            `Retrieved ${formatNum(perPage)}/${numResultsFormatted} observations.`,
+            `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE)}/${numResultsFormatted} observations.`,
             'info',
           );
         } else {
           logger.current.replaceLogRow(
             packetLoggerRowId,
-            `Retrieved ${formatNum(perPage * packetNum)}/${numResultsFormatted} observations.`,
+            `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE * packetNum)}/${numResultsFormatted} observations.`,
             'info',
           );
         }
@@ -130,28 +128,34 @@ export const downloadDataByPacket = (params, cleanUsernames, packetNum, logger, 
     .catch(onError);
 };
 
-export const getPacket = (packetNum, params) => {
+export const getDataPacket = (packetNum: number, params: GetDataPacketParams) => {
   if (LOAD_DATA_FROM_LOCAL_FILES) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const fileContent = fs.readFileSync(path.resolve(__dirname, `../dist/packet-${packetNum}.json`), 'utf-8');
       resolve(JSON.parse(fileContent.toString()));
     });
   }
 
-  params.order = 'asc';
-  params.order_by = 'id';
-  params.per_page = perPage;
+  const apiParams: INatApiObsRequestParams = {
+    place_id: params.placeId,
+    taxon_id: params.taxonId,
+    order: 'asc',
+    order_by: 'id',
+    per_page: INAT_REQUEST_RESULTS_PER_PAGE,
+    verifiable: 'any',
+  };
 
-  if (numResults) {
-    params.id_above = lastId;
+  if (numResults && lastId) {
+    apiParams.id_above = lastId;
   }
-  const paramsStr = qs.stringify(params);
-  const apiUrl = `${baseApiUrl}?${paramsStr}`;
+
+  const paramsStr = qs.stringify(apiParams);
+  const apiUrl = `${INAT_API_URL}?${paramsStr}`;
 
   return fetch(apiUrl).then((resp) => resp.json());
 };
 
-export const removeExistingNewAddition = (taxonId, data) => {
+export const removeExistingNewAddition = (taxonId: number, data) => {
   Object.keys(data).forEach((year) => {
     if (data[year][taxonId]) {
       delete data[year][taxonId];
@@ -217,92 +221,4 @@ export const extractSpecies = (rawData, curators, taxonsToReturn) => {
       }
     });
   });
-};
-
-export const minifySpeciesData = (data, targetTaxons) => {
-  const minifiedData = {
-    taxonMap: {},
-    taxonData: {},
-  };
-
-  Object.keys(data).forEach((taxonId) => {
-    // keyed by rank
-    const rowData = {};
-
-    // replace all non-species taxon strings (Pterygota, or whatever) with a short code in taxonMap
-    Object.keys(data[taxonId].data).forEach((taxonRank) => {
-      const taxonName = data[taxonId].data[taxonRank];
-
-      if (taxonsToMinify[taxonRank]) {
-        // if we've already minified this particular taxon name (note: no reason this might be a totally
-        // different rank from the original minification - it doesn't matter - point is that the STRING is identical)
-        if (minifiedData.taxonMap[taxonName]) {
-          rowData[taxonRank] = minifiedData.taxonMap[taxonName];
-        } else {
-          const key = getNextKey();
-          minifiedData.taxonMap[taxonName] = key;
-          rowData[taxonRank] = key;
-        }
-      } else {
-        rowData[taxonRank] = taxonName;
-      }
-    });
-
-    const row = targetTaxons.map((t) => (rowData[t] ? rowData[t] : '')).join('|');
-    minifiedData.taxonData[taxonId] = `${row}|${data[taxonId].count}`;
-  });
-
-  return minifiedData;
-};
-
-export const unminifySpeciesData = (data, visibleTaxons) => {
-  const map = invertObj(data.taxonMap);
-
-  const fullData = {};
-  Object.keys(data.taxonData).forEach((taxonId) => {
-    // Assumes that this is now an ordered array of the taxons specified in visibleTaxons. The user should
-    // have supplied the same list of taxons used in creating the minified file
-    const rowData = data.taxonData[taxonId].split('|');
-    const expandedTaxonData = {};
-
-    for (let i = 0; i < visibleTaxons.length; i++) {
-      const visibleTaxon = visibleTaxons[i];
-      // only the species row isn't minified. Everything else is found in the map
-      if (visibleTaxon === 'species') {
-        expandedTaxonData[visibleTaxon] = rowData[i];
-      } else {
-        // not every taxon will be filled for each row
-        if (rowData[i] && !map[rowData[i]]) {
-          console.log('missing', i, rowData);
-        }
-        expandedTaxonData[visibleTaxon] = rowData[i] ? map[rowData[i]] : '';
-      }
-    }
-
-    fullData[taxonId] = {
-      data: expandedTaxonData,
-      count: rowData[rowData.length - 1],
-    };
-  });
-
-  return fullData;
-};
-
-export const minifyNewAdditionsData = (newAdditions) => {
-  const newAdditionsByYear = {};
-  Object.keys(newAdditions).forEach((taxonId) => {
-    const row = newAdditions[taxonId];
-    const curatorConfirmationDate = new Date(row.curatorConfirmationDate);
-    const year = curatorConfirmationDate.getFullYear();
-
-    if (!newAdditionsByYear[year]) {
-      newAdditionsByYear[year] = [];
-    }
-
-    newAdditionsByYear[year].push(newAdditions[taxonId]);
-  });
-
-  console.log({ before: newAdditions, newAdditionsByYear });
-
-  return newAdditions;
 };

@@ -31,4 +31,45 @@ export type Taxon =
   | 'subtribe'
   | 'genus'
   | 'subgenus'
+  | 'section'
   | 'species';
+
+// not exhaustive. Just contains a couple of things we use from their data model
+export type INatTaxonAncestor = {
+  readonly rank: Taxon;
+  readonly name: string;
+};
+
+export type INatApiObsRequestParams = {
+  readonly place_id: number;
+  readonly taxon_id: number;
+  readonly order: string;
+  readonly per_page: number;
+  readonly order_by: 'id';
+  readonly verifiable: 'any';
+  id_above?: number;
+};
+
+export type TaxonomyMap = {
+  [rank in Taxon]: string;
+};
+
+export type LogType = 'info' | 'error' | 'success';
+export type LogRow = [string, string];
+export type LoggerHandle = {
+  addLogRow: (str: string, logType: LogType) => number;
+  addLogRows: (arr: LogRow[]) => void;
+  replaceLogRow: (rowId: number, str: string, logType: LogType) => void;
+  clear: () => void;
+};
+
+export type CuratedSpeciesData = {
+  [taxonId: string]: {
+    data: {
+      [taxon in Taxon]: {
+        taxonName: string;
+      };
+    };
+    count: number;
+  };
+};

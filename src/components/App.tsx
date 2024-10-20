@@ -11,8 +11,9 @@ import styles from './App.module.css';
 // import { Logger, LoggerHandle } from './Logger';
 import { DataTable } from './DataTable';
 import { NewAdditions } from './NewAdditions';
+import type { AppProps } from '../types';
 
-const App: FC<AppProps> = ({ curatedSpeciesDataUrl, placeId, taxonId, curatorUsernames }) => {
+const App: FC<AppProps> = ({ placeId, taxonId, curatorUsernames, dataUrl }) => {
   // const [curatorUsernames, setCuratorUsernames] = useState(() => C.CURATOR_INAT_USERNAMES.join(','));
   // const [placeId, setPlaceId] = useState(C.PLACE_ID);
   // const [taxonId, setTaxonId] = useState(C.TAXON_ID);
@@ -30,18 +31,15 @@ const App: FC<AppProps> = ({ curatedSpeciesDataUrl, placeId, taxonId, curatorUse
   // const onStart = () => {
   //   setLoading(true);
   //   resetData();
-
   //   loggerRef.current!.clear();
   //   loggerRef.current!.addLogRow('Pinging iNat for observation data.', 'info');
-
   //   const cleanUsernames = curatorUsernames.split(',').map((username) => username.trim());
-
   //   // const d = require('./test-data.json');
   //   // setNewAdditionsData(minifyNewAdditionsData(d));
   // };
 
   const getTabs = () => {
-    if (!curatedSpeciesDataUrl) {
+    if (!dataUrl) {
       return;
     }
 

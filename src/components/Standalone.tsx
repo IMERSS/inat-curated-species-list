@@ -2,13 +2,19 @@ import { useCallback, useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import * as C from '../constants';
 import { DataTable } from './DataTable';
-import { unminifySpeciesData } from '../utils/generator';
+// import { unminifySpeciesData } from '../utils/generator';
 import debounce from 'debounce';
 
-const Standalone = () => {
+/**
+ * This component is bundled separately and included as a separate self-contained javascript file in the build artifacts. Anyone
+ * who isn't using.
+ *
+ * See the documentation on how this component can use used.
+ */
+export const Standalone = () => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
-  const [data, setData] = useState([]);
+  const [data] = useState([]);
   const [filter, setFilter] = useState('');
   const [debouncedFilter, setDebouncedFilter] = useState('');
   const [filteredData, setFilteredData] = useState({});
@@ -32,7 +38,8 @@ const Standalone = () => {
       },
     })
       .then((resp) => resp.json())
-      .then((json) => {
+      .then(() => {
+        // json
         setLoaded(true);
         // setData(unminifySpeciesData(json, C.VISIBLE_TAXONS));
       })
@@ -49,13 +56,16 @@ const Standalone = () => {
     const re = new RegExp(debouncedFilter, 'i');
     Object.keys(data).forEach((id) => {
       let found = false;
+      // @ts-ignore-next-line
       Object.keys(data[id].data).forEach((taxon) => {
+        // @ts-ignore-next-line
         if (re.test(data[id].data[taxon])) {
           found = true;
         }
       });
 
       if (found) {
+        // @ts-ignore-next-line
         newObj[id] = data[id];
       }
     });
@@ -105,5 +115,3 @@ const Standalone = () => {
     </>
   );
 };
-
-export default Standalone;

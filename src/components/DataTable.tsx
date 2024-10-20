@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { firstBy } from 'thenby';
-import { capitalizeFirstLetter } from '../utils/generator';
+import { capitalizeFirstLetter } from '../utils/helpers';
 import styles from './DataTable.module.css';
 import { ColumnControls } from './ColumnControls';
 import { INAT_BASE_URL } from '../constants';

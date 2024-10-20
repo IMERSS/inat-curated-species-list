@@ -1,16 +1,8 @@
 import React, { useImperativeHandle, useState } from 'react';
 import styles from './Logger.module.css';
+import { LogRow, LoggerHandle } from '../types';
 
-type LogType = 'info' | 'error' | 'success';
-type LogRow = [string, string];
 let logRows: LogRow[] = [];
-
-export type LoggerHandle = {
-  addLogRow: (str: string, logType: LogType) => number;
-  addLogRows: (arr: LogRow[]) => void;
-  replaceLogRow: (rowId: number, str: string, logType: LogType) => void;
-  clear: () => void;
-};
 
 export const Logger = React.forwardRef<LoggerHandle, unknown>((_props, ref) => {
   const [count, setCount] = useState(0);
