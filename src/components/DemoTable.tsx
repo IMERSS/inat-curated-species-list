@@ -29,13 +29,17 @@ export const DemoTable: FC = () => {
   const [curatedSpeciesData, setCuratedSpeciesData] = useState<CuratedSpeciesData | null>(null);
   const [newAdditionsData, setNewAdditionsData] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
-  const loggerRef = useRef<LoggerHandle>();
+  const loggerRef = useRef<LoggerHandle>(null);
 
-  const onChangeTab = (_e: React.ChangeEvent<HTMLButtonElement>, newValue: number) => {
+  const onChangeTab = (_e: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
   };
 
   const downloadData = () => {
+    if (!loggerRef) {
+      return;
+    }
+
     setLoading(true);
     resetData();
 
@@ -53,12 +57,14 @@ export const DemoTable: FC = () => {
       },
       cleanUsernames,
       1,
-      loggerRef,
-      (curatedSpeciesData, newAdditionsData) => {
+      loggerRef.current!,
+      (
+        curatedSpeciesData, // newAdditionsData
+      ) => {
         setLoading(false);
         setDataLoaded(true);
 
-        loggerRef.current.addLogRows([
+        loggerRef.current!.addLogRows([
           ['Observation data all returned.', 'info'],
           ['Parsing data.', 'info'],
           [`Found <b>${Object.keys(curatedSpeciesData).length}</b> unique species in observation results.`, 'success'],
@@ -67,7 +73,7 @@ export const DemoTable: FC = () => {
         setCuratedSpeciesData(curatedSpeciesData);
         // setNewAdditionsData(minifyNewAdditionsData(newAdditionsData, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY));
       },
-      (e) => {
+      () => {
         loggerRef.current!.addLogRow('Error pinging the iNat API.', 'error');
         setLoading(false);
       },
@@ -87,7 +93,7 @@ export const DemoTable: FC = () => {
         return <DataTable data={curatedSpeciesData} curatorUsernames={curatorUsernames} placeId={placeId} />;
       }
 
-      return <NewAdditions data={newAdditionsData} />;
+      //   return <NewAdditions data={newAdditionsData} />;
     };
 
     return (
@@ -142,6 +148,8 @@ export const DemoTable: FC = () => {
       <Box sx={{ display: 'flex', visibility: showLogs, height: logsHeight }}>
         <Logger ref={loggerRef} />
       </Box>
+
+      <div className={styles.app}>{getTabs()}</div>
     </>
   );
 };

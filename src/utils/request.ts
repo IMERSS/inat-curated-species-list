@@ -91,9 +91,7 @@ interface DownloadDataByPacket {
     params: GetDataPacketParams,
     cleanUsernames: string[],
     packageNum: number,
-    logger: {
-      current: LoggerHandle;
-    },
+    logger: LoggerHandle,
     onSuccess: (data: CuratedSpeciesData, newAdditions: any, params: GetDataPacketParams) => void,
     onError: () => void,
   ): void;
@@ -119,7 +117,7 @@ export const downloadDataByPacket: DownloadDataByPacket = (
       }
 
       if (resp.total_results <= 0) {
-        logger.current.addLogRow(`No observations found.`, 'info');
+        logger.addLogRow(`No observations found.`, 'info');
         onSuccess(curatedSpeciesData, newAdditions, params);
         return;
       } else {
@@ -138,16 +136,16 @@ export const downloadDataByPacket: DownloadDataByPacket = (
       const numResultsFormatted = formatNum(numResults);
       if (packetNum * INAT_REQUEST_RESULTS_PER_PAGE < numResults) {
         if (!packetLoggerRowId) {
-          logger.current.addLogRow(
+          logger.addLogRow(
             `<b>${new Intl.NumberFormat('en-US').format(resp.total_results)}</b> observations found.`,
             'info',
           );
-          packetLoggerRowId = logger.current.addLogRow(
+          packetLoggerRowId = logger.addLogRow(
             `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE)}/${numResultsFormatted} observations.`,
             'info',
           );
         } else {
-          logger.current.replaceLogRow(
+          logger.replaceLogRow(
             packetLoggerRowId,
             `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE * packetNum)}/${numResultsFormatted} observations.`,
             'info',
@@ -155,7 +153,7 @@ export const downloadDataByPacket: DownloadDataByPacket = (
         }
         downloadDataByPacket(params, cleanUsernames, packetNum + 1, logger, onSuccess, onError);
       } else {
-        logger.current.replaceLogRow(
+        logger.replaceLogRow(
           packetLoggerRowId,
           `Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`,
           'info',

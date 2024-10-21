@@ -5,8 +5,10 @@
 import { CuratedSpeciesData, Taxon } from '../types';
 import { getShortestUniqueKey, invertObj } from './helpers';
 
-export type TaxonMap = Partial<Record<Taxon, boolean>>;
-const taxonsToMinify: TaxonMap = {
+export type TaxonsToMinifyMap = Partial<Record<Taxon, boolean>>;
+export type TaxonMinificationDataMap = Partial<Record<string, string>>;
+
+const taxonsToMinify: TaxonsToMinifyMap = {
   kingdom: true,
   phylum: true,
   subphylum: true,
@@ -22,7 +24,7 @@ const taxonsToMinify: TaxonMap = {
 };
 
 type MinifiedData = {
-  taxonMap: TaxonMap;
+  taxonMap: TaxonMinificationDataMap;
   taxonData: {
     [taxonName: string]: string;
   };
@@ -36,7 +38,7 @@ export const minifySpeciesData = (data: CuratedSpeciesData, targetTaxons: Taxon[
 
   Object.keys(data).forEach((taxonId) => {
     // keyed by rank
-    const rowData = {};
+    const rowData: Partial<Record<Taxon, string>> = {};
 
     // replace all non-species taxon strings (Pterygota, or whatever) with a short code in taxonMap
     (Object.keys(data[taxonId].data) as Taxon[]).forEach((taxonRank) => {
@@ -64,7 +66,7 @@ export const minifySpeciesData = (data: CuratedSpeciesData, targetTaxons: Taxon[
   return minifiedData;
 };
 
-export const unminifySpeciesData = (data, visibleTaxons: Taxon[]) => {
+export const unminifySpeciesData = (data: CuratedSpeciesData, visibleTaxons: Taxon[]) => {
   const map = invertObj(data.taxonMap);
 
   const fullData: CuratedSpeciesData = {};
@@ -72,7 +74,7 @@ export const unminifySpeciesData = (data, visibleTaxons: Taxon[]) => {
     // Assumes that this is now an ordered array of the taxons specified in visibleTaxons. The user should
     // have supplied the same list of taxons used in creating the minified file
     const rowData = data.taxonData[taxonId].split('|');
-    const expandedTaxonData: TaxonMap = {};
+    const expandedTaxonData: TaxonMinificationDataMap = {};
 
     for (let i = 0; i < visibleTaxons.length; i++) {
       const visibleTaxon = visibleTaxons[i];

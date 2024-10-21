@@ -75,7 +75,7 @@ export const DataTable: FC<DataTableProps> = ({
       arr.sort(sorted);
       setSortedData(arr);
 
-      const titleRow = [];
+      const titleRow: string[] = [];
       visibleCols.forEach((col) => {
         titleRow.push(capitalizeFirstLetter(col));
       });
@@ -94,7 +94,7 @@ export const DataTable: FC<DataTableProps> = ({
   }, [data, visibleCols]);
 
   // this ensures correct sorting of the taxonomical levels in the table
-  const onChange = (cols) => {
+  const onChange = (cols: string[]) => {
     setVisibleCols(orderedCols.filter((col) => cols.indexOf(col) !== -1));
   };
 
