@@ -8,10 +8,10 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Logger } from './Logger';
 import { downloadDataByPacket, resetData } from '../utils/request';
-import styles from './App.module.css';
 import { DataTable } from './DataTable';
 import { NewAdditions } from './NewAdditions';
-import { LoggerHandle } from '../types';
+import { CuratedSpeciesData, LoggerHandle } from '../types';
+import styles from './App.module.css'; // TODO
 
 /**
  * This isn't included in the exported components from this package. It's used as a test/demo page housed on github pages for the repo,
@@ -26,9 +26,14 @@ export const DemoTable: FC = () => {
   const [taxonId, setTaxonId] = useState(C.DEMO_DEFAULT_TAXON_ID);
   const [loading, setLoading] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [curatedSpeciesData, setCuratedSpeciesData] = useState(null);
+  const [curatedSpeciesData, setCuratedSpeciesData] = useState<CuratedSpeciesData | null>(null);
   const [newAdditionsData, setNewAdditionsData] = useState(null);
+  const [tabIndex, setTabIndex] = useState(0);
   const loggerRef = useRef<LoggerHandle>();
+
+  const onChangeTab = (_e: React.ChangeEvent<HTMLButtonElement>, newValue: number) => {
+    setTabIndex(newValue);
+  };
 
   const downloadData = () => {
     setLoading(true);

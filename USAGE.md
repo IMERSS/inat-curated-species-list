@@ -5,7 +5,7 @@
 This `@imerss/inat-curated-species-list` package is separated into two areas:
 
 1. The code, used to render the HTML on your site
-2. A script to quewry iNaturalist's API and create data files of the information you need.
+2. A script to query iNaturalist's API and create data files of the information you need.
 
 Please read over this full document to get an understanding of how to use it.
 

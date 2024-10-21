@@ -5,23 +5,8 @@
 import { CuratedSpeciesData, Taxon } from '../types';
 import { getShortestUniqueKey, invertObj } from './helpers';
 
-const taxonsToMinify: {
-  [taxon in Extract<
-    Taxon,
-    | 'kingdom'
-    | 'phylum'
-    | 'subphylum'
-    | 'class'
-    | 'subclass'
-    | 'order'
-    | 'superfamily'
-    | 'family'
-    | 'subfamily'
-    | 'tribe'
-    | 'genus'
-    | 'section'
-  >]: true;
-} = {
+export type TaxonMap = Partial<Record<Taxon, boolean>>;
+const taxonsToMinify: TaxonMap = {
   kingdom: true,
   phylum: true,
   subphylum: true,
@@ -36,8 +21,15 @@ const taxonsToMinify: {
   section: true,
 };
 
+type MinifiedData = {
+  taxonMap: TaxonMap;
+  taxonData: {
+    [taxonName: string]: string;
+  };
+};
+
 export const minifySpeciesData = (data: CuratedSpeciesData, targetTaxons: Taxon[]) => {
-  const minifiedData = {
+  const minifiedData: MinifiedData = {
     taxonMap: {},
     taxonData: {},
   };
@@ -47,7 +39,7 @@ export const minifySpeciesData = (data: CuratedSpeciesData, targetTaxons: Taxon[
     const rowData = {};
 
     // replace all non-species taxon strings (Pterygota, or whatever) with a short code in taxonMap
-    Object.keys(data[taxonId].data).forEach((taxonRank) => {
+    (Object.keys(data[taxonId].data) as Taxon[]).forEach((taxonRank) => {
       const taxonName = data[taxonId].data[taxonRank];
 
       if (taxonsToMinify[taxonRank]) {
@@ -75,12 +67,12 @@ export const minifySpeciesData = (data: CuratedSpeciesData, targetTaxons: Taxon[
 export const unminifySpeciesData = (data, visibleTaxons: Taxon[]) => {
   const map = invertObj(data.taxonMap);
 
-  const fullData = {};
+  const fullData: CuratedSpeciesData = {};
   Object.keys(data.taxonData).forEach((taxonId) => {
     // Assumes that this is now an ordered array of the taxons specified in visibleTaxons. The user should
     // have supplied the same list of taxons used in creating the minified file
     const rowData = data.taxonData[taxonId].split('|');
-    const expandedTaxonData = {};
+    const expandedTaxonData: TaxonMap = {};
 
     for (let i = 0; i < visibleTaxons.length; i++) {
       const visibleTaxon = visibleTaxons[i];
@@ -105,21 +97,21 @@ export const unminifySpeciesData = (data, visibleTaxons: Taxon[]) => {
   return fullData;
 };
 
-export const minifyNewAdditionsData = (newAdditions) => {
-  const newAdditionsByYear = {};
-  Object.keys(newAdditions).forEach((taxonId) => {
-    const row = newAdditions[taxonId];
-    const curatorConfirmationDate = new Date(row.curatorConfirmationDate);
-    const year = curatorConfirmationDate.getFullYear();
+// export const minifyNewAdditionsData = (newAdditions) => {
+//   const newAdditionsByYear = {};
+//   Object.keys(newAdditions).forEach((taxonId) => {
+//     const row = newAdditions[taxonId];
+//     const curatorConfirmationDate = new Date(row.curatorConfirmationDate);
+//     const year = curatorConfirmationDate.getFullYear();
 
-    // if (!newAdditionsByYear[year]) {
-    //   newAdditionsByYear[year] = [];
-    // }
+//     // if (!newAdditionsByYear[year]) {
+//     //   newAdditionsByYear[year] = [];
+//     // }
 
-    // newAdditionsByYear[year].push(newAdditions[taxonId]);
-  });
+//     // newAdditionsByYear[year].push(newAdditions[taxonId]);
+//   });
 
-  console.log({ before: newAdditions, newAdditionsByYear });
+//   console.log({ before: newAdditions, newAdditionsByYear });
 
-  return newAdditions;
-};
+//   return newAdditions;
+// };

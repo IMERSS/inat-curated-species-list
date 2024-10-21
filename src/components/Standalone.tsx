@@ -104,8 +104,9 @@ export const Standalone = () => {
       {numFilteredItems > 0 && (
         <DataTable
           data={filteredData}
-          usernames={C.USERS}
-          placeId={C.PLACE_ID}
+          allowedCols={['family']}
+          curatorUsernames="123"
+          placeId={1234}
           defaultVisibleCols={['superfamily', 'family', 'subfamily', 'tribe', 'species']}
           hideControls={true}
           showCount={false}

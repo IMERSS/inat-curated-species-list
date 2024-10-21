@@ -65,11 +65,7 @@ export type LoggerHandle = {
 
 export type CuratedSpeciesData = {
   [taxonId: string]: {
-    data: {
-      [taxon in Taxon]: {
-        taxonName: string;
-      };
-    };
+    data: TaxonomyMap;
     count: number;
   };
 };

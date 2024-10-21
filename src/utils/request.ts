@@ -48,6 +48,44 @@ type GetDataPacketParams = {
   readonly visibleTaxons: Taxon[];
 };
 
+type GetDataPacketResponse = {
+  readonly total_results: number;
+  readonly results: [
+    {
+      id: number;
+
+      // user info about who made the observation
+      user: {
+        login: string;
+      };
+
+      // the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made on the osb
+      taxon: {
+        rank: Taxon;
+      };
+
+      // an array of identifications made on this observation
+      identifications: [
+        {
+          taxon_id: string;
+          user: {
+            login: string;
+          };
+
+          // this seems to indicate whether the user has overwritten it with a newer one, or maybe removed. Regardless: it's
+          // needed to filter out dud identifications
+          current: boolean;
+          taxon: {
+            name: string;
+            rank: Taxon;
+            ancestors: [];
+          };
+        },
+      ];
+    },
+  ];
+};
+
 interface DownloadDataByPacket {
   (
     params: GetDataPacketParams,
@@ -128,7 +166,7 @@ export const downloadDataByPacket: DownloadDataByPacket = (
     .catch(onError);
 };
 
-export const getDataPacket = (packetNum: number, params: GetDataPacketParams) => {
+export const getDataPacket = (packetNum: number, params: GetDataPacketParams): Promise<GetDataPacketResponse> => {
   if (LOAD_DATA_FROM_LOCAL_FILES) {
     return new Promise((resolve) => {
       const fileContent = fs.readFileSync(path.resolve(__dirname, `../dist/packet-${packetNum}.json`), 'utf-8');
@@ -155,26 +193,21 @@ export const getDataPacket = (packetNum: number, params: GetDataPacketParams) =>
   return fetch(apiUrl).then((resp) => resp.json());
 };
 
-export const removeExistingNewAddition = (taxonId: number, data) => {
-  Object.keys(data).forEach((year) => {
-    if (data[year][taxonId]) {
-      delete data[year][taxonId];
-    }
-  });
-};
+// export const removeExistingNewAddition = (taxonId: number, data) => {
+//   Object.keys(data).forEach((year) => {
+//     if (data[year][taxonId]) {
+//       delete data[year][taxonId];
+//     }
+//   });
+// };
 
-export const extractSpecies = (rawData, curators, taxonsToReturn) => {
+export const extractSpecies = (rawData: GetDataPacketResponse, curators: string[], taxonsToReturn: Taxon[]) => {
   rawData.results.forEach((obs) => {
-    // obs                - the full observation data
-    // obs.user           - user info about who made the observation
-    // obs.taxon          - the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made on the osb
-    // obs.identification - an array of identifications made on this observation
     obs.identifications.forEach((ident) => {
       if (curators.indexOf(ident.user.login) === -1) {
         return;
       }
 
-      // `current` seems to indicate whether the user has overwritten it with a newer one
       if (!ident.current) {
         return;
       }
@@ -204,21 +237,21 @@ export const extractSpecies = (rawData, curators, taxonsToReturn) => {
       //    (a) ignore any records earlier than the earliest confirmation
       //    (b)
 
-      if (!newAdditions[ident.taxon.id] || newAdditions[ident.taxon.id].curatorConfirmationDate < ident.created_at) {
-        const taxonomy = getTaxonomy(ident.taxon.ancestors, taxonsToReturn);
+      // if (!newAdditions[ident.taxon.id] || newAdditions[ident.taxon.id].curatorConfirmationDate < ident.created_at) {
+      //   const taxonomy = getTaxonomy(ident.taxon.ancestors, taxonsToReturn);
 
-        newAdditions[ident.taxon.id] = {
-          taxonomy,
-          species: ident.taxon.name,
-          observerUsername: obs.user.login,
-          observerName: obs.user.name,
-          obsDate: ident.created_at,
-          // obsId: ident.taxon_id,
-          obsPhoto: obs.photos && obs.photos.length > 0 ? obs.photos[0].url : null,
-          url: obs.uri,
-          curatorConfirmationDate: ident.created_at,
-        };
-      }
+      //   newAdditions[ident.taxon.id] = {
+      //     taxonomy,
+      //     species: ident.taxon.name,
+      //     observerUsername: obs.user.login,
+      //     observerName: obs.user.name,
+      //     obsDate: ident.created_at,
+      //     // obsId: ident.taxon_id,
+      //     obsPhoto: obs.photos && obs.photos.length > 0 ? obs.photos[0].url : null,
+      //     url: obs.uri,
+      //     curatorConfirmationDate: ident.created_at,
+      //   };
+      // }
     });
   });
 };

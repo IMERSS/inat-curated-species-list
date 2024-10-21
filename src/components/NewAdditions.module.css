@@ -1,13 +1,13 @@
 .table {
-    width: 100%;
-    margin-top: 20px;
-    flex: 1;
-    line-height: 25px;
-    font-size: 12px;
+  width: 100%;
+  margin-top: 20px;
+  flex: 1;
+  line-height: 25px;
+  font-size: 12px;
 }
 
 .table th {
-    text-transform: capitalize;
-    text-align: left;
-    font-size: 12px;
+  text-transform: capitalize;
+  text-align: left;
+  font-size: 12px;
 }

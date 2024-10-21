@@ -8,7 +8,7 @@ import { INAT_BASE_URL } from '../constants';
 import { Taxon } from '../types';
 
 interface DataTableProps {
-  readonly data: []; // TODO
+  readonly data: any; // TODO
   readonly curatorUsernames: string;
   readonly placeId: number;
   readonly allowedCols: Taxon[];
