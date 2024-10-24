@@ -5,17 +5,17 @@ import { capitalizeFirstLetter } from '../utils/helpers';
 import styles from './DataTable.module.css';
 import { ColumnControls } from './ColumnControls';
 import { INAT_BASE_URL } from '../constants';
-import { Taxon } from '../types';
+import { CuratedSpeciesData, CuratedSpeciesTaxon, Taxon } from '../types';
 
 interface DataTableProps {
-  readonly data: any; // TODO
+  readonly data: CuratedSpeciesData;
   readonly curatorUsernames: string;
   readonly placeId: number;
-  readonly allowedCols: Taxon[];
-  readonly defaultVisibleCols: Taxon[];
-  readonly showCount: boolean;
-  readonly allowDownload: boolean;
-  readonly hideControls: boolean;
+  readonly allowedCols?: Taxon[];
+  readonly defaultVisibleCols?: Taxon[];
+  readonly showCount?: boolean;
+  readonly allowDownload?: boolean;
+  readonly hideControls?: boolean;
 }
 
 export const DataTable: FC<DataTableProps> = ({
@@ -43,7 +43,7 @@ export const DataTable: FC<DataTableProps> = ({
   allowDownload = true,
   hideControls = false,
 }) => {
-  const [sortedData, setSortedData] = useState([]);
+  const [sortedData, setSortedData] = useState<CuratedSpeciesTaxon[]>([]);
   const [downloadData, setDownloadData] = useState<string[][]>([]);
   const [visibleCols, setVisibleCols] = useState(defaultVisibleCols);
 
@@ -52,12 +52,12 @@ export const DataTable: FC<DataTableProps> = ({
       return;
     }
 
-    const arr = Object.keys(data).map((taxonId) => ({
+    const arr: CuratedSpeciesTaxon[] = Object.keys(data).map((taxonId) => ({
       ...data[taxonId],
       taxonId,
     }));
 
-    let sorted = null;
+    let sorted: IThenBy<CuratedSpeciesTaxon> | null = null;
     const csvData = [];
     visibleCols.forEach((visibleCol) => {
       if (!sorted) {
@@ -82,7 +82,7 @@ export const DataTable: FC<DataTableProps> = ({
       csvData.push(titleRow);
 
       arr.forEach((a) => {
-        const row = [];
+        const row: string[] = [];
         visibleCols.forEach((col) => {
           row.push(a.data[col] ? a.data[col] : '');
         });

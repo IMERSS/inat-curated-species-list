@@ -9,7 +9,7 @@ import Tab from '@mui/material/Tab';
 import { Logger } from './Logger';
 import { downloadDataByPacket, resetData } from '../utils/request';
 import { DataTable } from './DataTable';
-import { NewAdditions } from './NewAdditions';
+// import { NewAdditions } from './NewAdditions';
 import { CuratedSpeciesData, LoggerHandle } from '../types';
 import styles from './App.module.css'; // TODO
 
@@ -27,7 +27,7 @@ export const DemoTable: FC = () => {
   const [loading, setLoading] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [curatedSpeciesData, setCuratedSpeciesData] = useState<CuratedSpeciesData | null>(null);
-  const [newAdditionsData, setNewAdditionsData] = useState(null);
+  //   const [newAdditionsData, setNewAdditionsData] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
   const loggerRef = useRef<LoggerHandle>(null);
 
@@ -90,9 +90,10 @@ export const DemoTable: FC = () => {
 
     const getTab = () => {
       if (tabIndex === 0) {
-        return <DataTable data={curatedSpeciesData} curatorUsernames={curatorUsernames} placeId={placeId} />;
+        return (
+          <DataTable data={curatedSpeciesData} curatorUsernames={curatorUsernames} placeId={parseInt(placeId) || 0} />
+        );
       }
-
       //   return <NewAdditions data={newAdditionsData} />;
     };
 

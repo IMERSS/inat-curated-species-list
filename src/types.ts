@@ -69,3 +69,9 @@ export type CuratedSpeciesData = {
     count: number;
   };
 };
+
+export type CuratedSpeciesTaxon = {
+  data: TaxonomyMap;
+  count: number;
+  taxonId: string;
+};
