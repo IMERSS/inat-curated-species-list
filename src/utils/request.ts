@@ -10,12 +10,13 @@ import {
   INAT_API_URL,
   INAT_REQUEST_RESULTS_PER_PAGE,
 } from '../constants';
-import { formatNum } from './helpers';
+import { formatNum, splitStringByComma } from './helpers';
 import {
   CuratedSpeciesData,
+  DownloadDataByPacket,
+  GetDataPacketResponse,
   INatTaxonAncestor,
   INatApiObsRequestParams,
-  LoggerHandle,
   Taxon,
   TaxonomyMap,
 } from '../types';
@@ -41,71 +42,10 @@ export const resetData = () => {
   numResults = 0;
 };
 
-type GetDataPacketParams = {
-  readonly curators: string;
-  readonly placeId: number;
-  readonly taxonId: number;
-  readonly visibleTaxons: Taxon[];
-};
+export const downloadDataByPacket = (args: DownloadDataByPacket) => {
+  const { curators, visibleTaxons, packetNum, placeId, taxonId, logger, onSuccess, onError } = args;
 
-type GetDataPacketResponse = {
-  readonly total_results: number;
-  readonly results: [
-    {
-      id: number;
-
-      // user info about who made the observation
-      user: {
-        login: string;
-      };
-
-      // the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made on the osb
-      taxon: {
-        rank: Taxon;
-      };
-
-      // an array of identifications made on this observation
-      identifications: [
-        {
-          taxon_id: string;
-          user: {
-            login: string;
-          };
-
-          // this seems to indicate whether the user has overwritten it with a newer one, or maybe removed. Regardless: it's
-          // needed to filter out dud identifications
-          current: boolean;
-          taxon: {
-            name: string;
-            rank: Taxon;
-            ancestors: [];
-          };
-        },
-      ];
-    },
-  ];
-};
-
-interface DownloadDataByPacket {
-  (
-    params: GetDataPacketParams,
-    cleanUsernames: string[],
-    packageNum: number,
-    logger: LoggerHandle,
-    onSuccess: (data: CuratedSpeciesData, newAdditions: any, params: GetDataPacketParams) => void,
-    onError: () => void,
-  ): void;
-}
-
-export const downloadDataByPacket: DownloadDataByPacket = (
-  params,
-  cleanUsernames,
-  packetNum,
-  logger,
-  onSuccess,
-  onError,
-) => {
-  getDataPacket(packetNum, params)
+  getDataPacket(packetNum, placeId, taxonId)
     .then((resp) => {
       // generate the files as backup so we don't have to ping iNat all the time while testing
       if (ENABLE_DATA_BACKUP) {
@@ -118,7 +58,7 @@ export const downloadDataByPacket: DownloadDataByPacket = (
 
       if (resp.total_results <= 0) {
         logger.addLogRow(`No observations found.`, 'info');
-        onSuccess(curatedSpeciesData, newAdditions, params);
+        onSuccess(curatedSpeciesData, newAdditions);
         return;
       } else {
         // only the first request has the correct number of total results
@@ -129,7 +69,7 @@ export const downloadDataByPacket: DownloadDataByPacket = (
 
       // the data returned by iNat is enormous. I found on my server, loading everything into memory caused
       // memory issues (hard-disk space, I think). So instead, here we extract the necessary information right away
-      extractSpecies(resp, cleanUsernames, params.visibleTaxons);
+      extractSpecies(resp, curators, visibleTaxons);
 
       lastId = resp.results[resp.results.length - 1].id;
 
@@ -151,20 +91,20 @@ export const downloadDataByPacket: DownloadDataByPacket = (
             'info',
           );
         }
-        downloadDataByPacket(params, cleanUsernames, packetNum + 1, logger, onSuccess, onError);
+        downloadDataByPacket({ ...args, logger, packetNum: packetNum + 1 });
       } else {
         logger.replaceLogRow(
           packetLoggerRowId,
           `Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`,
           'info',
         );
-        onSuccess(curatedSpeciesData, newAdditions, params);
+        onSuccess(curatedSpeciesData, newAdditions);
       }
     })
     .catch(onError);
 };
 
-export const getDataPacket = (packetNum: number, params: GetDataPacketParams): Promise<GetDataPacketResponse> => {
+export const getDataPacket = (packetNum: number, placeId: number, taxonId: number): Promise<GetDataPacketResponse> => {
   if (LOAD_DATA_FROM_LOCAL_FILES) {
     return new Promise((resolve) => {
       const fileContent = fs.readFileSync(path.resolve(__dirname, `../dist/packet-${packetNum}.json`), 'utf-8');
@@ -173,8 +113,8 @@ export const getDataPacket = (packetNum: number, params: GetDataPacketParams): P
   }
 
   const apiParams: INatApiObsRequestParams = {
-    place_id: params.placeId,
-    taxon_id: params.taxonId,
+    place_id: placeId,
+    taxon_id: taxonId,
     order: 'asc',
     order_by: 'id',
     per_page: INAT_REQUEST_RESULTS_PER_PAGE,
@@ -199,10 +139,12 @@ export const getDataPacket = (packetNum: number, params: GetDataPacketParams): P
 //   });
 // };
 
-export const extractSpecies = (rawData: GetDataPacketResponse, curators: string[], taxonsToReturn: Taxon[]) => {
+export const extractSpecies = (rawData: GetDataPacketResponse, curators: string, taxonsToReturn: Taxon[]) => {
+  const curatorArray = splitStringByComma(curators);
+
   rawData.results.forEach((obs) => {
     obs.identifications.forEach((ident) => {
-      if (curators.indexOf(ident.user.login) === -1) {
+      if (curatorArray.indexOf(ident.user.login) === -1) {
         return;
       }
 

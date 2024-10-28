@@ -11,7 +11,7 @@ import { downloadDataByPacket, resetData } from '../utils/request';
 import { DataTable } from './DataTable';
 // import { NewAdditions } from './NewAdditions';
 import { CuratedSpeciesData, LoggerHandle } from '../types';
-import styles from './App.module.css'; // TODO
+import styles from './DemoTable.module.css';
 
 /**
  * This isn't included in the exported components from this package. It's used as a test/demo page housed on github pages for the repo,
@@ -22,8 +22,8 @@ import styles from './App.module.css'; // TODO
  * */
 export const DemoTable: FC = () => {
   const [curatorUsernames, setCuratorUsernames] = useState(() => C.DEMO_DEFAULT_CURATOR_INAT_USERNAMES.join(','));
-  const [placeId, setPlaceId] = useState(C.DEMO_DEFAULT_PLACE_ID);
-  const [taxonId, setTaxonId] = useState(C.DEMO_DEFAULT_TAXON_ID);
+  const [placeId, setPlaceId] = useState<number | ''>(C.DEMO_DEFAULT_PLACE_ID);
+  const [taxonId, setTaxonId] = useState<number | ''>(C.DEMO_DEFAULT_TAXON_ID);
   const [loading, setLoading] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [curatedSpeciesData, setCuratedSpeciesData] = useState<CuratedSpeciesData | null>(null);
@@ -36,48 +36,51 @@ export const DemoTable: FC = () => {
   };
 
   const downloadData = () => {
-    if (!loggerRef) {
+    if (!loggerRef || !placeId || !taxonId) {
       return;
     }
 
-    setLoading(true);
+    // clear out any old data and start the new requests
     resetData();
+    setLoading(true);
 
     loggerRef.current!.clear();
     loggerRef.current!.addLogRow('Pinging iNat for observation data.', 'info');
 
-    const cleanUsernames = curatorUsernames.split(',').map((username) => username.trim());
+    const onSuccess = (
+      curatedSpeciesData: any, // newAdditionsData
+    ) => {
+      setLoading(false);
+      setDataLoaded(true);
 
-    downloadDataByPacket(
-      {
-        curators: curatorUsernames,
-        placeId: parseInt(placeId) || 0,
-        taxonId: parseInt(taxonId) || 0,
-        visibleTaxons: C.VISIBLE_TAXONS, // TODO allow option via UI to configure?
-      },
-      cleanUsernames,
-      1,
-      loggerRef.current!,
-      (
-        curatedSpeciesData, // newAdditionsData
-      ) => {
-        setLoading(false);
-        setDataLoaded(true);
+      console.log('on success', curatedSpeciesData);
 
-        loggerRef.current!.addLogRows([
-          ['Observation data all returned.', 'info'],
-          ['Parsing data.', 'info'],
-          [`Found <b>${Object.keys(curatedSpeciesData).length}</b> unique species in observation results.`, 'success'],
-        ]);
+      loggerRef.current!.addLogRows([
+        ['Observation data all returned.', 'info'],
+        ['Parsing data.', 'info'],
+        [`Found <b>${Object.keys(curatedSpeciesData).length}</b> unique species in observation results.`, 'success'],
+      ]);
 
-        setCuratedSpeciesData(curatedSpeciesData);
-        // setNewAdditionsData(minifyNewAdditionsData(newAdditionsData, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY));
-      },
-      () => {
-        loggerRef.current!.addLogRow('Error pinging the iNat API.', 'error');
-        setLoading(false);
-      },
-    );
+      setCuratedSpeciesData(curatedSpeciesData);
+      // setNewAdditionsData(minifyNewAdditionsData(newAdditionsData, C.NEW_ADDITIONS_IGNORE_SPECIES_OBSERVED_BY));
+    };
+
+    const onError = () => {
+      loggerRef.current!.addLogRow('Error pinging the iNat API.', 'error');
+      setLoading(false);
+    };
+
+    downloadDataByPacket({
+      curators: curatorUsernames,
+      placeId,
+      taxonId,
+      visibleTaxons: C.VISIBLE_TAXONS, // TODO allow option via UI to configure?
+      maxResults: 1000,
+      packetNum: 1,
+      logger: loggerRef,
+      onSuccess,
+      onError,
+    });
 
     // const d = require('./test-data.json');
     // setNewAdditionsData(minifyNewAdditionsData(d));
@@ -90,9 +93,7 @@ export const DemoTable: FC = () => {
 
     const getTab = () => {
       if (tabIndex === 0) {
-        return (
-          <DataTable data={curatedSpeciesData} curatorUsernames={curatorUsernames} placeId={parseInt(placeId) || 0} />
-        );
+        return <DataTable data={curatedSpeciesData} curatorUsernames={curatorUsernames} placeId={placeId} />;
       }
       //   return <NewAdditions data={newAdditionsData} />;
     };
@@ -109,7 +110,7 @@ export const DemoTable: FC = () => {
   };
 
   const showLogs = loading || dataLoaded ? 'visible' : 'hidden';
-  const logsHeight = loading || dataLoaded ? 'auto' : 0;
+  const logsHeight = loading || dataLoaded ? 'auto' : 2;
 
   return (
     <>
@@ -125,16 +126,18 @@ export const DemoTable: FC = () => {
         <TextField
           label="Place ID"
           variant="outlined"
+          type="number"
           value={placeId}
           disabled={loading}
-          onChange={(e) => setPlaceId(e.target.value)}
+          onChange={(e) => setPlaceId(e.target.value ? parseInt(e.target.value) : '')}
         />
         <TextField
           label="Taxon ID"
           variant="outlined"
+          type="number"
           value={taxonId}
           disabled={loading}
-          onChange={(e) => setTaxonId(e.target.value)}
+          onChange={(e) => setTaxonId(e.target.value ? parseInt(e.target.value) : '')}
         />
         <LoadingButton
           variant="contained"

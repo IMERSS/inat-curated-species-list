@@ -7,7 +7,6 @@ import Tab from '@mui/material/Tab';
 
 // import * as C from '../constants';
 // import { resetData, downloadDataByPacket } from '../utils/shared'; // minifyNewAdditionsData
-import styles from './App.module.css';
 // import { Logger, LoggerHandle } from './Logger';
 // import { DataTable } from './DataTable';
 // import { NewAdditions } from './NewAdditions';
@@ -64,7 +63,7 @@ const App: FC<AppProps> = () => {
     );
   };
 
-  return <div className={styles.app}>{getTabs()}</div>;
+  return getTabs();
 };
 
 export default App;

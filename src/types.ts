@@ -75,3 +75,53 @@ export type CuratedSpeciesTaxon = {
   count: number;
   taxonId: string;
 };
+
+export type DownloadDataByPacket = {
+  readonly curators: string;
+  readonly placeId: number;
+  readonly taxonId: number;
+  readonly visibleTaxons: Taxon[];
+  readonly packetNum: number;
+  readonly logger: LoggerHandle;
+  readonly onSuccess: (data: CuratedSpeciesData, newAdditions: any) => void;
+  readonly onError: () => void;
+  readonly maxResults?: number;
+};
+
+export type GetDataPacketResponse = {
+  readonly total_results: number;
+  readonly results: [
+    {
+      id: number;
+
+      // user info about who made the observation
+      user: {
+        login: string;
+      };
+
+      // the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made on the osb
+      taxon: {
+        rank: Taxon;
+      };
+
+      // an array of identifications made on this observation
+      identifications: [
+        {
+          taxon_id: string;
+          user: {
+            login: string;
+          };
+
+          // this seems to indicate whether the user has overwritten it with a newer one, or maybe removed. Regardless: it's
+          // needed to filter out dud identifications
+          current: boolean;
+          taxon: {
+            name: string;
+            rank: Taxon;
+            ancestors: [];
+          };
+        },
+      ];
+    },
+  ];
+};

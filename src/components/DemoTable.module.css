@@ -1,4 +1,3 @@
-/* move to DemoTable */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
@@ -11,12 +10,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.app {
+:global(#root) {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
-/* end move to DemoTable */
 
 div.usernames {
   flex: 1;
