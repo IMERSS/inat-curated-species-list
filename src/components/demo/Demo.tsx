@@ -1,39 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, useRef, useState } from 'react';
-import * as C from '../constants';
+import * as C from '../../constants';
 import Box from '@mui/material/Box';
+import { Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { Logger } from './Logger';
-import { downloadDataByPacket, resetData } from '../utils/request';
-import { DataTable } from './DataTable';
+import { Logger } from '../Logger';
+import { downloadDataByPacket, resetData } from '../../utils/request';
+// import { DataTable } from '../DataTable';
 // import { NewAdditions } from './NewAdditions';
-import { CuratedSpeciesData, LoggerHandle } from '../types';
-import styles from './DemoTable.module.css';
+import { CuratedSpeciesData, LoggerHandle } from '../../types';
+import styles from './Demo.module.css';
+import { DEMO_MAX_OBSERVATIONS } from '../../constants';
 
 /**
  * This isn't included in the exported components from this package. It's used as a test/demo page housed on github pages for the repo,
  * so potential users can feed in their values (taxon, place, curated) to get a sense of how the curated checklist table looks like for
  * them. It's also used for local development.
  *
- * It works by pinging the iNat API directly and convering the .
+ * It works by pinging the iNat API directly.
  * */
-export const DemoTable: FC = () => {
+export const Demo: FC = () => {
   const [curatorUsernames, setCuratorUsernames] = useState(() => C.DEMO_DEFAULT_CURATOR_INAT_USERNAMES.join(','));
   const [placeId, setPlaceId] = useState<number | ''>(C.DEMO_DEFAULT_PLACE_ID);
   const [taxonId, setTaxonId] = useState<number | ''>(C.DEMO_DEFAULT_TAXON_ID);
   const [loading, setLoading] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [curatedSpeciesData, setCuratedSpeciesData] = useState<CuratedSpeciesData | null>(null);
-  //   const [newAdditionsData, setNewAdditionsData] = useState(null);
-  const [tabIndex, setTabIndex] = useState(0);
   const loggerRef = useRef<LoggerHandle>(null);
-
-  const onChangeTab = (_e: React.SyntheticEvent, newValue: number) => {
-    setTabIndex(newValue);
-  };
 
   const downloadData = () => {
     if (!loggerRef || !placeId || !taxonId) {
@@ -52,8 +46,6 @@ export const DemoTable: FC = () => {
     ) => {
       setLoading(false);
       setDataLoaded(true);
-
-      console.log('on success [all]', curatedSpeciesData);
 
       loggerRef.current!.addLogRows([
         ['Observation data all returned.', 'info'],
@@ -74,7 +66,7 @@ export const DemoTable: FC = () => {
       curators: curatorUsernames,
       placeId,
       taxonId,
-      visibleTaxons: C.VISIBLE_TAXONS, // TODO allow option via UI to configure?
+      visibleTaxons: C.ALL_TAXONS,
       maxResults: 1000,
       packetNum: 1,
       logger: loggerRef,
@@ -82,31 +74,17 @@ export const DemoTable: FC = () => {
       onSuccess,
       onError,
     });
-
-    // const d = require('./test-data.json');
-    // setNewAdditionsData(minifyNewAdditionsData(d));
   };
 
-  const getTabs = () => {
+  const getContinueButton = () => {
     if (!curatedSpeciesData) {
       return;
     }
 
-    const getTab = () => {
-      if (tabIndex === 0) {
-        return <DataTable data={curatedSpeciesData} curatorUsernames={curatorUsernames} placeId={placeId} />;
-      }
-      //   return <NewAdditions data={newAdditionsData} />;
-    };
-
     return (
-      <>
-        <Tabs value={tabIndex} onChange={onChangeTab}>
-          <Tab label="Curated Species" />
-          <Tab label="Latest Additions" />
-        </Tabs>
-        {getTab()}
-      </>
+      <Button variant="outlined" style={{ marginTop: 15 }}>
+        Continue &raquo;
+      </Button>
     );
   };
 
@@ -115,6 +93,26 @@ export const DemoTable: FC = () => {
 
   return (
     <>
+      <p style={{ lineHeight: '25px' }}>
+        This a live, demoable version of the <code>@imerss/inat-curated-species-list</code> package to let you get a
+        sense of how the curated table will look for your data. This script limits the results to{' '}
+        <b>{DEMO_MAX_OBSERVATIONS}</b> observations from iNaturalist. The second (optionally shown) tab for New
+        Additions has a few hardcoded values for illustration purpose only. In addition to showing the curated species
+        table, it also lets you customize the available settings and generate the React or plain-vanilla JS code,
+        depending on{' '}
+        <a href="https://github.com/IMERSS/inat-curated-species-list/blob/main/USAGE.md">
+          how you intend to add the section to your site
+        </a>
+        .
+      </p>
+
+      <p style={{ lineHeight: '25px' }}>
+        To get started, fill in the fields below and click Start. You can find these values by browsing the iNaturalist
+        website: look at the query string on the searches to locate the place and taxon IDs.
+      </p>
+
+      <br />
+
       <Box className={styles.fieldsRow}>
         <TextField
           label="iNat usernames (comma-delimited)"
@@ -154,7 +152,7 @@ export const DemoTable: FC = () => {
         <Logger ref={loggerRef} />
       </Box>
 
-      <div className={styles.app}>{getTabs()}</div>
+      {getContinueButton()}
     </>
   );
 };
