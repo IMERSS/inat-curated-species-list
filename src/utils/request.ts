@@ -23,7 +23,6 @@ import {
 
 let packetLoggerRowId: number;
 let lastId: number | null = null;
-
 let curatedSpeciesData: CuratedSpeciesData = {};
 let newAdditions = {};
 let numResults = 0;
@@ -43,9 +42,10 @@ export const resetData = () => {
 };
 
 export const downloadDataByPacket = (args: DownloadDataByPacket) => {
-  const { curators, visibleTaxons, packetNum, placeId, taxonId, logger, onSuccess, onError } = args;
+  const { curators, visibleTaxons, packetNum, placeId, taxonId, logger, logFormat, maxResults, onSuccess, onError } =
+    args;
 
-  getDataPacket(packetNum, placeId, taxonId)
+  getDataPacket(packetNum, placeId, taxonId, curators)
     .then((resp) => {
       // generate the files as backup so we don't have to ping iNat all the time while testing
       if (ENABLE_DATA_BACKUP) {
@@ -57,7 +57,7 @@ export const downloadDataByPacket = (args: DownloadDataByPacket) => {
       }
 
       if (resp.total_results <= 0) {
-        logger.addLogRow(`No observations found.`, 'info');
+        logger.current!.addLogRow(`No observations found.`, 'info');
         onSuccess(curatedSpeciesData, newAdditions);
         return;
       } else {
@@ -74,28 +74,34 @@ export const downloadDataByPacket = (args: DownloadDataByPacket) => {
       lastId = resp.results[resp.results.length - 1].id;
 
       const numResultsFormatted = formatNum(numResults);
-      if (packetNum * INAT_REQUEST_RESULTS_PER_PAGE < numResults) {
+      const maxResultsLimit = Math.min(numResults, maxResults || Infinity);
+      let maxResultsLimitMsg = '';
+      if (maxResults) {
+        maxResultsLimitMsg =
+          logFormat === 'html' ? `(Results limited to <b>${maxResults}</b>)` : `(Results limited to ${maxResults})`;
+      }
+
+      if (packetNum * INAT_REQUEST_RESULTS_PER_PAGE < maxResultsLimit) {
         if (!packetLoggerRowId) {
-          logger.addLogRow(
-            `<b>${new Intl.NumberFormat('en-US').format(resp.total_results)}</b> observations found.`,
-            'info',
-          );
-          packetLoggerRowId = logger.addLogRow(
-            `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE)}/${numResultsFormatted} observations.`,
+          const num = new Intl.NumberFormat('en-US').format(resp.total_results);
+          const msg = logFormat === 'html' ? `<b>${num}</b> observations found.` : `${num} observations found.`;
+          logger.current!.addLogRow(msg, 'info');
+          packetLoggerRowId = logger.current!.addLogRow(
+            `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE)}/${numResultsFormatted} observations. ${maxResultsLimitMsg}`,
             'info',
           );
         } else {
-          logger.replaceLogRow(
+          logger.current!.replaceLogRow(
             packetLoggerRowId,
-            `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE * packetNum)}/${numResultsFormatted} observations.`,
+            `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE * packetNum)}/${numResultsFormatted} observations. ${maxResultsLimitMsg}`,
             'info',
           );
         }
         downloadDataByPacket({ ...args, logger, packetNum: packetNum + 1 });
       } else {
-        logger.replaceLogRow(
+        logger.current!.replaceLogRow(
           packetLoggerRowId,
-          `Retrieved ${numResultsFormatted}/${numResultsFormatted} observations.`,
+          `Retrieved ${numResultsFormatted}/${numResultsFormatted} observations. ${maxResultsLimitMsg}`,
           'info',
         );
         onSuccess(curatedSpeciesData, newAdditions);
@@ -104,7 +110,12 @@ export const downloadDataByPacket = (args: DownloadDataByPacket) => {
     .catch(onError);
 };
 
-export const getDataPacket = (packetNum: number, placeId: number, taxonId: number): Promise<GetDataPacketResponse> => {
+export const getDataPacket = (
+  packetNum: number,
+  placeId: number,
+  taxonId: number,
+  curators: string,
+): Promise<GetDataPacketResponse> => {
   if (LOAD_DATA_FROM_LOCAL_FILES) {
     return new Promise((resolve) => {
       const fileContent = fs.readFileSync(path.resolve(__dirname, `../dist/packet-${packetNum}.json`), 'utf-8');
@@ -119,6 +130,7 @@ export const getDataPacket = (packetNum: number, placeId: number, taxonId: numbe
     order_by: 'id',
     per_page: INAT_REQUEST_RESULTS_PER_PAGE,
     verifiable: 'any',
+    ident_user_id: curators,
   };
 
   if (numResults && lastId) {

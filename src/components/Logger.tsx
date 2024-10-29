@@ -7,8 +7,6 @@ let logRows: LogRow[] = [];
 export const Logger = React.forwardRef<LoggerHandle, unknown>((_props, ref) => {
   const [count, setCount] = useState(0);
 
-  console.log(logRows);
-
   useImperativeHandle(
     ref,
     () => ({

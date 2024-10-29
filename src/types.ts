@@ -7,6 +7,7 @@
  *                        showing new additions to the list.
  * - `generateDataFiles`: the script command used for generating the data files.
  */
+import { RefObject } from 'react';
 
 export type AppProps = {
   readonly placeId: number;
@@ -47,6 +48,7 @@ export type INatApiObsRequestParams = {
   readonly per_page: number;
   readonly order_by: 'id';
   readonly verifiable: 'any';
+  readonly ident_user_id: string;
   id_above?: number;
 };
 
@@ -82,9 +84,10 @@ export type DownloadDataByPacket = {
   readonly taxonId: number;
   readonly visibleTaxons: Taxon[];
   readonly packetNum: number;
-  readonly logger: LoggerHandle;
+  readonly logger: RefObject<LoggerHandle>;
   readonly onSuccess: (data: CuratedSpeciesData, newAdditions: any) => void;
   readonly onError: () => void;
+  readonly logFormat: 'html' | 'text';
   readonly maxResults?: number;
 };
 

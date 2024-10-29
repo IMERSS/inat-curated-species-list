@@ -53,7 +53,7 @@ export const DemoTable: FC = () => {
       setLoading(false);
       setDataLoaded(true);
 
-      console.log('on success', curatedSpeciesData);
+      console.log('on success [all]', curatedSpeciesData);
 
       loggerRef.current!.addLogRows([
         ['Observation data all returned.', 'info'],
@@ -78,6 +78,7 @@ export const DemoTable: FC = () => {
       maxResults: 1000,
       packetNum: 1,
       logger: loggerRef,
+      logFormat: 'html',
       onSuccess,
       onError,
     });
