@@ -105,51 +105,39 @@ export const DataTable: FC<DataTableProps> = ({
   const orderedCols = allowedCols;
 
   return (
-    <>
-      {!hideControls && (
-        <ColumnControls
-          cols={orderedCols}
-          visibleCols={visibleCols}
-          onChange={onChange}
-          downloadData={downloadData}
-          allowDownload={allowDownload}
-        />
-      )}
-
-      <table className={`${styles.table} inat-curated-species-table`} cellSpacing={0} cellPadding={2}>
-        <thead>
-          <tr key="header">
-            <th></th>
-            {visibleCols.map((rank) => (
-              <th key={rank}>{rank}</th>
-            ))}
-            {showCount && <th></th>}
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedData.map((row, index) => (
-            <tr key={row.taxonId}>
-              <td>
-                <b>{index + 1}</b>
-              </td>
-              {visibleCols.map((currentRank) => (
-                <td key={`${row.taxonId}-${currentRank}`}>{row.data[currentRank] ? row.data[currentRank] : ''}</td>
-              ))}
-              {showCount && <td>({row.count})</td>}
-              <td style={{ display: 'flex' }}>
-                <a
-                  href={`${INAT_BASE_URL}?ident_user_id=${curatorUsernames}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <VisibilityIcon />
-                </a>
-              </td>
-            </tr>
+    <table className={`${styles.table} inat-curated-species-table`} cellSpacing={0} cellPadding={2}>
+      <thead>
+        <tr key="header">
+          <th></th>
+          {visibleCols.map((rank) => (
+            <th key={rank}>{rank}</th>
           ))}
-        </tbody>
-      </table>
-    </>
+          {showCount && <th></th>}
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {sortedData.map((row, index) => (
+          <tr key={row.taxonId}>
+            <td>
+              <b>{index + 1}</b>
+            </td>
+            {visibleCols.map((currentRank) => (
+              <td key={`${row.taxonId}-${currentRank}`}>{row.data[currentRank] ? row.data[currentRank] : ''}</td>
+            ))}
+            {showCount && <td>({row.count})</td>}
+            <td style={{ display: 'flex' }}>
+              <a
+                href={`${INAT_BASE_URL}?ident_user_id=${curatorUsernames}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <VisibilityIcon />
+              </a>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
