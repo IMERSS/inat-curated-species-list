@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import Grid from '@mui/material/Grid';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import { Taxon } from '../../types';
 import { ALL_TAXONS } from '../../constants';
 
@@ -10,6 +11,28 @@ interface BuilderOptionsProps {
   showFilterResults: boolean;
   showLatestAdditions: boolean;
 }
+
+const Rank = ({ label, visibleCols }) => (
+  <div>
+    <FormControlLabel
+      control={
+        <Checkbox
+          size="small"
+          id={`control-${label}`}
+          checked={visibleCols.indexOf(label) !== -1}
+          // onChange={(e) => {
+          //   if (e.target.checked) {
+          //     onChange([...visibleCols, col]);
+          //   } else {
+          //     onChange(visibleCols.filter((a) => a !== col));
+          //   }
+          // }}
+        />
+      }
+      label={label}
+    />
+  </div>
+);
 
 export const BuilderOptions: FC<BuilderOptionsProps> = ({
   visibleCols,
@@ -23,33 +46,36 @@ export const BuilderOptions: FC<BuilderOptionsProps> = ({
   return (
     <>
       <h4>Visible Ranks</h4>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        {ALL_TAXONS.map((col) => (
-          <Grid size={6} key={`col-${col}`}>
-            <div>
-              <input
-                type="checkbox"
-                id={`control-${col}`}
-                checked={visibleCols.indexOf(col) !== -1}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    onChange([...visibleCols, col]);
-                  } else {
-                    onChange(visibleCols.filter((a) => a !== col));
-                  }
-                }}
-              />
-              <label htmlFor={`control-${col}`}>{col}</label>
-            </div>
-          </Grid>
-        ))}
-      </Grid>
+      <table>
+        <tr>
+          <td>
+            <Rank label="kingdom" visibleCols={visibleCols} />
+            <Rank label="phylum" visibleCols={visibleCols} />
+            <Rank label="subphylum" visibleCols={visibleCols} />
+            <Rank label="class" visibleCols={visibleCols} />
+            <Rank label="subclass" visibleCols={visibleCols} />
+          </td>
+          <td valign="top">
+            <Rank label="order" visibleCols={visibleCols} />
+            <Rank label="superfamily" visibleCols={visibleCols} />
+            <Rank label="family" visibleCols={visibleCols} />
+            <Rank label="subfamily" visibleCols={visibleCols} />
+          </td>
+          <td valign="top">
+            <Rank label="tribe" visibleCols={visibleCols} />
+            <Rank label="subtribe" visibleCols={visibleCols} />
+            <Rank label="genus" visibleCols={visibleCols} />
+            <Rank label="species" visibleCols={visibleCols} />
+          </td>
+        </tr>
+      </table>
 
-      <label>Include species count</label>
-      <label>Allow download data</label>
-
-      <label>Include Latest additions tab</label>
-      <label>Include Filter results field</label>
+      <div>
+        <FormControlLabel control={<Checkbox defaultChecked />} label="Include species count" />
+        <FormControlLabel control={<Checkbox defaultChecked />} label="Allow download data" />
+        <FormControlLabel control={<Checkbox defaultChecked />} label="Include Latest additions tab" />
+        <FormControlLabel control={<Checkbox defaultChecked />} label="Include Filter results field" />
+      </div>
     </>
   );
 };
