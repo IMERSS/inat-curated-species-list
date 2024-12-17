@@ -26,6 +26,7 @@ div.usernames {
 
 .fieldsRow {
   display: flex;
+  margin-top: 10px;
 }
 
 .fieldsRow :global(.MuiInputBase-root) {

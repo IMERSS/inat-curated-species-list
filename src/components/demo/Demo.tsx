@@ -14,7 +14,7 @@ import { BuilderPage } from './BuilderPage';
  * It works by pinging the iNat API directly.
  * */
 export const Demo: FC = () => {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [data, setData] = useState<StartPageData>();
 
   const onDataLoaded = (data: StartPageData) => {
@@ -43,6 +43,7 @@ export const Demo: FC = () => {
           <StepLabel>Generate markup</StepLabel>
         </Step>
       </Stepper>
+
       {getPage()}
     </>
   );

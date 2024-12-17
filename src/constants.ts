@@ -15,7 +15,7 @@ export const INAT_API_URL = 'https://api.inaturalist.org/v1/observations';
 
 // enter URL of generated data source here (for standalone version)
 export const DATA_URL = 'https://sisyphean.ca/inat/curated-bc-leps-list2.json';
-export const VISIBLE_TAXONS: Taxon[] = ['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species'];
+export const DEFAULT_VISIBLE_TAXONS: Taxon[] = ['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species'];
 export const ALL_TAXONS: Taxon[] = [
   'kingdom',
   'phylum',

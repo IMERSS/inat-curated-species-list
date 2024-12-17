@@ -41,7 +41,7 @@ export const Standalone = () => {
       .then(() => {
         // json
         setLoaded(true);
-        // setData(unminifySpeciesData(json, C.VISIBLE_TAXONS));
+        // setData(unminifySpeciesData(json, C.DEFAULT_VISIBLE_TAXONS));
       })
       .catch(() => setError(true));
   }, []);

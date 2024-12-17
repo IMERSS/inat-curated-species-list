@@ -28,6 +28,7 @@ export const StartPage: FC<StartPageProps> = ({ onDataLoaded }) => {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [curatedSpeciesData, setCuratedSpeciesData] = useState<CuratedSpeciesData | null>(null);
   const [loading, setLoading] = useState(false);
+  const [maxResults, setMaxResults] = useState(1000);
 
   const downloadData = () => {
     if (!loggerRef || !placeId || !taxonId) {
@@ -65,7 +66,7 @@ export const StartPage: FC<StartPageProps> = ({ onDataLoaded }) => {
       placeId,
       taxonId,
       visibleTaxons: C.ALL_TAXONS,
-      maxResults: 1000,
+      maxResults,
       packetNum: 1,
       logger: loggerRef,
       logFormat: 'html',
@@ -116,6 +117,15 @@ export const StartPage: FC<StartPageProps> = ({ onDataLoaded }) => {
       </p>
 
       <p>
+        <TextField
+          style={{ float: 'right', marginLeft: 20 }}
+          label="Limit results"
+          variant="outlined"
+          className={styles.usernames}
+          value={maxResults}
+          disabled={loading}
+          onChange={(e) => setMaxResults(parseInt(e.target.value, 10))}
+        />
         To get started, fill in the fields below and click Start. You can find these values by browsing the iNaturalist
         website: look at the query string on the searches to locate the place and taxon IDs.
       </p>
