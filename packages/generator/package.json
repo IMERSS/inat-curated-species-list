@@ -1,0 +1,26 @@
+{
+  "name": "@imerss/inat-curated-species-list-generator",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "generate-data-files": "./bin/generator.js"
+  },
+  "types": "./bin/generate.types.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "debounce": "^2.2.0",
+    "nanoid": "5.0.9",
+    "query-string": "^9.1.1"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@turbo/gen": "^1.12.4",
+    "@types/node": "^20.11.24",
+    "typescript": "5.5.4"
+  }
+}

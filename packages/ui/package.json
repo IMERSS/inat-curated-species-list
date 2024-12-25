@@ -1,12 +1,10 @@
 {
   "name": "@imerss/inat-curated-species-list",
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "private": true,
   "exports": {
-    "./button": "./src/button.tsx",
-    "./card": "./src/card.tsx",
-    "./code": "./src/code.tsx"
+    "./button": "./src/components.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

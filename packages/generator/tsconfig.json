@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "outDir": "bin",
+    "esModuleInterop": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "bin"]
+}

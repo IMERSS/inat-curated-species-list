@@ -1,0 +1,24 @@
+{
+  "name": "dev-generator",
+  "description": "A test package for the @imerss/inat-curated-species-list-generator.",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "next lint --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@imerss/inat-curated-species-list-generator": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^20",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.0",
+    "typescript": "5.5.4"
+  }
+}

@@ -12,7 +12,30 @@ importers:
       turbo: 2.3.3
       typescript: 5.5.4
 
-  apps/dev:
+  apps/dev-generator:
+    specifiers:
+      '@imerss/inat-curated-species-list-generator': workspace:*
+      '@repo/eslint-config': workspace:*
+      '@repo/typescript-config': workspace:*
+      '@types/node': ^20
+      '@types/react': 18.3.1
+      '@types/react-dom': 18.3.0
+      react: ^19.0.0
+      react-dom: ^19.0.0
+      typescript: 5.5.4
+    dependencies:
+      '@imerss/inat-curated-species-list-generator': link:../../packages/generator
+      react: 19.0.0
+      react-dom: 19.0.0_react@19.0.0
+    devDependencies:
+      '@repo/eslint-config': link:../../packages/eslint-config
+      '@repo/typescript-config': link:../../packages/typescript-config
+      '@types/node': 20.17.10
+      '@types/react': 18.3.1
+      '@types/react-dom': 18.3.0
+      typescript: 5.5.4
+
+  apps/dev-ui:
     specifiers:
       '@imerss/inat-curated-species-list': workspace:*
       '@repo/eslint-config': workspace:*
@@ -66,6 +89,27 @@ importers:
       globals: 15.14.0
       typescript: 5.7.2
       typescript-eslint: 8.18.2_iv52uyctfzkctflchzytvwe3zq
+
+  packages/generator:
+    specifiers:
+      '@repo/eslint-config': workspace:*
+      '@repo/typescript-config': workspace:*
+      '@turbo/gen': ^1.12.4
+      '@types/node': ^20.11.24
+      debounce: ^2.2.0
+      nanoid: 5.0.9
+      query-string: ^9.1.1
+      typescript: 5.5.4
+    dependencies:
+      debounce: 2.2.0
+      nanoid: 5.0.9
+      query-string: 9.1.1
+    devDependencies:
+      '@repo/eslint-config': link:../eslint-config
+      '@repo/typescript-config': link:../typescript-config
+      '@turbo/gen': 1.13.4_ldzyf27dr7zwtxqlzek34lk4em
+      '@types/node': 20.17.10
+      typescript: 5.5.4
 
   packages/typescript-config:
     specifiers: {}
@@ -628,7 +672,7 @@ packages:
   /@types/react-dom/18.3.1:
     resolution: {integrity: sha512-qW1Mfv8taImTthu4KoXgDfLuk4bydU6Q/TkADnDWWHwi4NX4BR+LWfTp2sVmTqRrsHvyDDTelgelxJ+SsejKKQ==}
     dependencies:
-      '@types/react': 18.3.0
+      '@types/react': 18.3.1
     dev: true
 
   /@types/react/18.3.0:
@@ -1229,6 +1273,11 @@ packages:
       is-data-view: 1.0.2
     dev: true
 
+  /debounce/2.2.0:
+    resolution: {integrity: sha512-Xks6RUDLZFdz8LIdR6q0MTH44k7FikOmnh5xkSjMig6ch45afc8sjTjRQf3P6ax8dMgcQrYO/AR2RGWURrruqw==}
+    engines: {node: '>=18'}
+    dev: false
+
   /debug/4.4.0:
     resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
     engines: {node: '>=6.0'}
@@ -1240,6 +1289,11 @@ packages:
     dependencies:
       ms: 2.1.3
     dev: true
+
+  /decode-uri-component/0.4.1:
+    resolution: {integrity: sha512-+8VxcR21HhTy8nOt6jf20w0c9CADrw1O8d+VZ/YzzCt4bJ3uBjw+D1q2osAB8RnpwwaeYBxy0HyKQxD5JBMuuQ==}
+    engines: {node: '>=14.16'}
+    dev: false
 
   /deep-extend/0.6.0:
     resolution: {integrity: sha512-LOHxIOaPYdHlJRtCQfDIVZtfw/ufM8+rVj649RIHzcm/vGwQRXFt6OPqIFWsm2XEMrNIEtWR64sY1LEKD2vAOA==}
@@ -1732,6 +1786,11 @@ packages:
     dependencies:
       to-regex-range: 5.0.1
     dev: true
+
+  /filter-obj/5.1.0:
+    resolution: {integrity: sha512-qWeTREPoT7I0bifpPUXtxkZJ1XJzxWtfoWWkdVGqa+eCr3SHW/Ocp89o8vLvbUuQnadybJpjOKu4V+RwO6sGng==}
+    engines: {node: '>=14.16'}
+    dev: false
 
   /find-up/5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
@@ -2537,6 +2596,12 @@ packages:
     hasBin: true
     dev: false
 
+  /nanoid/5.0.9:
+    resolution: {integrity: sha512-Aooyr6MXU6HpvvWXKoVoXwKMs/KyVakWwg7xQfv5/S/RIgJMy0Ifa45H9qqYy7pTCszrHzP21Uk4PZq2HpEM8Q==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+    dev: false
+
   /natural-compare/1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
@@ -2902,6 +2967,15 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /query-string/9.1.1:
+    resolution: {integrity: sha512-MWkCOVIcJP9QSKU52Ngow6bsAWAPlPK2MludXvcrS2bGZSl+T1qX9MZvRIkqUIkGLJquMJHWfsT6eRqUpp4aWg==}
+    engines: {node: '>=18'}
+    dependencies:
+      decode-uri-component: 0.4.1
+      filter-obj: 5.1.0
+      split-on-first: 3.0.0
+    dev: false
+
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
     dev: true
@@ -3263,6 +3337,11 @@ packages:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /split-on-first/3.0.0:
+    resolution: {integrity: sha512-qxQJTx2ryR0Dw0ITYyekNQWpz6f8dGd7vffGNflQQ3Iqj9NJ6qiZ7ELpZsJ/QBhIVAiDfXdag3+Gp8RvWa62AA==}
+    engines: {node: '>=12'}
+    dev: false
 
   /sprintf-js/1.1.3:
     resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==}

@@ -8,3 +8,4 @@
 
 3. Run the local dev server demoing the components.
    `pnpm dev`
+   [This doesn't current auto-open the browser]
