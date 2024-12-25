@@ -10,7 +10,7 @@ import Tab from '@mui/material/Tab';
 // import { Logger, LoggerHandle } from './Logger';
 // import { DataTable } from './DataTable';
 // import { NewAdditions } from './NewAdditions';
-import type { AppProps } from '../types';
+import type { AppProps } from '../../types/internal';
 
 const App: FC<AppProps> = () => {
   // { placeId, taxonId, curatorUsernames, dataUrl }

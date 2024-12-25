@@ -1,1 +1,19 @@
-{"root":["./src/constants.ts","./src/main.tsx","./src/types.ts","./src/vite-env.d.ts","./src/components/app.tsx","./src/components/datatable.tsx","./src/components/loader.tsx","./src/components/logger.tsx","./src/components/newadditions.tsx","./src/components/standalone.tsx","./src/components/yeardropdown.tsx","./src/components/demo/builderpage.tsx","./src/components/demo/columncontrols.tsx","./src/components/demo/demo.tsx","./src/components/demo/options.tsx","./src/components/demo/reactcode.tsx","./src/components/demo/startpage.tsx","./src/utils/helpers.ts","./src/utils/minification.ts","./src/utils/request.ts"],"errors":true,"version":"5.6.3"}
+{
+  "root": [
+    "./src/constants.ts",
+    "./src/main.tsx",
+    "./src/vite-env.d.ts",
+    "./src/components/app.tsx",
+    "./src/components/datatable.tsx",
+    "./src/components/loader.tsx",
+    "./src/components/logger.tsx",
+    "./src/components/newadditions.tsx",
+    "./src/components/standalone.tsx",
+    "./src/components/yeardropdown.tsx",
+    "./src/utils/helpers.ts",
+    "./src/utils/minification.ts",
+    "./src/utils/request.ts",
+    "./types/internal.ts"
+  ],
+  "version": "5.6.3"
+}

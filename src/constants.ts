@@ -1,4 +1,4 @@
-import { Taxon } from './types';
+import { Taxon } from '../types/internal';
 
 // for the DemoTable settings
 export const DEMO_DEFAULT_CURATOR_INAT_USERNAMES = ['gpohl', 'crispinguppy', 'oneofthedavesiknow'];

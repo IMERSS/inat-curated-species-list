@@ -19,7 +19,7 @@ import {
   INatApiObsRequestParams,
   Taxon,
   TaxonomyMap,
-} from '../types';
+} from '../../types/internal';
 
 let packetLoggerRowId: number;
 let lastId: number | null = null;

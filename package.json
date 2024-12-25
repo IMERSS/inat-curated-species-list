@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "generate-data-files": "node ./dist/",
     "demo": "tsc -b && vite demo",
     "lint": "eslint .",
     "preview": "vite preview"

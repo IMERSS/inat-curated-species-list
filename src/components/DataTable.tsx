@@ -3,9 +3,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { firstBy } from 'thenby';
 import { capitalizeFirstLetter } from '../utils/helpers';
 import styles from './DataTable.module.css';
-import { ColumnControls } from './demo/ColumnControls';
 import { INAT_BASE_URL } from '../constants';
-import { CuratedSpeciesData, CuratedSpeciesTaxon, Taxon } from '../types';
+import { CuratedSpeciesData, CuratedSpeciesTaxon, Taxon } from '../../types/internal';
 
 interface DataTableProps {
   readonly data: CuratedSpeciesData;
@@ -40,12 +39,12 @@ export const DataTable: FC<DataTableProps> = ({
   ],
   defaultVisibleCols = ['superfamily', 'family', 'subfamily', 'tribe', 'subtribe', 'genus', 'subgenus', 'species'],
   showCount = true,
-  allowDownload = true,
-  hideControls = false,
+  // allowDownload = true,
+  // hideControls = false,
 }) => {
   const [sortedData, setSortedData] = useState<CuratedSpeciesTaxon[]>([]);
-  const [downloadData, setDownloadData] = useState<string[][]>([]);
-  const [visibleCols, setVisibleCols] = useState(defaultVisibleCols);
+  // const [downloadData, setDownloadData] = useState<string[][]>([]);
+  const [visibleCols] = useState(defaultVisibleCols); // setVisibleCols
 
   useEffect(() => {
     if (!data) {
@@ -89,20 +88,23 @@ export const DataTable: FC<DataTableProps> = ({
         csvData.push(row);
       });
 
-      setDownloadData(csvData);
+      // setDownloadData(csvData);
     }
   }, [data, visibleCols]);
 
   // this ensures correct sorting of the taxonomical levels in the table
-  const onChange = (cols: string[]) => {
-    setVisibleCols(orderedCols.filter((col) => cols.indexOf(col) !== -1));
-  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const onChange = (cols: string[]) => {
+  //   setVisibleCols(orderedCols.filter((col) => cols.indexOf(col) !== -1));
+  // };
 
   if (!sortedData.length) {
     return null;
   }
 
-  const orderedCols = allowedCols;
+  console.log(allowedCols);
+  // const orderedCols = allowedCols;
 
   return (
     <table className={`${styles.table} inat-curated-species-table`} cellSpacing={0} cellPadding={2}>

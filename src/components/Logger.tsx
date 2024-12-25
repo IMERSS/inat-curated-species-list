@@ -1,6 +1,6 @@
 import React, { useImperativeHandle, useState } from 'react';
 import styles from './Logger.module.css';
-import { LogRow, LoggerHandle } from '../types';
+import { LogRow, LoggerHandle } from '../../types/internal';
 
 let logRows: LogRow[] = [];
 
