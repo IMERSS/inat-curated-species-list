@@ -1,6 +1,6 @@
 # inat-curated-species-list
 
-> October 2024: this script is being rewritten and re-documented! Come back soon.
+> Dec 2024: this script is being rewritten and re-documented! Come back soon.
 
 This is a tool to query [iNaturalist](https://www.inaturalist.org/) for all observations in a specific taxon and place that have been confirmed by one or more specific users. It allows you to create _tailored list of species_ that have been approved by experts, rather than rely on the community "research grade" standard.
 
@@ -11,7 +11,7 @@ This tool is location and taxon agnostic. You can use it to create a curated lis
 ### Screenshot
 
 <kbd>
-  <img src="./resources/screenshot.png" />
+  <img src="./docs/screenshot.png" />
 </kbd>
 
 ### Features

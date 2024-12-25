@@ -1,43 +1,19 @@
 {
-  "name": "@imerss/inat-curated-species-list",
+  "name": "inat-curated-species",
   "private": true,
-  "version": "0.0.1",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "generate-data-files": "node ./dist/",
-    "demo": "tsc -b && vite demo",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@fontsource/roboto": "^4.5.8",
-    "@mui/icons-material": "^5.10.9",
-    "@mui/lab": "^5.0.0-alpha.173",
-    "@mui/material": "^5.10.12",
-    "debounce": "^2.1.1",
-    "query-string": "^7.1.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-spinners": "^0.13.8",
-    "thenby": "^1.3.4"
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@eslint/js": "^9.11.1",
-    "@types/react": "^18.3.10",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.2",
-    "eslint": "^9.11.1",
-    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
-    "eslint-plugin-react-refresh": "^0.4.12",
-    "globals": "^15.9.0",
-    "prettier": "^3.3.3",
-    "typescript": "^5.5.3",
-    "typescript-eslint": "^8.7.0",
-    "vite": "^5.4.8",
-    "vite-plugin-node-polyfills": "^0.22.0"
+    "prettier": "^3.2.5",
+    "turbo": "^2.3.3",
+    "typescript": "5.5.4"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
   }
 }
