@@ -1,3 +1,5 @@
+import { Logger } from 'winston';
+
 export type Taxon =
   | 'kingdom'
   | 'phylum'
@@ -37,17 +39,13 @@ export type TaxonomyMap = {
   [rank in Taxon]: string;
 };
 
-export type DownloadDataByPacket = {
+export type DownloadDataPacketArgs = {
   readonly curators: string;
   readonly placeId: number;
   readonly taxonId: number;
-  readonly taxons: Taxon[];
   readonly packetNum: number;
-  readonly logger: any;
-  readonly debugMaxResults?: number;
-  readonly onPacketComplete: (packetNum: number, totalResults: number) => void;
-  readonly onComplete: (data: CuratedSpeciesData, newAdditions: any) => void;
-  readonly onError: () => void;
+  readonly tempFolder: string;
+  readonly logger: Logger;
 };
 
 // not exhaustive. Just contains a couple of things we use from their data model

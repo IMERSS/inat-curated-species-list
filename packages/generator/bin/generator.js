@@ -69,11 +69,17 @@ var yargs_1 = __importDefault(require("yargs"));
 var helpers_1 = require("yargs/helpers");
 var path_1 = __importDefault(require("path"));
 var fs_1 = __importDefault(require("fs"));
+var cli_progress_1 = __importDefault(require("cli-progress"));
+var ansi_colors_1 = __importDefault(require("ansi-colors"));
+var request_1 = require("./request");
+var logs_1 = require("./logs");
+var constants_1 = require("./constants");
+var throttled_queue_1 = __importDefault(require("throttled-queue"));
 var configFilePath = (0, yargs_1.default)((0, helpers_1.hideBin)(process.argv)).argv.config;
 (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var configFile, config;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var configFile, config, _a, curators, taxonId, placeId, _b, taxons, _c, tempFolder, temporaryFolder, progress, logger, throttle, curatorList, _d, totalResults, numRequests;
+    return __generator(this, function (_e) {
+        switch (_e.label) {
             case 0:
                 // check the user's specified a config file
                 if (!configFilePath) {
@@ -87,7 +93,56 @@ var configFilePath = (0, yargs_1.default)((0, helpers_1.hideBin)(process.argv)).
                 }
                 return [4 /*yield*/, Promise.resolve("".concat(configFile)).then(function (s) { return __importStar(require(s)); })];
             case 1:
-                config = _a.sent();
+                config = _e.sent();
+                _a = config.default, curators = _a.curators, taxonId = _a.taxonId, placeId = _a.placeId, _b = _a.taxons, taxons = _b === void 0 ? constants_1.DEFAULT_TAXONS : _b, _c = _a.tempFolder, tempFolder = _c === void 0 ? './temp' : _c;
+                temporaryFolder = path_1.default.resolve(process.cwd(), tempFolder);
+                (0, logs_1.clearTempFolder)(temporaryFolder);
+                progress = new cli_progress_1.default.SingleBar({
+                    format: 'Download progress |' + ansi_colors_1.default.green('{bar}') + '| {percentage}% || {value}/{total} requests',
+                    barCompleteChar: '\u2588',
+                    barIncompleteChar: '\u2591',
+                    hideCursor: true,
+                });
+                logger = (0, logs_1.initLogger)(temporaryFolder);
+                throttle = (0, throttled_queue_1.default)(1, 1050);
+                curatorList = curators.join(',');
+                return [4 /*yield*/, throttle(function () {
+                        return (0, request_1.downloadDataPacket)({
+                            curators: curatorList,
+                            placeId: placeId,
+                            taxonId: taxonId,
+                            packetNum: 1,
+                            tempFolder: temporaryFolder,
+                            logger: logger,
+                        });
+                    })];
+            case 2:
+                _d = _e.sent(), totalResults = _d.totalResults, numRequests = _d.numRequests;
+                if (totalResults === 0) {
+                    return [2 /*return*/];
+                }
+                progress.start(numRequests, 1);
+                //   for (let i = 2; i < numRequests; i++) {
+                //     throttle(() => {});
+                //   }
+                /*
+                // onComplete: () => {
+                  //   //   const minifiedSpeciesData = minifyData(speciesData, params.taxons);
+                  //   //   const filename = `${C.GENERATED_FILENAME_FOLDER}/${C.GENERATED_FILENAME}`;
+                  //   //   if (!fs.existsSync(C.GENERATED_FILENAME_FOLDER)) {
+                  //   //     fs.mkdirSync(C.GENERATED_FILENAME_FOLDER);
+                  //   //   }
+                  //   //   if (fs.existsSync(filename)) {
+                  //   //     fs.unlinkSync(filename);
+                  //   //   }
+                  //   //   fs.writeFileSync(filename, JSON.stringify(minifiedSpeciesData));
+                  //   //   console.log('__________________________________________');
+                  //   //   console.log(`Complete. File generated: ${filename}`);
+                  // },
+                  // onError: () => {
+                  //   console.error('Error loading data:');
+                  // },*/
+                progress.stop();
                 return [2 /*return*/];
         }
     });

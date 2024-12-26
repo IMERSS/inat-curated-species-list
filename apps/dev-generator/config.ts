@@ -2,10 +2,10 @@ import type { GeneratorConfig } from '@imerss/inat-curated-species-list-generato
 
 const config: GeneratorConfig = {
   curators: ['benkeen'],
-  taxonId: 7085,
-  placeId: 53787,
+  taxonId: 177158,
+  placeId: 7085,
   dataFilename: 'data.json',
-  logFile: 'log.txt',
+  logFile: 'data.log',
 };
 
 export default config;

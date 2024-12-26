@@ -2,32 +2,27 @@
  * This file contains a various methods for parsing and minify iNat data.
  */
 import qs from 'query-string';
-import path from 'path';
-import fs from 'fs';
+import fetch from 'node-fetch';
 
-import {
-  // ENABLE_DATA_BACKUP,
-  // LOAD_DATA_FROM_LOCAL_FILES,
-  INAT_API_URL,
-  INAT_REQUEST_RESULTS_PER_PAGE,
-} from './constants';
+import { INAT_API_URL, INAT_REQUEST_RESULTS_PER_PAGE } from './constants';
 
-import { formatNum, splitStringByComma } from './helpers';
 import {
   CuratedSpeciesData,
-  DownloadDataByPacket,
+  DownloadDataPacketArgs,
   GetDataPacketResponse,
   INatTaxonAncestor,
   INatApiObsRequestParams,
   Taxon,
   TaxonomyMap,
 } from '../types/generator.types';
+import { logPacket } from './logs';
+import { Logger } from 'winston';
 
-let packetLoggerRowId: number;
 let lastId: number | null = null;
 let curatedSpeciesData: CuratedSpeciesData = {};
 let newAdditions = {};
 let numResults = 0;
+let numRequests = 0;
 
 const getTaxonomy = (ancestors: INatTaxonAncestor[], taxonsToReturn: Taxon[]): TaxonomyMap =>
   ancestors.reduce((acc, curr) => {
@@ -37,103 +32,96 @@ const getTaxonomy = (ancestors: INatTaxonAncestor[], taxonsToReturn: Taxon[]): T
     return acc;
   }, {} as TaxonomyMap);
 
+// weird...
 export const resetData = () => {
   curatedSpeciesData = {};
   newAdditions = {};
   numResults = 0;
 };
 
-export const downloadDataByPacket = (args: DownloadDataByPacket) => {
-  const {
-    curators,
-    taxons,
-    packetNum,
-    placeId,
-    taxonId,
-    logger,
-    debugMaxResults,
-    onPacketComplete,
-    onComplete,
-    onError,
-  } = args;
-
-  getDataPacket(packetNum, placeId, taxonId, curators)
-    .then((resp) => {
-      const totalResults = resp.total_results;
-
-      // write the entire content to a log file. We'll parse them in a second step
-      fs.writeFileSync(
-        path.resolve(__dirname, `./dist/packet-${packetNum}.json`),
-        JSON.stringify(resp, null, '\t'),
-        'utf-8',
-      );
-
-      onPacketComplete(packetNum, totalResults);
-
-      if (totalResults <= 0) {
-        logger.current!.addLogRow(`No observations found.`, 'info');
-        onComplete(curatedSpeciesData, newAdditions);
-        return;
-      } else {
-        // only the first request has the correct number of total results
-        if (!numResults) {
-          numResults = resp.total_results;
-        }
-      }
-
-      // the data returned by iNat is enormous. I found on my server, loading everything into memory caused
-      // memory issues (hard-disk space, I think). So instead, here we extract the necessary information right away
-      // and write each packet to a file
-      extractSpecies(resp, curators, taxons);
-
-      lastId = resp.results[resp.results.length - 1].id;
-
-      const numResultsFormatted = formatNum(numResults);
-      const maxResultsLimit = Math.min(numResults, debugMaxResults || Infinity);
-      let maxResultsLimitMsg = '';
-      // if (debugMaxResults) {
-      //   maxResultsLimitMsg =
-      //     debugMaxResults === 'html'
-      //       ? `(Results limited to <b>${debugMaxResults}</b>)`
-      //       : `(Results limited to ${debugMaxResults})`;
-      // }
-
-      if (packetNum * INAT_REQUEST_RESULTS_PER_PAGE < maxResultsLimit) {
-        if (!packetLoggerRowId) {
-          const num = new Intl.NumberFormat('en-US').format(resp.total_results);
-          const msg = logFormat === 'html' ? `<b>${num}</b> observations found.` : `${num} observations found.`;
-          logger.current!.addLogRow(msg, 'info');
-          packetLoggerRowId = logger.current!.addLogRow(
-            `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE)}/${numResultsFormatted} observations. ${maxResultsLimitMsg}`,
-            'info',
-          );
-        }
-        downloadDataByPacket({ ...args, logger, packetNum: packetNum + 1 });
-      } else {
-        logger.current!.replaceLogRow(
-          packetLoggerRowId,
-          `Retrieved ${numResultsFormatted}/${numResultsFormatted} observations. ${maxResultsLimitMsg}`,
-          'info',
-        );
-        onComplete(curatedSpeciesData, newAdditions);
-      }
-    })
-    .catch(onError);
+export type DownloadDataPacketResponse = {
+  readonly totalResults: number;
+  readonly numRequests: number;
 };
 
-export const getDataPacket = (
-  packetNum: number,
-  placeId: number,
-  taxonId: number,
-  curators: string,
-): Promise<GetDataPacketResponse> => {
-  // if (LOAD_DATA_FROM_LOCAL_FILES) {
-  //   return new Promise((resolve) => {
-  //     const fileContent = fs.readFileSync(path.resolve(__dirname, `../dist/packet-${packetNum}.json`), 'utf-8');
-  //     resolve(JSON.parse(fileContent.toString()));
-  //   });
-  // }
+/**
+ * Simple high-level method that just downloads a chunk of data from iNat and stores the result in a temporary file on disk.
+ * Later steps parse, convert and minify the relevant data.
+ */
+export const downloadDataPacket = async ({
+  curators,
+  packetNum,
+  placeId,
+  taxonId,
+  tempFolder,
+  logger,
+}: DownloadDataPacketArgs): Promise<DownloadDataPacketResponse> => {
+  let rawResponse;
+  try {
+    rawResponse = await getDataPacket(placeId, taxonId, curators, logger);
+  } catch (e) {
+    logger.log('error', e);
+  }
 
+  const resp: any = (await rawResponse.json()) as GetDataPacketResponse;
+  const totalResults = resp.total_results;
+
+  logger.log('info', 'request successful'); //
+
+  if (totalResults <= 0) {
+    return {
+      totalResults,
+      numRequests,
+    };
+  } else {
+    if (!numResults) {
+      numResults = totalResults;
+      numRequests = Math.ceil(totalResults / INAT_REQUEST_RESULTS_PER_PAGE);
+    }
+  }
+
+  // write the entire API response to a file. We'll extract what we need once the data's fully downloaded
+  logPacket(packetNum, tempFolder, resp);
+
+  // the iNat API works by passing in a property to return data above a particular ID. This tracks it for subsequent requests
+  lastId = resp.results[resp.results.length - 1].id;
+
+  return {
+    totalResults,
+    numRequests,
+  };
+
+  // const maxResultsLimit = Math.min(numResults, debugMaxResults || Infinity);
+  // // let maxResultsLimitMsg = '';
+  // // if (debugMaxResults) {
+  // //   maxResultsLimitMsg =
+  // //     debugMaxResults === 'html'
+  // //       ? `(Results limited to <b>${debugMaxResults}</b>)`
+  // //       : `(Results limited to ${debugMaxResults})`;
+  // // }
+
+  // if (packetNum * INAT_REQUEST_RESULTS_PER_PAGE < maxResultsLimit) {
+  //   // if (!packetLoggerRowId) {
+  //   //   const num = new Intl.NumberFormat('en-US').format(resp.total_results);
+  //   //   const msg = logFormat === 'html' ? `<b>${num}</b> observations found.` : `${num} observations found.`;
+  //   //   logger.current!.addLogRow(msg, 'info');
+  //   //   packetLoggerRowId = logger.current!.addLogRow(
+  //   //     `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE)}/${numResultsFormatted} observations. ${maxResultsLimitMsg}`,
+  //   //     'info',
+  //   //   );
+  //   // }
+  //   // downloadDataByPacket({ ...args, logger, packetNum: packetNum + 1 });
+  // } else {
+  //   // logger.current!.replaceLogRow(
+  //   //   packetLoggerRowId,
+  //   //   `Retrieved ${numResultsFormatted}/${numResultsFormatted} observations. ${maxResultsLimitMsg}`,
+  //   //   'info',
+  //   // );
+  //   // onComplete();
+  // }
+};
+
+export const getDataPacket = async (placeId: number, taxonId: number, curators: string, logger: Logger) => {
   const apiParams: INatApiObsRequestParams = {
     place_id: placeId,
     taxon_id: taxonId,
@@ -144,6 +132,7 @@ export const getDataPacket = (
     ident_user_id: curators,
   };
 
+  // refactor
   if (numResults && lastId) {
     apiParams.id_above = lastId;
   }
@@ -151,70 +140,7 @@ export const getDataPacket = (
   const paramsStr = qs.stringify(apiParams);
   const apiUrl = `${INAT_API_URL}?${paramsStr}`;
 
-  return fetch(apiUrl).then((resp) => resp.json());
-};
+  logger.log('info', `Request: ${apiUrl}`);
 
-// export const removeExistingNewAddition = (taxonId: number, data) => {
-//   Object.keys(data).forEach((year) => {
-//     if (data[year][taxonId]) {
-//       delete data[year][taxonId];
-//     }
-//   });
-// };
-
-export const extractSpecies = (rawData: GetDataPacketResponse, curators: string, taxonsToReturn: Taxon[]) => {
-  const curatorArray = splitStringByComma(curators);
-
-  rawData.results.forEach((obs) => {
-    obs.identifications.forEach((ident) => {
-      if (curatorArray.indexOf(ident.user.login) === -1) {
-        return;
-      }
-
-      if (!ident.current) {
-        return;
-      }
-
-      // ignore anything that isn't a species. Currently we're ignoring subspecies data and anything in a more general
-      // rank isn't of use
-      if (ident.taxon.rank !== 'species') {
-        return;
-      }
-
-      // the data from the server is sorted by ID - oldest to newest - so here we've found the first *observation* of a species
-      // that meets our curated reviewer requirements. This tracks when the species was *first confirmed* by a curated reviewer,
-      // which might be vastly different from when the sighting was actually made
-      if (!curatedSpeciesData[ident.taxon_id]) {
-        const taxonomy = getTaxonomy(ident.taxon.ancestors, taxonsToReturn);
-        taxonomy.species = ident.taxon.name;
-        curatedSpeciesData[ident.taxon_id] = { data: taxonomy, count: 1 };
-
-        // note: count just tracks how many observations have been reviewed and confirmed by our curators, not by anyone
-      } else {
-        curatedSpeciesData[ident.taxon_id].count++;
-      }
-
-      // now onto the New Additions section
-
-      // track the earliest confirmation of a species by any user on the ignore list. Once all the data is gathered up, we:
-      //    (a) ignore any records earlier than the earliest confirmation
-      //    (b)
-
-      // if (!newAdditions[ident.taxon.id] || newAdditions[ident.taxon.id].curatorConfirmationDate < ident.created_at) {
-      //   const taxonomy = getTaxonomy(ident.taxon.ancestors, taxonsToReturn);
-
-      //   newAdditions[ident.taxon.id] = {
-      //     taxonomy,
-      //     species: ident.taxon.name,
-      //     observerUsername: obs.user.login,
-      //     observerName: obs.user.name,
-      //     obsDate: ident.created_at,
-      //     // obsId: ident.taxon_id,
-      //     obsPhoto: obs.photos && obs.photos.length > 0 ? obs.photos[0].url : null,
-      //     url: obs.uri,
-      //     curatorConfirmationDate: ident.created_at,
-      //   };
-      // }
-    });
-  });
+  return fetch(apiUrl);
 };
