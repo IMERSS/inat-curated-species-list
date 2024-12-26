@@ -44,13 +44,13 @@ const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
   const logger = initLogger(tempFolderFullPath);
 
   // now to the meat!
-  // console.log('Step 1: download data');
-  // const { numRequests } = await downloadDataPackets(config.default, tempFolderFullPath, logger);
-
-  const numRequests = 153;
+  console.log('Step 1: download data from iNat');
+  const { numRequests } = await downloadDataPackets(config.default, tempFolderFullPath, logger);
 
   console.log('Step 2: extract species list');
-  const speciesData = extractSpeciesList(config.default, numRequests);
+  const speciesData = extractSpeciesList(config.default, tempFolderFullPath, numRequests);
+
+  console.log(speciesData);
 
   /*
   // onComplete: () => {
