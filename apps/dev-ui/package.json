@@ -1,5 +1,5 @@
 {
-  "name": "inat-curated-list-dev-env",
+  "name": "inat-curated-list-dev-ui",
   "description": "A local dev environment for the components in the published @imerss/inat-curated-species-list package.",
   "version": "0.1.0",
   "type": "module",

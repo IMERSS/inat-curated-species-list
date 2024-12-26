@@ -41,7 +41,7 @@ var resetData = function () {
 };
 exports.resetData = resetData;
 var downloadDataByPacket = function (args) {
-    var curators = args.curators, visibleTaxons = args.visibleTaxons, packetNum = args.packetNum, placeId = args.placeId, taxonId = args.taxonId, logger = args.logger, logFormat = args.logFormat, maxResults = args.maxResults, onSuccess = args.onSuccess, onError = args.onError;
+    var curators = args.curators, visibleTaxons = args.visibleTaxons, packetNum = args.packetNum, placeId = args.placeId, taxonId = args.taxonId, logger = args.logger, maxResults = args.maxResults, onSuccess = args.onSuccess, onError = args.onError;
     (0, exports.getDataPacket)(packetNum, placeId, taxonId, curators)
         .then(function (resp) {
         // generate the files as backup so we don't have to ping iNat all the time while testing

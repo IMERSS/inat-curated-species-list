@@ -41,16 +41,13 @@ export type DownloadDataByPacket = {
   readonly curators: string;
   readonly placeId: number;
   readonly taxonId: number;
-  readonly visibleTaxons: Taxon[];
+  readonly taxons: Taxon[];
   readonly packetNum: number;
-
-  // TODO: rethink
   readonly logger: any;
-
-  readonly onSuccess: (data: CuratedSpeciesData, newAdditions: any) => void;
+  readonly debugMaxResults?: number;
+  readonly onPacketComplete: (packetNum: number, totalResults: number) => void;
+  readonly onComplete: (data: CuratedSpeciesData, newAdditions: any) => void;
   readonly onError: () => void;
-  readonly logFormat: 'html' | 'text';
-  readonly maxResults?: number;
 };
 
 // not exhaustive. Just contains a couple of things we use from their data model
@@ -64,7 +61,7 @@ export type INatTaxonAncestor = {
  * running the extraction script. That then pings iNat's API to retrieve the information they want and generate a file on
  * disk for use by the script. For the run-time visualization of the data, see the `VisualizationConfig` type below.
  */
-export type ExtractDataConfig = {
+export type GeneratorConfig = {
   /**
    * An array of iNat usernames for your curators. The script will request all observations in the
    * taxon and place of your choosing that have been reviewed by the users here.
@@ -87,7 +84,12 @@ export type ExtractDataConfig = {
    *
    * Default: ['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species']
    */
-  readonly retrieveTaxons?: Taxon[];
+  readonly taxons?: Taxon[];
+
+  /**
+   * The name of the generated data file.
+   */
+  readonly dataFilename: string;
 
   /**
    * The data set can typically get very large. In all cases the data in the file will be minified (a map of taxon strings is generated and
@@ -96,6 +98,17 @@ export type ExtractDataConfig = {
    * Default: true
    */
   readonly minifyData?: boolean;
+
+  /**
+   * The name of the logfile. Path is relative to where you ran the generation command. This file will be generated/overwritten.
+   * Defaults to `log.txt`
+   */
+  readonly logFile?: string;
+
+  /**
+   * The name of a temporary folder where the raw data from iNat will be stored. Defaults to './temp
+   */
+  readonly tempFolder?: string;
 };
 
 export type GetDataPacketResponse = {

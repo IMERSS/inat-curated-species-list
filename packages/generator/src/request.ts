@@ -21,7 +21,7 @@ import {
   INatApiObsRequestParams,
   Taxon,
   TaxonomyMap,
-} from './generator.types';
+} from '../types/generator.types';
 
 let packetLoggerRowId: number;
 let lastId: number | null = null;
@@ -44,23 +44,35 @@ export const resetData = () => {
 };
 
 export const downloadDataByPacket = (args: DownloadDataByPacket) => {
-  const { curators, visibleTaxons, packetNum, placeId, taxonId, logger, logFormat, maxResults, onSuccess, onError } =
-    args;
+  const {
+    curators,
+    taxons,
+    packetNum,
+    placeId,
+    taxonId,
+    logger,
+    debugMaxResults,
+    onPacketComplete,
+    onComplete,
+    onError,
+  } = args;
 
   getDataPacket(packetNum, placeId, taxonId, curators)
     .then((resp) => {
-      // generate the files as backup so we don't have to ping iNat all the time while testing
-      // if (ENABLE_DATA_BACKUP) {
-      //   fs.writeFileSync(
-      //     path.resolve(__dirname, `../dist/packet-${packetNum}.json`),
-      //     JSON.stringify(resp, null, '\t'),
-      //     'utf-8',
-      //   );
-      // }
+      const totalResults = resp.total_results;
 
-      if (resp.total_results <= 0) {
+      // write the entire content to a log file. We'll parse them in a second step
+      fs.writeFileSync(
+        path.resolve(__dirname, `./dist/packet-${packetNum}.json`),
+        JSON.stringify(resp, null, '\t'),
+        'utf-8',
+      );
+
+      onPacketComplete(packetNum, totalResults);
+
+      if (totalResults <= 0) {
         logger.current!.addLogRow(`No observations found.`, 'info');
-        onSuccess(curatedSpeciesData, newAdditions);
+        onComplete(curatedSpeciesData, newAdditions);
         return;
       } else {
         // only the first request has the correct number of total results
@@ -71,17 +83,20 @@ export const downloadDataByPacket = (args: DownloadDataByPacket) => {
 
       // the data returned by iNat is enormous. I found on my server, loading everything into memory caused
       // memory issues (hard-disk space, I think). So instead, here we extract the necessary information right away
-      extractSpecies(resp, curators, visibleTaxons);
+      // and write each packet to a file
+      extractSpecies(resp, curators, taxons);
 
       lastId = resp.results[resp.results.length - 1].id;
 
       const numResultsFormatted = formatNum(numResults);
-      const maxResultsLimit = Math.min(numResults, maxResults || Infinity);
+      const maxResultsLimit = Math.min(numResults, debugMaxResults || Infinity);
       let maxResultsLimitMsg = '';
-      if (maxResults) {
-        maxResultsLimitMsg =
-          logFormat === 'html' ? `(Results limited to <b>${maxResults}</b>)` : `(Results limited to ${maxResults})`;
-      }
+      // if (debugMaxResults) {
+      //   maxResultsLimitMsg =
+      //     debugMaxResults === 'html'
+      //       ? `(Results limited to <b>${debugMaxResults}</b>)`
+      //       : `(Results limited to ${debugMaxResults})`;
+      // }
 
       if (packetNum * INAT_REQUEST_RESULTS_PER_PAGE < maxResultsLimit) {
         if (!packetLoggerRowId) {
@@ -92,12 +107,6 @@ export const downloadDataByPacket = (args: DownloadDataByPacket) => {
             `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE)}/${numResultsFormatted} observations. ${maxResultsLimitMsg}`,
             'info',
           );
-        } else {
-          logger.current!.replaceLogRow(
-            packetLoggerRowId,
-            `Retrieved ${formatNum(INAT_REQUEST_RESULTS_PER_PAGE * packetNum)}/${numResultsFormatted} observations. ${maxResultsLimitMsg}`,
-            'info',
-          );
         }
         downloadDataByPacket({ ...args, logger, packetNum: packetNum + 1 });
       } else {
@@ -106,7 +115,7 @@ export const downloadDataByPacket = (args: DownloadDataByPacket) => {
           `Retrieved ${numResultsFormatted}/${numResultsFormatted} observations. ${maxResultsLimitMsg}`,
           'info',
         );
-        onSuccess(curatedSpeciesData, newAdditions);
+        onComplete(curatedSpeciesData, newAdditions);
       }
     })
     .catch(onError);

@@ -3,18 +3,22 @@
   "version": "1.0.0",
   "type": "module",
   "bin": {
-    "generate-data-files": "./bin/generator.js"
+    "generate-data-files": "./src/generator.ts"
   },
-  "types": "./bin/generate.types.d.ts",
+  "main": "./src/generator.ts",
+  "types": "./types/generator.types.d.ts",
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "ansi-colors": "^4.1.3",
+    "cli-progress": "^3.12.0",
     "debounce": "^2.2.0",
     "nanoid": "5.0.9",
-    "query-string": "^9.1.1"
+    "query-string": "^9.1.1",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
