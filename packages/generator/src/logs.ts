@@ -20,7 +20,7 @@ export const logPacket = (packetNum: number, tempFolder: string, resp: any) => {
   fs.mkdirSync(tempFolder, { recursive: true });
 
   const packetDataFile = path.resolve(tempFolder, `packet-${packetNum}.json`);
-  fs.writeFileSync(packetDataFile, JSON.stringify(resp, null, '\t'), 'utf-8');
+  fs.writeFileSync(packetDataFile, JSON.stringify(resp), 'utf-8'); // JSON.stringify(resp, null, '\t')
 
   return packetDataFile;
 };

@@ -33,5 +33,3 @@ export const getShortestUniqueKey: () => string = () => {
 
   return getShortestUniqueKey();
 };
-
-export const splitStringByComma = (fullStr: string): string[] => fullStr.split(',').map((str) => str.trim());

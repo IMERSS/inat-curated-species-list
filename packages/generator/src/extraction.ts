@@ -7,12 +7,15 @@ import {
   TaxonomyMap,
 } from '../types/generator.types';
 import path from 'path';
+import fs from 'fs';
 
 export const extractSpeciesList = (config: GeneratorConfig, tempFolder: string, numRequests: number) => {
   const curatedSpeciesData: CuratedSpeciesData = {};
 
   for (let packetNum = 1; packetNum <= numRequests; packetNum++) {
-    const rawData: GetDataPacketResponse = require(path.resolve(tempFolder, `packet-${packetNum}.json`));
+    const rawData: GetDataPacketResponse = JSON.parse(
+      fs.readFileSync(path.resolve(tempFolder, `packet-${packetNum}.json`), 'utf-8'),
+    );
     appendSpeciesFromPacket(rawData, config.curators, config.taxons, curatedSpeciesData);
   }
 

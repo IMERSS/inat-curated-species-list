@@ -7,10 +7,27 @@ import path from 'path';
 import fs from 'fs';
 import { downloadDataPackets } from './request';
 import { extractSpeciesList } from './extraction';
+import { minifySpeciesData } from './minification';
 import { clearTempFolder, initLogger } from './logs';
 import { DEFAULT_TAXONS } from './constants';
+import { CuratedSpeciesData, GeneratorConfig } from '../types/generator.types';
 
 const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
+
+const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesData, tempFolder: string) => {
+  const minifiedSpeciesData = minifySpeciesData(speciesData, config.taxons);
+
+  const filename = path.resolve(tempFolder, config.dataFilename);
+  if (!fs.existsSync(tempFolder)) {
+    fs.mkdirSync(tempFolder);
+  }
+  if (fs.existsSync(filename)) {
+    fs.unlinkSync(filename);
+  }
+  fs.writeFileSync(filename, JSON.stringify(minifiedSpeciesData));
+
+  return filename;
+};
 
 (async () => {
   // check the user has specified a config file
@@ -29,8 +46,8 @@ const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
   // assumption here is that it's returning an object of type GeneratorConfig. Runtime check?
   const config = await import(configFile);
   const cleanConfig = {
-    // default
     tempFolder: './temp',
+    dataFilename: 'data.json',
     taxons: DEFAULT_TAXONS,
     ...config.default,
   };
@@ -45,26 +62,14 @@ const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
 
   // now to the meat!
   console.log('Step 1: download data from iNat');
-  const { numRequests } = await downloadDataPackets(config.default, tempFolderFullPath, logger);
+  const { numRequests } = await downloadDataPackets(cleanConfig, tempFolderFullPath, logger);
 
   console.log('Step 2: extract species list');
-  const speciesData = extractSpeciesList(config.default, tempFolderFullPath, numRequests);
+  const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numRequests);
 
-  console.log(speciesData);
+  console.log('Step 3: generate data file');
+  const filename = generateDataFile(cleanConfig, speciesData, tempFolderFullPath);
 
-  /*
-  // onComplete: () => {
-    //   //   const minifiedSpeciesData = minifyData(speciesData, params.taxons);
-    //   //   const filename = `${C.GENERATED_FILENAME_FOLDER}/${C.GENERATED_FILENAME}`;
-    //   //   if (!fs.existsSync(C.GENERATED_FILENAME_FOLDER)) {
-    //   //     fs.mkdirSync(C.GENERATED_FILENAME_FOLDER);
-    //   //   }
-    //   //   if (fs.existsSync(filename)) {
-    //   //     fs.unlinkSync(filename);
-    //   //   }
-    //   //   fs.writeFileSync(filename, JSON.stringify(minifiedSpeciesData));
-    //   //   console.log('__________________________________________');
-    //   //   console.log(`Complete. File generated: ${filename}`);
-    // },
-  */
+  console.log('__________________________________________');
+  console.log(`Complete. Data file generated: ${filename}`);
 })();

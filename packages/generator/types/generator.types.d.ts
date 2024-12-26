@@ -77,17 +77,17 @@ export type GeneratorConfig = {
   readonly placeId: number;
 
   /**
+   * The name of the generated data file.
+   */
+  readonly dataFilename: string;
+
+  /**
    * The iNat data contains the (vast!) full taxonomy of all observations. You won't be interested in displaying all that
    * info. This setting controls which taxons will be retrieved and stored in the data file for display.
    *
    * Default: ['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species']
    */
   readonly taxons?: Taxon[];
-
-  /**
-   * The name of the generated data file.
-   */
-  readonly dataFilename: string;
 
   /**
    * The data set can typically get very large. In all cases the data in the file will be minified (a map of taxon strings is generated and
@@ -98,13 +98,7 @@ export type GeneratorConfig = {
   readonly minifyData?: boolean;
 
   /**
-   * The name of the logfile. Path is relative to where you ran the generation command. This file will be generated/overwritten.
-   * Defaults to `log.txt`
-   */
-  readonly logFile?: string;
-
-  /**
-   * The name of a temporary folder where the raw data from iNat will be stored. Defaults to './temp
+   * The name of a temporary folder where all the data will be generated.
    */
   readonly tempFolder?: string;
 };
