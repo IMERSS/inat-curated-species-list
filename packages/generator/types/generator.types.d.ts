@@ -146,3 +146,8 @@ export type GetDataPacketResponse = {
     },
   ];
 };
+
+export type DownloadDataPacketResponse = {
+  readonly totalResults: number;
+  readonly numRequests: number;
+};

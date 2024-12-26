@@ -5,24 +5,21 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import path from 'path';
 import fs from 'fs';
-import cliProgress from 'cli-progress';
-import colors from 'ansi-colors';
-import { downloadDataPacket, DownloadDataPacketResponse } from './request';
+import { downloadDataPackets } from './request';
+import { extractSpeciesList } from './extraction';
 import { clearTempFolder, initLogger } from './logs';
 import { DEFAULT_TAXONS } from './constants';
-import { GeneratorConfig } from '../types/generator.types';
-import throttledQueue from 'throttled-queue';
 
 const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
 
 (async () => {
-  // check the user's specified a config file
+  // check the user has specified a config file
   if (!configFilePath) {
     console.error('Please specify a --config parameter linking to your config.ts file.');
     process.exit(1);
   }
 
-  // check file exists
+  // check the file exists
   const configFile = path.resolve(process.cwd(), configFilePath);
   if (!fs.existsSync(configFile)) {
     console.error(`The config file cannot be found at this location: ${configFile}`);
@@ -31,55 +28,29 @@ const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
 
   // assumption here is that it's returning an object of type GeneratorConfig. Runtime check?
   const config = await import(configFile);
-  const {
-    curators,
-    taxonId,
-    placeId,
-    taxons = DEFAULT_TAXONS,
-    tempFolder = './temp',
-  } = config.default as GeneratorConfig;
+  const cleanConfig = {
+    // default
+    tempFolder: './temp',
+    taxons: DEFAULT_TAXONS,
+    ...config.default,
+  };
+
+  const tempFolderFullPath = path.resolve(process.cwd(), cleanConfig.tempFolder);
 
   // reset the old log folder
-  const temporaryFolder = path.resolve(process.cwd(), tempFolder);
-  clearTempFolder(temporaryFolder);
+  clearTempFolder(tempFolderFullPath);
 
-  // used for visualizing the download + extraction process
-  const progress = new cliProgress.SingleBar({
-    format: 'Download progress |' + colors.green('{bar}') + '| {percentage}% || {value}/{total} requests',
-    barCompleteChar: '\u2588',
-    barIncompleteChar: '\u2591',
-    hideCursor: true,
-  });
+  // create the logger
+  const logger = initLogger(tempFolderFullPath);
 
-  const logger = initLogger(temporaryFolder);
+  // now to the meat!
+  // console.log('Step 1: download data');
+  // const { numRequests } = await downloadDataPackets(config.default, tempFolderFullPath, logger);
 
-  // limit the requests to iNat to be one per second (plus extra 50ms). Their API forbids anything more and will
-  // reject too many requests coming from the same source
-  const throttle = throttledQueue(1, 1050);
-  const curatorList = curators.join(',');
+  const numRequests = 153;
 
-  // do our initial request. This is the only request that returns the total number of results in the result set. Once
-  // we get the data back, initialize the progress bar and kick off all the remaining requests within our request throttler
-  const { totalResults, numRequests } = await throttle<DownloadDataPacketResponse>(() =>
-    downloadDataPacket({
-      curators: curatorList,
-      placeId,
-      taxonId,
-      packetNum: 1,
-      tempFolder: temporaryFolder,
-      logger,
-    }),
-  );
-
-  if (totalResults === 0) {
-    return;
-  }
-
-  progress.start(numRequests, 1);
-
-  //   for (let i = 2; i < numRequests; i++) {
-  //     throttle(() => {});
-  //   }
+  console.log('Step 2: extract species list');
+  const speciesData = extractSpeciesList(config.default, numRequests);
 
   /*
   // onComplete: () => {
@@ -95,9 +66,5 @@ const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
     //   //   console.log('__________________________________________');
     //   //   console.log(`Complete. File generated: ${filename}`);
     // },
-    // onError: () => {
-    //   console.error('Error loading data:');
-    // },*/
-
-  progress.stop();
+  */
 })();
