@@ -54,10 +54,7 @@ const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesDa
 
   const tempFolderFullPath = path.resolve(process.cwd(), cleanConfig.tempFolder);
 
-  // reset the old log folder
   clearTempFolder(tempFolderFullPath);
-
-  // create the logger
   const logger = initLogger(tempFolderFullPath);
 
   // now to the meat!

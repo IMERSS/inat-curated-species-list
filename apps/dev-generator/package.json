@@ -1,16 +1,15 @@
 {
-  "name": "dev-generator",
+  "name": "@imerss/inat-curated-species-list-generator",
   "description": "A demo package for the @imerss/inat-curated-species-list-generator package",
   "version": "0.1.0",
   "type": "module",
-  "private": true,
   "scripts": {
-    "generate": "npx tsx ./node_modules/@imerss/inat-curated-species-list-generator --config=config.ts",
+    "generate": "npx tsx ./node_modules/@imerss/inat-curated-species-list-tools --config=config.ts",
     "lint": "next lint --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@imerss/inat-curated-species-list-generator": "workspace:*",
+    "@imerss/inat-curated-species-list-tools": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

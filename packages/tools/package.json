@@ -1,5 +1,5 @@
 {
-  "name": "@imerss/inat-curated-species-list-generator",
+  "name": "@imerss/inat-curated-species-list-tools",
   "version": "1.0.0",
   "type": "module",
   "bin": {
