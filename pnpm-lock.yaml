@@ -90,8 +90,12 @@ importers:
       typescript: 5.7.2
       typescript-eslint: 8.18.2_iv52uyctfzkctflchzytvwe3zq
 
+  packages/shared:
+    specifiers: {}
+
   packages/tools:
     specifiers:
+      '@imerss/inat-curated-species-list-types': workspace:*
       '@repo/eslint-config': workspace:*
       '@repo/typescript-config': workspace:*
       '@turbo/gen': ^1.12.4
@@ -119,6 +123,7 @@ importers:
       winston: 3.17.0
       yargs: 17.7.2
     devDependencies:
+      '@imerss/inat-curated-species-list-types': link:../shared
       '@repo/eslint-config': link:../eslint-config
       '@repo/typescript-config': link:../typescript-config
       '@turbo/gen': 1.13.4_ldzyf27dr7zwtxqlzek34lk4em
@@ -133,6 +138,7 @@ importers:
       '@emotion/react': ^11.14.0
       '@emotion/styled': ^11.14.0
       '@imerss/inat-curated-species-list-tools': workspace:*
+      '@imerss/inat-curated-species-list-types': workspace:*
       '@mui/icons-material': ^6.3.0
       '@mui/material': ^6.3.0
       '@repo/eslint-config': workspace:*
@@ -141,18 +147,23 @@ importers:
       '@types/node': ^20.11.24
       '@types/react': 18.3.0
       '@types/react-dom': 18.3.1
+      debounce: ^2.2.0
       react: ^19.0.0
       react-dom: ^19.0.0
+      react-spinners: ^0.15.0
       thenby: ^1.3.4
       typescript: 5.5.4
     dependencies:
       '@emotion/react': 11.14.0_6lnu5ymwu5qq22hjmxugwl5akq
       '@emotion/styled': 11.14.0_cbpnrdkh2dy2uprn4pgq64q7xa
       '@imerss/inat-curated-species-list-tools': link:../tools
+      '@imerss/inat-curated-species-list-types': link:../shared
       '@mui/icons-material': 6.3.0_uyxzg4adylylguwai72rt3mi2i
       '@mui/material': 6.3.0_nlprrtvm2sn3yp4z36kriwz2ya
+      debounce: 2.2.0
       react: 19.0.0
       react-dom: 19.0.0_react@19.0.0
+      react-spinners: 0.15.0_upmzqgzhjrquwzo2dphtigtdgi
       thenby: 1.3.4
     devDependencies:
       '@repo/eslint-config': link:../eslint-config
@@ -3709,6 +3720,16 @@ packages:
 
   /react-is/19.0.0:
     resolution: {integrity: sha512-H91OHcwjZsbq3ClIDHMzBShc1rotbfACdWENsmEf0IFvZ3FgGPtdHMcsv45bQ1hAbgdfiA8SnxTKfDS+x/8m2g==}
+    dev: false
+
+  /react-spinners/0.15.0_upmzqgzhjrquwzo2dphtigtdgi:
+    resolution: {integrity: sha512-ZO3/fNB9Qc+kgpG3SfdlMnvTX6LtLmTnOogb3W6sXIaU/kZ1ydEViPfZ06kSOaEsor58C/tzXw2wROGQu3X2pA==}
+    peerDependencies:
+      react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    dependencies:
+      react: 19.0.0
+      react-dom: 19.0.0_react@19.0.0
     dev: false
 
   /react-transition-group/4.4.5_upmzqgzhjrquwzo2dphtigtdgi:

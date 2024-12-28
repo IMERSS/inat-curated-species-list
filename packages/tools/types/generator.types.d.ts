@@ -1,28 +1,5 @@
 import { Logger } from 'winston';
-
-export type Taxon =
-  | 'kingdom'
-  | 'phylum'
-  | 'subphylum'
-  | 'class'
-  | 'subclass'
-  | 'order'
-  | 'superfamily'
-  | 'family'
-  | 'subfamily'
-  | 'tribe'
-  | 'subtribe'
-  | 'genus'
-  | 'subgenus'
-  | 'section'
-  | 'species';
-
-export type CuratedSpeciesData = {
-  [taxonId: string]: {
-    data: TaxonomyMap;
-    count: number;
-  };
-};
+import { Taxon } from '@imerss/inat-curated-species-list-types';
 
 export type INatApiObsRequestParams = {
   readonly place_id: number;
@@ -33,10 +10,6 @@ export type INatApiObsRequestParams = {
   readonly verifiable: 'any';
   readonly ident_user_id: string;
   id_above?: number;
-};
-
-export type TaxonomyMap = {
-  [rank in Taxon]: string;
 };
 
 export type DownloadDataPacketArgs = {

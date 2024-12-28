@@ -1,3 +1,5 @@
+'use client';
+
 import { FC } from 'react';
 // import { YearDropdown } from './YearDropdown';
 // import VisibilityIcon from '@mui/icons-material/Visibility';

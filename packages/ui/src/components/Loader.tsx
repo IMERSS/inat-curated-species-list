@@ -1,3 +1,5 @@
+'use client';
+
 import { FC } from 'react';
 import LoadingSpinner from 'react-spinners/MoonLoader.js';
 import styles from './Loader.module.css';

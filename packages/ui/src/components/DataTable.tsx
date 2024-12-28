@@ -1,9 +1,12 @@
+'use client';
+
 import { FC, useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { firstBy } from 'thenby';
-import { capitalizeFirstLetter } from '../utils/helpers';
-import styles from './DataTable.module.css';
-import { CuratedSpeciesData, CuratedSpeciesTaxon, Taxon } from '../../types/internal';
+import { capitalizeFirstLetter } from '../utils/helpers.js';
+// import styles from './DataTable.module.css';
+import { CuratedSpeciesData, Taxon } from '@imerss/inat-curated-species-list-types';
+import { CuratedSpeciesTaxon } from '../ui.types.js';
 
 interface DataTableProps {
   readonly data: CuratedSpeciesData;

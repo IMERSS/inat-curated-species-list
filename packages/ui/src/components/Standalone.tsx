@@ -1,7 +1,9 @@
+'use client';
+
 import { useCallback, useEffect, useState } from 'react';
-import { Loader } from './Loader';
-import * as C from '../constants';
-import { DataTable } from './DataTable';
+import { Loader } from './Loader.js';
+import * as C from '../constants.js';
+import { DataTable } from './DataTable.js';
 // import { unminifySpeciesData } from '../utils/generator';
 import debounce from 'debounce';
 
