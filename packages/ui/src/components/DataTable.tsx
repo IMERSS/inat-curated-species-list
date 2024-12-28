@@ -3,7 +3,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { firstBy } from 'thenby';
 import { capitalizeFirstLetter } from '../utils/helpers';
 import styles from './DataTable.module.css';
-import { INAT_BASE_URL } from '../constants';
 import { CuratedSpeciesData, CuratedSpeciesTaxon, Taxon } from '../../types/internal';
 
 interface DataTableProps {

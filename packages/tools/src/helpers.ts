@@ -2,7 +2,6 @@ import { nanoid } from 'nanoid';
 
 export const invertObj = (data: object) => Object.fromEntries(Object.entries(data).map(([key, value]) => [value, key]));
 export const formatNum = (num: number) => new Intl.NumberFormat('en-US').format(num);
-export const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
 type Keys = {
   [key: string]: boolean;
