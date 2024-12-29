@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 100px;
   font-size: 15px;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
@@ -9,4 +9,25 @@ table td {
 table th {
   text-align: left;
   text-transform: capitalize;
+}
+
+.inat-curated-species-filter {
+  margin-bottom: 20px;
+}
+
+.inat-curated-species-filter-counts {
+  margin-left: 10px;
+  color: #3366cc;
+}
+
+.inat-curated-species-table {
+  width: 100%;
+}
+
+.inat-curated-species-table tr:nth-child(even) {
+  background-color: #efefef;
+}
+
+svg.MuiSvgIcon-fontSizeMedium {
+  color: #3366cc;
 }

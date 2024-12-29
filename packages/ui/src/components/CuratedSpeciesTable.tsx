@@ -54,8 +54,6 @@ export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({ dataUrl, cur
         setTaxons(minifiedData.taxons);
         setData(unminifySpeciesData(minifiedData));
         setLoaded(true);
-
-        console.log(Object.keys(minifiedData.taxonData));
       })
       .catch(() => setError(true));
   }, []);
