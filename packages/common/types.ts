@@ -25,3 +25,19 @@ export type CuratedSpeciesData = {
 export type TaxonomyMap = {
   [rank in Taxon]: string;
 };
+
+export type CuratedSpeciesTaxon = {
+  data: TaxonomyMap;
+  count: number;
+  taxonId: string;
+};
+
+export type TaxonMinificationDataMap = Partial<Record<string, string>>;
+
+export type CuratedSpeciesDataMinified = {
+  taxonMap: TaxonMinificationDataMap;
+  taxonData: {
+    [taxonName: string]: string;
+  };
+  taxons: Taxon[];
+};

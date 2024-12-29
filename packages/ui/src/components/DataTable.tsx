@@ -1,15 +1,23 @@
-'use client';
-
 import { FC, useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { firstBy } from 'thenby';
-import { capitalizeFirstLetter } from '../utils/helpers.js';
+// import { firstBy } from 'thenby';
+// import { capitalizeFirstLetter } from '../utils/helpers';
 // import styles from './DataTable.module.css';
-import { CuratedSpeciesData, Taxon } from '@imerss/inat-curated-species-list-types';
-import { CuratedSpeciesTaxon } from '../ui.types.js';
+import {
+  unminifySpeciesData,
+  CuratedSpeciesData,
+  CuratedSpeciesTaxon,
+  Taxon,
+  CuratedSpeciesDataMinified,
+} from '@imerss/inat-curated-species-list-common';
+// import { constants } from '@imerss/inat-curated-species-list-common';
+
+// const { INAT_OBSERVATIONS_URL } = constants;
+
+const INAT_OBSERVATIONS_URL = '';
 
 interface DataTableProps {
-  readonly data: CuratedSpeciesData;
+  readonly data: CuratedSpeciesDataMinified;
   readonly curatorUsernames: string;
   readonly placeId: number;
   readonly allowedCols?: Taxon[];
@@ -53,45 +61,51 @@ export const DataTable: FC<DataTableProps> = ({
       return;
     }
 
-    const arr: CuratedSpeciesTaxon[] = Object.keys(data).map((taxonId) => ({
-      ...data[taxonId],
-      taxonId,
-    }));
+    console.log({ data });
 
-    let sorted: IThenBy<CuratedSpeciesTaxon> | null = null;
-    const csvData = [];
-    visibleCols.forEach((visibleCol) => {
-      if (!sorted) {
-        sorted = firstBy((a) => a.data[visibleCol] || 'Zzzzz', {
-          direction: 'asc',
-        });
-      } else {
-        sorted = sorted.thenBy((a) => a.data[visibleCol] || 'Zzzzz', {
-          direction: 'asc',
-        });
-      }
-    });
+    console.log(unminifySpeciesData(data));
 
-    if (sorted) {
-      arr.sort(sorted);
-      setSortedData(arr);
+    // const arr: CuratedSpeciesTaxon[] = Object.keys(data).map((taxonId) => ({
+    //   ...data[taxonId],
+    //   taxonId,
+    // }));
 
-      const titleRow: string[] = [];
-      visibleCols.forEach((col) => {
-        titleRow.push(capitalizeFirstLetter(col));
-      });
-      csvData.push(titleRow);
+    // console.log({ data, arr });
 
-      arr.forEach((a) => {
-        const row: string[] = [];
-        visibleCols.forEach((col) => {
-          row.push(a.data[col] ? a.data[col] : '');
-        });
-        csvData.push(row);
-      });
+    //   let sorted: IThenBy<CuratedSpeciesTaxon> | null = null;
+    //   const csvData = [];
+    //   visibleCols.forEach((visibleCol) => {
+    //     if (!sorted) {
+    //       sorted = firstBy((a) => a.data[visibleCol] || 'Zzzzz', {
+    //         direction: 'asc',
+    //       });
+    //     } else {
+    //       sorted = sorted.thenBy((a) => a.data[visibleCol] || 'Zzzzz', {
+    //         direction: 'asc',
+    //       });
+    //     }
+    //   });
 
-      // setDownloadData(csvData);
-    }
+    //   if (sorted) {
+    //     arr.sort(sorted);
+    //     setSortedData(arr);
+
+    //     const titleRow: string[] = [];
+    //     visibleCols.forEach((col) => {
+    //       titleRow.push(capitalizeFirstLetter(col));
+    //     });
+    //     csvData.push(titleRow);
+
+    //     arr.forEach((a) => {
+    //       const row: string[] = [];
+    //       visibleCols.forEach((col) => {
+    //         row.push(a.data[col] ? a.data[col] : '');
+    //       });
+    //       csvData.push(row);
+    //     });
+
+    //     // setDownloadData(csvData);
+    //   }
   }, [data, visibleCols]);
 
   // this ensures correct sorting of the taxonomical levels in the table
@@ -105,11 +119,22 @@ export const DataTable: FC<DataTableProps> = ({
     return null;
   }
 
-  console.log(allowedCols);
   // const orderedCols = allowedCols;
 
+  /*
+  .table th {
+    text-transform: capitalize;
+    text-align: left;
+    font-size: 12px;
+  }
+  */
   return (
-    <table className={`${styles.table} inat-curated-species-table`} cellSpacing={0} cellPadding={2}>
+    <table
+      className="inat-curated-species-table"
+      cellSpacing={0}
+      cellPadding={2}
+      style={{ width: '100%', marginTop: 20, flex: 1, lineHeight: 25, fontSize: 12 }}
+    >
       <thead>
         <tr key="header">
           <th></th>
@@ -132,7 +157,7 @@ export const DataTable: FC<DataTableProps> = ({
             {showCount && <td>({row.count})</td>}
             <td style={{ display: 'flex' }}>
               <a
-                href={`${INAT_BASE_URL}?ident_user_id=${curatorUsernames}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`}
+                href={`${INAT_OBSERVATIONS_URL}?ident_user_id=${curatorUsernames}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`}
                 target="_blank"
                 rel="noreferrer"
               >

@@ -9,6 +9,22 @@ interface NewAdditionsProps {
   readonly data: object;
 }
 
+/*
+.table {
+  width: 100%;
+  margin-top: 20px;
+  flex: 1;
+  line-height: 25px;
+  font-size: 12px;
+}
+
+.table th {
+  text-transform: capitalize;
+  text-align: left;
+  font-size: 12px;
+}
+*/
+
 export const NewAdditions: FC<NewAdditionsProps> = () => {
   // { data }
   // const years = Object.keys(data);

@@ -37,6 +37,7 @@ importers:
 
   apps/dev-ui:
     specifiers:
+      '@imerss/inat-curated-species-list-common': workspace:*
       '@imerss/inat-curated-species-list-ui': workspace:*
       '@repo/eslint-config': workspace:*
       '@repo/typescript-config': workspace:*
@@ -48,6 +49,7 @@ importers:
       react-dom: ^19.0.0
       typescript: 5.5.4
     dependencies:
+      '@imerss/inat-curated-species-list-common': link:../../packages/common
       '@imerss/inat-curated-species-list-ui': link:../../packages/ui
       next: 15.1.2_upmzqgzhjrquwzo2dphtigtdgi
       react: 19.0.0

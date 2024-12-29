@@ -2,11 +2,10 @@
  * The data needed for this package is very large, after extracting only what we need from the iNat requests. This file
  * contains some helpers to minimize and expand the raw data so requests to the data source are kept as small as possible.
  */
-import { CuratedSpeciesData, Taxon } from '../types/generator.types';
+import { CuratedSpeciesData, Taxon, CuratedSpeciesDataMinified } from '@imerss/inat-curated-species-list-common';
 import { getShortestUniqueKey } from './helpers';
 
 export type TaxonsToMinifyMap = Partial<Record<Taxon, boolean>>;
-export type TaxonMinificationDataMap = Partial<Record<string, string>>;
 
 const taxonsToMinify: TaxonsToMinifyMap = {
   kingdom: true,
@@ -23,17 +22,11 @@ const taxonsToMinify: TaxonsToMinifyMap = {
   section: true,
 };
 
-type MinifiedData = {
-  taxonMap: TaxonMinificationDataMap;
-  taxonData: {
-    [taxonName: string]: string;
-  };
-};
-
 export const minifySpeciesData = (data: CuratedSpeciesData, targetTaxons: Taxon[]) => {
-  const minifiedData: MinifiedData = {
+  const minifiedData: CuratedSpeciesDataMinified = {
     taxonMap: {},
     taxonData: {},
+    taxons: targetTaxons,
   };
 
   Object.keys(data).forEach((taxonId) => {
@@ -65,39 +58,6 @@ export const minifySpeciesData = (data: CuratedSpeciesData, targetTaxons: Taxon[
 
   return minifiedData;
 };
-
-// export const unminifySpeciesData = (data: CuratedSpeciesData, visibleTaxons: Taxon[]) => {
-//   const map = invertObj(data.taxonMap);
-
-//   const fullData: CuratedSpeciesData = {};
-//   Object.keys(data.taxonData).forEach((taxonId) => {
-//     // Assumes that this is now an ordered array of the taxons specified in visibleTaxons. The user should
-//     // have supplied the same list of taxons used in creating the minified file
-//     const rowData: string[] = data.taxonData[taxonId].split('|');
-//     const expandedTaxonData: TaxonMinificationDataMap = {};
-
-//     for (let i = 0; i < visibleTaxons.length; i++) {
-//       const visibleTaxon = visibleTaxons[i];
-//       // only the species row isn't minified. Everything else is found in the map
-//       if (visibleTaxon === 'species') {
-//         expandedTaxonData[visibleTaxon] = rowData[i];
-//       } else {
-//         // not every taxon will be filled for each row
-//         if (rowData[i] && !map[rowData[i]]) {
-//           console.log('missing', i, rowData);
-//         }
-//         expandedTaxonData[visibleTaxon] = rowData[i] ? map[rowData[i]] : '';
-//       }
-//     }
-
-//     fullData[taxonId] = {
-//       data: expandedTaxonData,
-//       count: rowData[rowData.length - 1],
-//     };
-//   });
-
-//   return fullData;
-// };
 
 // export const minifyNewAdditionsData = (newAdditions) => {
 //   const newAdditionsByYear = {};

@@ -10,7 +10,8 @@ import { extractSpeciesList } from './extraction';
 import { minifySpeciesData } from './minification';
 import { clearTempFolder, initLogger } from './logs';
 import { DEFAULT_TAXONS } from './constants';
-import { CuratedSpeciesData, GeneratorConfig } from '../types/generator.types';
+import { GeneratorConfig } from '../types/generator.types';
+import { CuratedSpeciesData } from '@imerss/inat-curated-species-list-common';
 
 const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
 
