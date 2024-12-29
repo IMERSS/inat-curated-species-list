@@ -1,11 +1,19 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 module.exports = {
   mode: 'production',
-  entry: path.resolve(__dirname, '../src/index.ts'),
+  entry: path.resolve(__dirname, '../src/index.tsx'),
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: 'inat-curated-species-list.js',
+    filename: 'bundle.js',
+  },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, '../public'),
+    },
+    compress: true,
+    port: 9000,
   },
   module: {
     rules: [
@@ -31,4 +39,9 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json', '.css'],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, '../public/index.html'),
+    }),
+  ],
 };

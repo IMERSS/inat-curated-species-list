@@ -1,2 +1,6 @@
-export { DataTable } from './components/DataTable';
-export { Standalone } from './components/Standalone';
+// export { DataTable } from './components/DataTable';
+import { Standalone } from './components/Standalone';
+
+export default () => {
+  console.log('Okay.');
+};

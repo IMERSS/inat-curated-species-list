@@ -3,6 +3,7 @@
   "version": "2.0.0-alpha",
   "type": "commonjs",
   "main": "./dist/bundle.js",
+  "module": "./dist/bundle.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "webpack --watch --config=./config/webpack.config.js",
