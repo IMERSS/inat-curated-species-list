@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-// import { firstBy } from 'thenby';
-// import { capitalizeFirstLetter } from '../utils/helpers';
+import { firstBy } from 'thenby';
+import { capitalizeFirstLetter } from '../utils/helpers';
 // import styles from './DataTable.module.css';
 import {
   unminifySpeciesData,
@@ -10,11 +10,9 @@ import {
   Taxon,
   CuratedSpeciesDataMinified,
 } from '@imerss/inat-curated-species-list-common';
-// import { constants } from '@imerss/inat-curated-species-list-common';
+import { constants } from '@imerss/inat-curated-species-list-common';
 
-// const { INAT_OBSERVATIONS_URL } = constants;
-
-const INAT_OBSERVATIONS_URL = '';
+const { INAT_OBSERVATIONS_URL } = constants;
 
 interface DataTableProps {
   readonly data: CuratedSpeciesDataMinified;
@@ -31,82 +29,80 @@ export const DataTable: FC<DataTableProps> = ({
   data,
   curatorUsernames,
   placeId,
-  allowedCols = [
-    'kingdom',
-    'phylum',
-    'subphylum',
-    'class',
-    'subclass',
-    'order',
-    'superfamily',
-    'family',
-    'subfamily',
-    'tribe',
-    'subtribe',
-    'genus',
-    'subgenus',
-    'species',
-  ],
-  defaultVisibleCols = ['superfamily', 'family', 'subfamily', 'tribe', 'subtribe', 'genus', 'subgenus', 'species'],
+  // allowedCols = [
+  //   'kingdom',
+  //   'phylum',
+  //   'subphylum',
+  //   'class',
+  //   'subclass',
+  //   'order',
+  //   'superfamily',
+  //   'family',
+  //   'subfamily',
+  //   'tribe',
+  //   'subtribe',
+  //   'genus',
+  //   'subgenus',
+  //   'species',
+  // ],
   showCount = true,
   // allowDownload = true,
   // hideControls = false,
 }) => {
   const [sortedData, setSortedData] = useState<CuratedSpeciesTaxon[]>([]);
   // const [downloadData, setDownloadData] = useState<string[][]>([]);
-  const [visibleCols] = useState(defaultVisibleCols); // setVisibleCols
+  const [taxonCols, setTaxonCols] = useState<Taxon[]>([]);
 
   useEffect(() => {
     if (!data) {
       return;
     }
 
-    console.log({ data });
+    setTaxonCols(data.taxons);
+    const unminifiedData = unminifySpeciesData(data);
 
-    console.log(unminifySpeciesData(data));
+    console.log(unminifiedData);
 
-    // const arr: CuratedSpeciesTaxon[] = Object.keys(data).map((taxonId) => ({
-    //   ...data[taxonId],
-    //   taxonId,
-    // }));
+    const arr: CuratedSpeciesData[] = Object.keys(unminifiedData).map((taxonId) => ({
+      ...unminifiedData[taxonId],
+      taxonId,
+    }));
 
-    // console.log({ data, arr });
+    let sorted: IThenBy<CuratedSpeciesTaxon> | null = null;
+    const csvData = [];
+    taxonCols.forEach((taxon) => {
+      if (!sorted) {
+        sorted = firstBy((a) => a.data[taxon] || 'Zzzzz', {
+          direction: 'asc',
+        });
+      } else {
+        sorted = sorted.thenBy((a) => a.data[taxon] || 'Zzzzz', {
+          direction: 'asc',
+        });
+      }
+    });
 
-    //   let sorted: IThenBy<CuratedSpeciesTaxon> | null = null;
-    //   const csvData = [];
-    //   visibleCols.forEach((visibleCol) => {
-    //     if (!sorted) {
-    //       sorted = firstBy((a) => a.data[visibleCol] || 'Zzzzz', {
-    //         direction: 'asc',
-    //       });
-    //     } else {
-    //       sorted = sorted.thenBy((a) => a.data[visibleCol] || 'Zzzzz', {
-    //         direction: 'asc',
-    //       });
-    //     }
-    //   });
+    if (sorted) {
+      arr.sort(sorted);
+      setSortedData(arr);
 
-    //   if (sorted) {
-    //     arr.sort(sorted);
-    //     setSortedData(arr);
+      const titleRow: string[] = [];
+      taxonCols.forEach((col) => {
+        titleRow.push(capitalizeFirstLetter(col));
+      });
+      csvData.push(titleRow);
 
-    //     const titleRow: string[] = [];
-    //     visibleCols.forEach((col) => {
-    //       titleRow.push(capitalizeFirstLetter(col));
-    //     });
-    //     csvData.push(titleRow);
+      arr.forEach((a) => {
+        const row: string[] = [];
+        taxonCols.forEach((col) => {
+          row.push(a.data[col] ? a.data[col] : '');
+        });
+        csvData.push(row);
+      });
 
-    //     arr.forEach((a) => {
-    //       const row: string[] = [];
-    //       visibleCols.forEach((col) => {
-    //         row.push(a.data[col] ? a.data[col] : '');
-    //       });
-    //       csvData.push(row);
-    //     });
-
-    //     // setDownloadData(csvData);
-    //   }
-  }, [data, visibleCols]);
+      // setDownloadData(csvData);
+    }
+  }, [data, taxonCols]);
 
   // this ensures correct sorting of the taxonomical levels in the table
 
@@ -133,12 +129,12 @@ export const DataTable: FC<DataTableProps> = ({
       className="inat-curated-species-table"
       cellSpacing={0}
       cellPadding={2}
-      style={{ width: '100%', marginTop: 20, flex: 1, lineHeight: 25, fontSize: 12 }}
+      style={{ width: '100%', marginTop: 20, flex: 1, lineHeight: '25px', fontSize: 12 }}
     >
       <thead>
         <tr key="header">
           <th></th>
-          {visibleCols.map((rank) => (
+          {taxonCols.map((rank) => (
             <th key={rank}>{rank}</th>
           ))}
           {showCount && <th></th>}
@@ -151,7 +147,7 @@ export const DataTable: FC<DataTableProps> = ({
             <td>
               <b>{index + 1}</b>
             </td>
-            {visibleCols.map((currentRank) => (
+            {taxonCols.map((currentRank) => (
               <td key={`${row.taxonId}-${currentRank}`}>{row.data[currentRank] ? row.data[currentRank] : ''}</td>
             ))}
             {showCount && <td>({row.count})</td>}

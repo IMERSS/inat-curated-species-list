@@ -5,7 +5,7 @@ import { DataTable } from '@imerss/inat-curated-species-list-ui';
 import { CuratedSpeciesDataMinified } from '@imerss/inat-curated-species-list-common';
 
 // TODO document + automate.
-import generatedCuratedSpeciesData from '../public/data.json';
+import generatedCuratedSpeciesData from './data.json';
 import './globals.css';
 
 const RootLayout: FC = () => {

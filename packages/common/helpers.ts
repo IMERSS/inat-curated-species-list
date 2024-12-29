@@ -1,8 +1,8 @@
-import { CuratedSpeciesData, Taxon, TaxonMinificationDataMap, CuratedSpeciesDataMinified } from './types';
+import { CuratedSpeciesData, CuratedSpeciesDataMinified } from './types';
 
 export const invertObj = (data: object) => Object.fromEntries(Object.entries(data).map(([key, value]) => [value, key]));
 
-export const unminifySpeciesData = (data: CuratedSpeciesDataMinified) => {
+export const unminifySpeciesData = (data: CuratedSpeciesDataMinified): CuratedSpeciesData => {
   const taxons = data.taxons;
   const map = invertObj(data.taxonMap);
 

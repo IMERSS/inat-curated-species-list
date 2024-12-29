@@ -1,11 +1,5 @@
-import {
-  CuratedSpeciesData,
-  GeneratorConfig,
-  INatTaxonAncestor,
-  GetDataPacketResponse,
-  Taxon,
-  TaxonomyMap,
-} from '../types/generator.types';
+import { GeneratorConfig, INatTaxonAncestor, GetDataPacketResponse } from '../types/generator.types';
+import { CuratedSpeciesData, Taxon, TaxonomyMap } from '@imerss/inat-curated-species-list-common';
 import path from 'path';
 import fs from 'fs';
 

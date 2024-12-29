@@ -62,10 +62,10 @@ const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesDa
   console.log('Step 1: download data from iNat');
   const { numRequests } = await downloadDataPackets(cleanConfig, tempFolderFullPath, logger);
 
-  console.log('Step 2: extract species list');
+  console.log('\nStep 2: extract species list');
   const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numRequests);
 
-  console.log('Step 3: generate data file');
+  console.log('\nStep 3: generate data file');
   const filename = generateDataFile(cleanConfig, speciesData, tempFolderFullPath);
 
   console.log('__________________________________________');
