@@ -12,6 +12,7 @@ import { clearTempFolder, initLogger } from './logs';
 import { DEFAULT_TAXONS } from './constants';
 import { GeneratorConfig } from '../types/generator.types';
 import { CuratedSpeciesData } from '@imerss/inat-curated-species-list-common';
+import { performance } from 'perf_hooks';
 
 const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
 
@@ -28,6 +29,12 @@ const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesDa
   fs.writeFileSync(filename, JSON.stringify(minifiedSpeciesData));
 
   return filename;
+};
+
+const millisToMinutesAndSeconds = (ms: number) => {
+  var minutes = Math.floor(ms / 60000);
+  var seconds = (ms % 60000) / 1000;
+  return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 };
 
 (async () => {
@@ -59,8 +66,12 @@ const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesDa
   const logger = initLogger(tempFolderFullPath);
 
   // now to the meat!
+  const start = performance.now();
   console.log('Step 1: download data from iNat');
   const { numRequests } = await downloadDataPackets(cleanConfig, tempFolderFullPath, logger);
+  const end = performance.now();
+  const date = new Date(end - start);
+  console.log(`Time taken: ${date.getMinutes()}:${date.getSeconds()}s`);
 
   console.log('\nStep 2: extract species list');
   const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numRequests);

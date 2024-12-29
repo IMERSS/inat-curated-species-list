@@ -2,73 +2,48 @@ import { FC, useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { firstBy } from 'thenby';
 import { capitalizeFirstLetter } from '../utils/helpers';
-// import styles from './DataTable.module.css';
-import {
-  unminifySpeciesData,
-  CuratedSpeciesData,
-  CuratedSpeciesTaxon,
-  Taxon,
-  CuratedSpeciesDataMinified,
-} from '@imerss/inat-curated-species-list-common';
+import { CuratedSpeciesData, CuratedSpeciesArrayItem, Taxon } from '@imerss/inat-curated-species-list-common';
 import { constants } from '@imerss/inat-curated-species-list-common';
 
 const { INAT_OBSERVATIONS_URL } = constants;
 
 interface DataTableProps {
-  readonly data: CuratedSpeciesDataMinified;
-  readonly curatorUsernames: string;
+  readonly data: CuratedSpeciesData;
+  readonly taxons: Taxon[];
+  readonly curatorUsernames: string[];
   readonly placeId: number;
   readonly allowedCols?: Taxon[];
-  readonly defaultVisibleCols?: Taxon[];
   readonly showCount?: boolean;
   readonly allowDownload?: boolean;
   readonly hideControls?: boolean;
 }
 
+/**
+ * Renders the data table alone.
+ */
 export const DataTable: FC<DataTableProps> = ({
   data,
+  taxons,
   curatorUsernames,
   placeId,
-  // allowedCols = [
-  //   'kingdom',
-  //   'phylum',
-  //   'subphylum',
-  //   'class',
-  //   'subclass',
-  //   'order',
-  //   'superfamily',
-  //   'family',
-  //   'subfamily',
-  //   'tribe',
-  //   'subtribe',
-  //   'genus',
-  //   'subgenus',
-  //   'species',
-  // ],
   showCount = true,
   // allowDownload = true,
   // hideControls = false,
 }) => {
-  const [sortedData, setSortedData] = useState<CuratedSpeciesTaxon[]>([]);
+  const [sortedData, setSortedData] = useState<CuratedSpeciesArrayItem[]>([]);
   // const [downloadData, setDownloadData] = useState<string[][]>([]);
   const [taxonCols, setTaxonCols] = useState<Taxon[]>([]);
 
   useEffect(() => {
-    if (!data) {
-      return;
-    }
+    setTaxonCols(taxons);
 
-    setTaxonCols(data.taxons);
-    const unminifiedData = unminifySpeciesData(data);
-
-    console.log(unminifiedData);
-
-    const arr: CuratedSpeciesData[] = Object.keys(unminifiedData).map((taxonId) => ({
-      ...unminifiedData[taxonId],
+    const arr: CuratedSpeciesArrayItem[] = Object.keys(data).map((taxonId) => ({
+      data: data[taxonId]!.data,
+      count: data[taxonId]!.count,
       taxonId,
     }));
 
-    let sorted: IThenBy<CuratedSpeciesTaxon> | null = null;
+    let sorted: IThenBy<CuratedSpeciesArrayItem> | null = null;
     const csvData = [];
     taxonCols.forEach((taxon) => {
       if (!sorted) {
@@ -102,38 +77,24 @@ export const DataTable: FC<DataTableProps> = ({
 
       // setDownloadData(csvData);
     }
-  }, [data, taxonCols]);
+  }, [data, taxonCols, taxons]);
 
   // this ensures correct sorting of the taxonomical levels in the table
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const onChange = (cols: string[]) => {
-  //   setVisibleCols(orderedCols.filter((col) => cols.indexOf(col) !== -1));
+  //   setTaxonCols(orderedCols.filter((col) => cols.indexOf(col) !== -1));
   // };
 
   if (!sortedData.length) {
     return null;
   }
 
-  // const orderedCols = allowedCols;
-
-  /*
-  .table th {
-    text-transform: capitalize;
-    text-align: left;
-    font-size: 12px;
-  }
-  */
   return (
-    <table
-      className="inat-curated-species-table"
-      cellSpacing={0}
-      cellPadding={2}
-      style={{ width: '100%', marginTop: 20, flex: 1, lineHeight: '25px', fontSize: 12 }}
-    >
+    <table className="inat-curated-species-table" cellSpacing={0} cellPadding={2}>
       <thead>
         <tr key="header">
-          <th></th>
+          {showCount && <th></th>}
           {taxonCols.map((rank) => (
             <th key={rank}>{rank}</th>
           ))}
@@ -144,16 +105,18 @@ export const DataTable: FC<DataTableProps> = ({
       <tbody>
         {sortedData.map((row, index) => (
           <tr key={row.taxonId}>
-            <td>
-              <b>{index + 1}</b>
-            </td>
+            {showCount && (
+              <td>
+                <b>{index + 1}</b>
+              </td>
+            )}
             {taxonCols.map((currentRank) => (
               <td key={`${row.taxonId}-${currentRank}`}>{row.data[currentRank] ? row.data[currentRank] : ''}</td>
             ))}
             {showCount && <td>({row.count})</td>}
             <td style={{ display: 'flex' }}>
               <a
-                href={`${INAT_OBSERVATIONS_URL}?ident_user_id=${curatorUsernames}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`}
+                href={`${INAT_OBSERVATIONS_URL}?ident_user_id=${curatorUsernames.join(',')}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`}
                 target="_blank"
                 rel="noreferrer"
               >

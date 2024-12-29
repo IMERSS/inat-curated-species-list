@@ -4,6 +4,7 @@
  */
 import { CuratedSpeciesData, Taxon, CuratedSpeciesDataMinified } from '@imerss/inat-curated-species-list-common';
 import { getShortestUniqueKey } from './helpers';
+const { version } = require('../package.json');
 
 export type TaxonsToMinifyMap = Partial<Record<Taxon, boolean>>;
 
@@ -27,6 +28,8 @@ export const minifySpeciesData = (data: CuratedSpeciesData, targetTaxons: Taxon[
     taxonMap: {},
     taxonData: {},
     taxons: targetTaxons,
+    dateGenerated: new Date().toString(),
+    '@imerss/inat-curated-species-list-tools': version,
   };
 
   Object.keys(data).forEach((taxonId) => {

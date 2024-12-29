@@ -1,22 +1,16 @@
 'use client';
 
 import { FC } from 'react';
-import { DataTable } from '@imerss/inat-curated-species-list-ui';
-import { CuratedSpeciesDataMinified } from '@imerss/inat-curated-species-list-common';
+import { CuratedSpeciesTable } from '@imerss/inat-curated-species-list-ui';
+import config from '../../dev-generator/config';
 
-// TODO document + automate.
-import generatedCuratedSpeciesData from './data.json';
 import './globals.css';
 
 const RootLayout: FC = () => {
   return (
     <html lang="en">
       <body>
-        <DataTable
-          data={generatedCuratedSpeciesData as unknown as CuratedSpeciesDataMinified}
-          curatorUsernames="benkeen"
-          placeId={123}
-        />
+        <CuratedSpeciesTable dataUrl="./data.json" curatorUsernames={config.curators} placeId={config.placeId} />
       </body>
     </html>
   );

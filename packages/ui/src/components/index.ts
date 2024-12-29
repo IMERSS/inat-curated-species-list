@@ -1,1 +1,1 @@
-export { DataTable } from './DataTable.js';
+export { CuratedSpeciesTable } from './CuratedSpeciesTable';

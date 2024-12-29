@@ -26,7 +26,7 @@ export type TaxonomyMap = {
   [rank in Taxon]: string;
 };
 
-export type CuratedSpeciesTaxon = {
+export type CuratedSpeciesArrayItem = {
   data: TaxonomyMap;
   count: number;
   taxonId: string;
@@ -40,4 +40,6 @@ export type CuratedSpeciesDataMinified = {
     [taxonName: string]: string;
   };
   taxons: Taxon[];
+  dateGenerated: string;
+  '@imerss/inat-curated-species-list-tools': string;
 };
