@@ -1,6 +1,0 @@
-{
-  "name": "@imerss/inat-curated-species-list-types",
-  "description": "Shared types.",
-  "main": "index.ts",
-  "types": "index.ts"
-}

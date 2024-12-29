@@ -37,7 +37,7 @@ importers:
 
   apps/dev-ui:
     specifiers:
-      '@imerss/inat-curated-species-list': workspace:*
+      '@imerss/inat-curated-species-list-ui': workspace:*
       '@repo/eslint-config': workspace:*
       '@repo/typescript-config': workspace:*
       '@types/node': ^20
@@ -48,7 +48,7 @@ importers:
       react-dom: ^19.0.0
       typescript: 5.5.4
     dependencies:
-      '@imerss/inat-curated-species-list': link:../../packages/ui
+      '@imerss/inat-curated-species-list-ui': link:../../packages/ui
       next: 15.1.2_upmzqgzhjrquwzo2dphtigtdgi
       react: 19.0.0
       react-dom: 19.0.0_react@19.0.0
@@ -59,6 +59,9 @@ importers:
       '@types/react': 18.3.1
       '@types/react-dom': 18.3.0
       typescript: 5.5.4
+
+  packages/common:
+    specifiers: {}
 
   packages/eslint-config:
     specifiers:
@@ -90,12 +93,9 @@ importers:
       typescript: 5.7.2
       typescript-eslint: 8.18.2_iv52uyctfzkctflchzytvwe3zq
 
-  packages/shared:
-    specifiers: {}
-
   packages/tools:
     specifiers:
-      '@imerss/inat-curated-species-list-types': workspace:*
+      '@imerss/inat-curated-species-list-common': workspace:*
       '@repo/eslint-config': workspace:*
       '@repo/typescript-config': workspace:*
       '@turbo/gen': ^1.12.4
@@ -123,7 +123,7 @@ importers:
       winston: 3.17.0
       yargs: 17.7.2
     devDependencies:
-      '@imerss/inat-curated-species-list-types': link:../shared
+      '@imerss/inat-curated-species-list-common': link:../common
       '@repo/eslint-config': link:../eslint-config
       '@repo/typescript-config': link:../typescript-config
       '@turbo/gen': 1.13.4_ldzyf27dr7zwtxqlzek34lk4em
@@ -137,8 +137,8 @@ importers:
     specifiers:
       '@emotion/react': ^11.14.0
       '@emotion/styled': ^11.14.0
+      '@imerss/inat-curated-species-list-common': workspace:*
       '@imerss/inat-curated-species-list-tools': workspace:*
-      '@imerss/inat-curated-species-list-types': workspace:*
       '@mui/icons-material': ^6.3.0
       '@mui/material': ^6.3.0
       '@repo/eslint-config': workspace:*
@@ -147,6 +147,7 @@ importers:
       '@types/node': ^20.11.24
       '@types/react': 18.3.0
       '@types/react-dom': 18.3.1
+      '@types/react-spinner': ^0.2.3
       debounce: ^2.2.0
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -156,8 +157,8 @@ importers:
     dependencies:
       '@emotion/react': 11.14.0_6lnu5ymwu5qq22hjmxugwl5akq
       '@emotion/styled': 11.14.0_cbpnrdkh2dy2uprn4pgq64q7xa
+      '@imerss/inat-curated-species-list-common': link:../common
       '@imerss/inat-curated-species-list-tools': link:../tools
-      '@imerss/inat-curated-species-list-types': link:../shared
       '@mui/icons-material': 6.3.0_uyxzg4adylylguwai72rt3mi2i
       '@mui/material': 6.3.0_nlprrtvm2sn3yp4z36kriwz2ya
       debounce: 2.2.0
@@ -172,6 +173,7 @@ importers:
       '@types/node': 20.17.10
       '@types/react': 18.3.0
       '@types/react-dom': 18.3.1
+      '@types/react-spinner': 0.2.3
       typescript: 5.5.4
 
 packages:
@@ -1130,6 +1132,12 @@ packages:
 
   /@types/react-dom/18.3.1:
     resolution: {integrity: sha512-qW1Mfv8taImTthu4KoXgDfLuk4bydU6Q/TkADnDWWHwi4NX4BR+LWfTp2sVmTqRrsHvyDDTelgelxJ+SsejKKQ==}
+    dependencies:
+      '@types/react': 18.3.1
+    dev: true
+
+  /@types/react-spinner/0.2.3:
+    resolution: {integrity: sha512-KmEOJVcAYP1Sg09l1QI4IrHZZF58SYlFKH4fTNYFjokWEgqpslwIC3oPFDfj8AVGNIM9/H+AKvYVY6qWbB+Kgg==}
     dependencies:
       '@types/react': 18.3.1
     dev: true
