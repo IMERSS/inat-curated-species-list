@@ -1,3 +1,5 @@
+'use client';
+
 import { FC, useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { firstBy } from 'thenby';
