@@ -1,11 +1,11 @@
 {
   "name": "@imerss/inat-curated-species-list-ui",
-  "version": "2.0.0",
-  "type": "module",
+  "version": "2.0.0-alpha",
+  "type": "commonjs",
   "main": "./dist/index.js",
   "scripts": {
     "dev": "tsc",
-    "build": "tsc",
+    "build": "webpack --config=./config/webpack.config.js",
     "lint": "eslint . --max-warnings 0",
     "generate:component": "turbo gen react-component",
     "check-types": "tsc --noEmit"
@@ -30,7 +30,11 @@
     "@types/node": "^20.11.24",
     "@types/react": "18.3.0",
     "@types/react-dom": "18.3.1",
-    "@types/react-spinner": "^0.2.3",
-    "typescript": "5.5.4"
+    "css-loader": "^7.1.2",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "5.5.4",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
   }
 }
