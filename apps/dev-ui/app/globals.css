@@ -1,5 +1,5 @@
 body {
-  padding: 100px;
+  padding: 60px 100px;
   font-size: 15px;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
@@ -30,4 +30,32 @@ table th {
 
 svg.MuiSvgIcon-fontSizeMedium {
   color: #3366cc;
+}
+
+.inat-curated-species-standalone-loader {
+  position: relative;
+}
+
+.inat-curated-species-loader-outer {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.inat-curated-species-loader-inner {
+  position: absolute;
+  background-color: #efefef;
+  padding: 20px;
+  width: 100px;
+  border-radius: 10px;
+  height: 100%;
+  opacity: 0.8;
+}
+.inat-curated-species-loader {
+  color: #3366cc !important;
 }

@@ -10,7 +10,15 @@ const RootLayout: FC = () => {
   return (
     <html lang="en">
       <body>
-        <CuratedSpeciesTable dataUrl="./data.json" curatorUsernames={config.curators} placeId={config.placeId} />
+        <h1>Demo</h1>
+
+        <CuratedSpeciesTable
+          dataUrl="./data.json"
+          curatorUsernames={config.curators}
+          placeId={config.placeId}
+          showRowNumbers={false}
+          showReviewerCount={true}
+        />
       </body>
     </html>
   );

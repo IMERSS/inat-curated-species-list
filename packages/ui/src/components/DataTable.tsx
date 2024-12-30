@@ -12,10 +12,10 @@ interface DataTableProps {
   readonly taxons: Taxon[];
   readonly curatorUsernames: string[];
   readonly placeId: number;
+  readonly showRowNumbers?: boolean;
+  readonly showReviewerCount?: boolean;
   readonly allowedCols?: Taxon[];
-  readonly showCount?: boolean;
   readonly allowDownload?: boolean;
-  readonly hideControls?: boolean;
 }
 
 /**
@@ -26,9 +26,9 @@ export const DataTable: FC<DataTableProps> = ({
   taxons,
   curatorUsernames,
   placeId,
-  showCount = true,
+  showRowNumbers = true,
+  showReviewerCount = false,
   // allowDownload = true,
-  // hideControls = false,
 }) => {
   const [sortedData, setSortedData] = useState<CuratedSpeciesArrayItem[]>([]);
   // const [downloadData, setDownloadData] = useState<string[][]>([]);
@@ -81,7 +81,6 @@ export const DataTable: FC<DataTableProps> = ({
 
   // this ensures correct sorting of the taxonomical levels in the table
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const onChange = (cols: string[]) => {
   //   setTaxonCols(orderedCols.filter((col) => cols.indexOf(col) !== -1));
   // };
@@ -94,18 +93,18 @@ export const DataTable: FC<DataTableProps> = ({
     <table className="inat-curated-species-table" cellSpacing={0} cellPadding={2}>
       <thead>
         <tr key="header">
-          {showCount && <th></th>}
+          {showRowNumbers && <th></th>}
           {taxonCols.map((rank) => (
             <th key={rank}>{rank}</th>
           ))}
-          {showCount && <th></th>}
+          {showReviewerCount && <th></th>}
           <th></th>
         </tr>
       </thead>
       <tbody>
         {sortedData.map((row, index) => (
           <tr key={row.taxonId}>
-            {showCount && (
+            {showRowNumbers && (
               <td>
                 <b>{index + 1}</b>
               </td>
@@ -113,7 +112,7 @@ export const DataTable: FC<DataTableProps> = ({
             {taxonCols.map((currentRank) => (
               <td key={`${row.taxonId}-${currentRank}`}>{row.data[currentRank] ? row.data[currentRank] : ''}</td>
             ))}
-            {showCount && <td>({row.count})</td>}
+            {showReviewerCount && <td>({row.count})</td>}
             <td style={{ display: 'flex' }}>
               <a
                 href={`${INAT_OBSERVATIONS_URL}?ident_user_id=${curatorUsernames.join(',')}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`}

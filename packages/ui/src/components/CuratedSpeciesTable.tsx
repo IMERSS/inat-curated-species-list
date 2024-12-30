@@ -1,27 +1,30 @@
 import { FC, useCallback, useEffect, useState } from 'react';
-import { Loader } from './Loader.js';
-import { DataTable } from './DataTable.js';
+import { Loader } from './Loader';
+import { DataTable } from './DataTable';
 import debounce from 'debounce';
 import {
   unminifySpeciesData,
   CuratedSpeciesData,
   CuratedSpeciesDataMinified,
   Taxon,
+  TaxonomyMap,
 } from '@imerss/inat-curated-species-list-common';
 
 export interface CuratedSpeciesTableProps {
   readonly dataUrl: string;
   readonly curatorUsernames: string[];
   readonly placeId: number;
+  readonly showRowNumbers?: boolean;
+  readonly showReviewerCount?: boolean;
 }
 
-/**
- * This component is bundled separately and included as a separate self-contained javascript file in the build artifacts.
- *
- * See the documentation on how this component can use used. But the basic idea is that consumers would define a global object
- * containing the data it needs.
- */
-export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({ dataUrl, curatorUsernames, placeId }) => {
+export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({
+  dataUrl,
+  curatorUsernames,
+  placeId,
+  showRowNumbers,
+  showReviewerCount,
+}) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [data, setData] = useState<CuratedSpeciesData | undefined>();
@@ -56,7 +59,7 @@ export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({ dataUrl, cur
         setLoaded(true);
       })
       .catch(() => setError(true));
-  }, []);
+  }, [dataUrl]);
 
   useEffect(() => {
     if (!data) {
@@ -68,27 +71,28 @@ export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({ dataUrl, cur
       return;
     }
 
-    const newObj = {};
+    const newObj: CuratedSpeciesData = {};
     const re = new RegExp(debouncedFilter, 'i');
     Object.keys(data).forEach((id) => {
       let found = false;
       Object.keys(data[id]!.data).forEach((taxon) => {
-        // @ts-ignore-next-line
-        if (re.test(data[id].data[taxon])) {
+        if (re.test(data[id]!.data[taxon as Taxon])) {
           found = true;
         }
       });
 
       if (found) {
-        // @ts-ignore-next-line
-        newObj[id] = data[id];
+        newObj[id] = data[id] as {
+          data: TaxonomyMap;
+          count: number;
+        };
       }
     });
 
     setFilteredData(newObj);
   }, [data, debouncedFilter]);
 
-  if (!loaded || !data || !filteredData || !taxons) {
+  if ((!loaded || !data || !filteredData || !taxons) && !error) {
     return (
       <div className="inat-curated-species-standalone-loader">
         <Loader />
@@ -100,7 +104,7 @@ export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({ dataUrl, cur
     return <p>Sorry, there was an error loading the data.</p>;
   }
 
-  const numFilteredItems = Object.keys(filteredData).length;
+  const numFilteredItems = Object.keys(filteredData!).length;
 
   return (
     <>
@@ -109,7 +113,7 @@ export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({ dataUrl, cur
         <input type="text" value={filter} onChange={updateFilter} />
         <span className="inat-curated-species-filter-counts">
           <b>
-            {numFilteredItems} / {Object.keys(data).length}
+            {numFilteredItems} / {Object.keys(data!).length}
           </b>
         </span>
       </div>
@@ -118,12 +122,12 @@ export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({ dataUrl, cur
 
       {numFilteredItems > 0 && (
         <DataTable
-          data={filteredData}
-          taxons={taxons}
+          data={filteredData!}
+          taxons={taxons!}
           curatorUsernames={curatorUsernames}
           placeId={placeId}
-          hideControls={true}
-          showCount={false}
+          showRowNumbers={showRowNumbers}
+          showReviewerCount={showReviewerCount}
           allowDownload={false}
         />
       )}
