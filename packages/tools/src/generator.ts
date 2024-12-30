@@ -31,12 +31,6 @@ const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesDa
   return filename;
 };
 
-const millisToMinutesAndSeconds = (ms: number) => {
-  var minutes = Math.floor(ms / 60000);
-  var seconds = (ms % 60000) / 1000;
-  return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-};
-
 (async () => {
   // check the user has specified a config file
   if (!configFilePath) {
@@ -65,7 +59,6 @@ const millisToMinutesAndSeconds = (ms: number) => {
   clearTempFolder(tempFolderFullPath);
   const logger = initLogger(tempFolderFullPath);
 
-  // now to the meat!
   const start = performance.now();
   console.log('Step 1: download data from iNat');
   const { numRequests } = await downloadDataPackets(cleanConfig, tempFolderFullPath, logger);
@@ -78,6 +71,11 @@ const millisToMinutesAndSeconds = (ms: number) => {
 
   console.log('\nStep 3: generate data file');
   const filename = generateDataFile(cleanConfig, speciesData, tempFolderFullPath);
+
+  if (config.trackNewAdditions) {
+    console.log('\nStep 4: generate new additions data file');
+    // ...
+  }
 
   console.log('__________________________________________');
   console.log(`Complete. Data file generated: ${filename}`);

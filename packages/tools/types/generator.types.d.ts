@@ -55,20 +55,27 @@ export type GeneratorConfig = {
   readonly dataFilename: string;
 
   /**
-   * The iNat data contains the (vast!) full taxonomy of all observations. You won't be interested in displaying all that
-   * info. This setting controls which taxons will be retrieved and stored in the data file for display.
+   * If enabled, generates a separate data file containing the list of "new additions". The idea is to be able to show newly
+   * confirmed species that have been added to the curated list, so you can see how the list is growing over time.
+   *
+   * A species is first added to the curated list when one of the curators first approves or adds the species identification.
+   * The very first observation to have been confirmed by a curator is the one that'll be shown up: NOT the first *observed*
+   * species.
+   */
+  readonly trackNewAdditions?: boolean;
+
+  /**
+   * TODO.
+   */
+  readonly newAdditionsStartDate?: string;
+
+  /**
+   * The iNat data contains the (vast!) full taxonomy for all observations. You won't be interested in displaying all that
+   * info. This setting controls which taxons will be retrieved and stored in the data file for display in your table.
    *
    * Default: ['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species']
    */
   readonly taxons?: Taxon[];
-
-  /**
-   * The data set can typically get very large. In all cases the data in the file will be minified (a map of taxon strings is generated and
-   * internally referenced) but this setting controls whether all whitespace and indention is removed.
-   *
-   * Default: true
-   */
-  readonly minifyData?: boolean;
 
   /**
    * The name of a temporary folder where all the data will be generated.
@@ -81,15 +88,19 @@ export type GetDataPacketResponse = {
   readonly results: [
     {
       id: number;
+      time_observed_at: string;
+      created_at_details: string;
 
       // user info about who made the observation
       user: {
         login: string;
       };
 
-      // the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made on the osb
+      // the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made
       taxon: {
+        id: number;
         rank: Taxon;
+        name: string;
       };
 
       // an array of identifications made on this observation
@@ -103,6 +114,7 @@ export type GetDataPacketResponse = {
           // this seems to indicate whether the user has overwritten it with a newer one, or maybe removed. Regardless: it's
           // needed to filter out dud identifications
           current: boolean;
+          created_at: string;
           taxon: {
             name: string;
             rank: Taxon;

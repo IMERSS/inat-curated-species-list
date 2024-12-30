@@ -1,5 +1,6 @@
-import { GeneratorConfig, INatTaxonAncestor, GetDataPacketResponse } from '../types/generator.types';
-import { CuratedSpeciesData, Taxon, TaxonomyMap } from '@imerss/inat-curated-species-list-common';
+import { GeneratorConfig, GetDataPacketResponse } from '../types/generator.types';
+import { CuratedSpeciesData, Taxon } from '@imerss/inat-curated-species-list-common';
+import { getTaxonomy } from './helpers';
 import path from 'path';
 import fs from 'fs';
 
@@ -53,11 +54,3 @@ export const appendSpeciesFromPacket = (
     });
   });
 };
-
-const getTaxonomy = (ancestors: INatTaxonAncestor[], taxonsToReturn: Taxon[]): TaxonomyMap =>
-  ancestors.reduce((acc, curr) => {
-    if (taxonsToReturn.indexOf(curr.rank) !== -1) {
-      acc[curr.rank] = curr.name;
-    }
-    return acc;
-  }, {} as TaxonomyMap);

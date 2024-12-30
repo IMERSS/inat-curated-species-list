@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "bin": {
-    "generate-data-files": "./src/generator.ts"
+    "generate-data-files": "./src/generator.ts",
+    "generate-new-additions-file": "./src/newAdditions.ts"
   },
   "main": "./src/generator.ts",
   "types": "./types/generator.types.d.ts",

@@ -5,6 +5,7 @@ const config: GeneratorConfig = {
   taxonId: 47157,
   placeId: 7085,
   dataFilename: 'data.json',
+  trackNewAdditions: true,
 };
 
 export default config;
