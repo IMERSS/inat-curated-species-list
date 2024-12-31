@@ -88,8 +88,12 @@ export type GetDataPacketResponse = {
   readonly results: [
     {
       id: number;
-      time_observed_at: string;
-      created_at_details: string;
+      observed_on_details: {
+        date: string;
+      };
+      created_at_details: {
+        date: string;
+      };
 
       // user info about who made the observation
       user: {
