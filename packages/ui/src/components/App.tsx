@@ -1,69 +1,70 @@
 import { FC, useState } from 'react';
-// import Box from '@mui/material/Box';
-// import TextField from '@mui/material/TextField';
-// import LoadingButton from '@mui/lab/LoadingButton';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import { SpeciesTab } from './SpeciesTab';
+import { NewAdditionsTab } from './NewAdditionsTab';
 
-// import * as C from '../constants';
-// import { resetData, downloadDataByPacket } from '../utils/shared'; // minifyNewAdditionsData
-// import { Logger, LoggerHandle } from './Logger';
-// import { DataTable } from './DataTable';
-// import { NewAdditions } from './NewAdditions';
-import type { AppProps } from '../ui.types.js';
+export interface AppProps {
+  readonly speciesDataUrl: string;
+  readonly curatorUsernames: string[];
+  readonly placeId: number;
+  readonly showRowNumbers?: boolean;
+  readonly showReviewerCount?: boolean;
+  readonly newAdditionsDataUrl: string;
+  readonly showNewAdditions?: boolean;
+  readonly lang: any;
+}
 
-const App: FC<AppProps> = () => {
-  // { placeId, taxonId, curatorUsernames, dataUrl }
-
-  // const [curatorUsernames, setCuratorUsernames] = useState(() => C.CURATOR_INAT_USERNAMES.join(','));
-  // const [placeId, setPlaceId] = useState(C.PLACE_ID);
-  // const [taxonId, setTaxonId] = useState(C.TAXON_ID);
-  // const [loading, setLoading] = useState(false);
-  // const [dataLoaded, setDataLoaded] = useState(false);
-  // const [curatedSpeciesData, setCuratedSpeciesData] = useState(null);
-  // const [newAdditionsData, setNewAdditionsData] = useState(null);
+export const App: FC<AppProps> = ({
+  speciesDataUrl,
+  curatorUsernames,
+  placeId,
+  showRowNumbers,
+  showReviewerCount,
+  newAdditionsDataUrl,
+  showNewAdditions,
+}) => {
   const [tabIndex, setTabIndex] = useState(0);
-  // const loggerRef = useRef<LoggerHandle>(null);
 
   const onChangeTab = (_e: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
   };
 
-  // const onStart = () => {
-  //   setLoading(true);
-  //   resetData();
-  //   loggerRef.current!.clear();
-  //   loggerRef.current!.addLogRow('Pinging iNat for observation data.', 'info');
-  //   const cleanUsernames = curatorUsernames.split(',').map((username) => username.trim());
-  //   // const d = require('./test-data.json');
-  //   // setNewAdditionsData(minifyNewAdditionsData(d));
-  // };
-
   const getTabs = () => {
-    //   if (!dataUrl) {
-    //     return;
-    //   }
-
-    //   const getTab = () => {
-    //     if (tabIndex === 0) {
-    //       return <DataTable data={data} curatorUsernames={curatorUsernames} placeId={placeId} />;
-    //     }
-
-    //     return <NewAdditions data={newAdditionsData} />;
-    //   };
+    if (!showNewAdditions) {
+      return null;
+    }
 
     return (
-      <>
-        <Tabs value={tabIndex} onChange={onChangeTab}>
-          <Tab label="Curated Species" />
-          <Tab label="Latest Additions" />
-        </Tabs>
-        {/* {getTab()} */}
-      </>
+      <Tabs value={tabIndex} onChange={onChangeTab}>
+        <Tab label="Species" />
+        <Tab label="New Additions" />
+      </Tabs>
     );
   };
 
-  return getTabs();
-};
+  return (
+    <>
+      {getTabs()}
+      <div style={{ display: tabIndex === 0 ? 'block' : 'none' }}>
+        <SpeciesTab
+          dataUrl={speciesDataUrl}
+          curatorUsernames={curatorUsernames}
+          placeId={placeId}
+          showRowNumbers={showRowNumbers}
+          showReviewerCount={showReviewerCount}
+        />
+      </div>
 
-export default App;
+      <div style={{ display: tabIndex === 1 ? 'block' : 'none' }}>
+        <NewAdditionsTab
+          dataUrl={newAdditionsDataUrl}
+          curatorUsernames={curatorUsernames}
+          placeId={placeId}
+          showRowNumbers={showRowNumbers}
+          showReviewerCount={showReviewerCount}
+        />
+      </div>
+    </>
+  );
+};

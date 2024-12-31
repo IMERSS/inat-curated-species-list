@@ -1,7 +1,7 @@
-import { FC, useCallback, useEffect, useState } from 'react';
-import { Loader } from './Loader';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { DataTable } from './DataTable';
 import debounce from 'debounce';
+import { Loader } from './Loader';
 import {
   unminifySpeciesData,
   CuratedSpeciesData,
@@ -10,7 +10,7 @@ import {
   TaxonomyMap,
 } from '@imerss/inat-curated-species-list-common';
 
-export interface CuratedSpeciesTableProps {
+export interface NewAdditionsTabProps {
   readonly dataUrl: string;
   readonly curatorUsernames: string[];
   readonly placeId: number;
@@ -18,7 +18,7 @@ export interface CuratedSpeciesTableProps {
   readonly showReviewerCount?: boolean;
 }
 
-export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({
+export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({
   dataUrl,
   curatorUsernames,
   placeId,
@@ -27,10 +27,10 @@ export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
-  const [data, setData] = useState<CuratedSpeciesData | undefined>();
-  const [taxons, setTaxons] = useState<Taxon[]>();
   const [filter, setFilter] = useState('');
   const [debouncedFilter, setDebouncedFilter] = useState('');
+  const [data, setData] = useState<CuratedSpeciesData | undefined>();
+  const [taxons, setTaxons] = useState<Taxon[]>();
   const [filteredData, setFilteredData] = useState<CuratedSpeciesData | undefined>();
 
   const updateFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +45,6 @@ export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({
     }, 200),
     [],
   );
-
   useEffect(() => {
     fetch(dataUrl, {
       headers: {

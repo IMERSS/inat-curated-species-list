@@ -1,1 +1,1 @@
-export { CuratedSpeciesTable } from './CuratedSpeciesTable';
+export { CuratedSpeciesTable } from './App';
