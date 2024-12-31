@@ -4,7 +4,8 @@ const config: GeneratorConfig = {
   curators: ['oneofthedavesiknow', 'gpohl', 'crispinguppy'],
   taxonId: 47157,
   placeId: 7085,
-  dataFilename: 'data.json',
+  speciesDataFilename: 'species-data.json',
+  newAdditionsFilename: 'new-additions-data.json',
   trackNewAdditions: true,
 };
 

@@ -12,7 +12,7 @@ export interface AppProps {
   readonly showReviewerCount?: boolean;
   readonly newAdditionsDataUrl: string;
   readonly showNewAdditions?: boolean;
-  readonly lang: any;
+  readonly lang?: any;
 }
 
 export const App: FC<AppProps> = ({

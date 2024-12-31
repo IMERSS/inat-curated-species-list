@@ -13,12 +13,12 @@ const RootLayout: FC = () => {
         <h1>Demo</h1>
 
         <App
-          speciesDataUrl="./data.json"
+          speciesDataUrl={`./${config.speciesDataFilename}`}
           curatorUsernames={config.curators}
           placeId={config.placeId}
           showRowNumbers={false}
           showReviewerCount={true}
-          newAdditionsDataUrl="./newAdditions.json"
+          newAdditionsDataUrl={`./${config.newAdditionsFilename}`}
           showNewAdditions={config.trackNewAdditions || false}
         />
       </body>

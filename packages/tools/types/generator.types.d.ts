@@ -50,9 +50,14 @@ export type GeneratorConfig = {
   readonly placeId: number;
 
   /**
-   * The name of the generated data file.
+   * The name of the generated data file for the species data.
    */
-  readonly dataFilename: string;
+  readonly speciesDataFilename: string;
+
+  /**
+   * The name of the generated data file for the new additions data.
+   */
+  readonly newAdditionsFilename: string;
 
   /**
    * If enabled, generates a separate data file containing the list of "new additions". The idea is to be able to show newly
