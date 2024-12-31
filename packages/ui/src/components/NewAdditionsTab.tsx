@@ -55,7 +55,5 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({
     return <p>Sorry, there was an error loading the data.</p>;
   }
 
-  console.log(data);
-
   return <div>...</div>;
 };

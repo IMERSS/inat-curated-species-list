@@ -82,6 +82,9 @@ const sortByConfirmationDate = (a, b) => {
   const dataArray = [];
   Object.keys(processedData).forEach((taxonId) => {
     processedData[taxonId].observations.sort(sortByConfirmationDate);
+
+    // strip out observations before the specified start date
+
     processedData[taxonId].observations = [processedData[taxonId].observations[0]];
 
     dataArray.push({
@@ -96,6 +99,6 @@ const sortByConfirmationDate = (a, b) => {
   dataArray.sort(sortByConfirmationDate);
 
   // filter out any that were made before the start cutoff date
-  const newAdditionsFile = path.resolve('./temp/newAdditions.json');
+  const newAdditionsFile = path.resolve('./temp/new-additions-data.json');
   fs.writeFileSync(newAdditionsFile, JSON.stringify(dataArray), 'utf-8');
 })();

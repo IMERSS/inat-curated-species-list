@@ -59,3 +59,6 @@ svg.MuiSvgIcon-fontSizeMedium {
 .inat-curated-species-loader {
   color: #3366cc !important;
 }
+.inat-curated-species-list-tabs {
+  margin-bottom: 20px;
+}

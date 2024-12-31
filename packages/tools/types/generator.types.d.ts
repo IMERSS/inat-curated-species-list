@@ -69,9 +69,6 @@ export type GeneratorConfig = {
    */
   readonly trackNewAdditions?: boolean;
 
-  /**
-   * TODO.
-   */
   readonly newAdditionsStartDate?: string;
 
   /**

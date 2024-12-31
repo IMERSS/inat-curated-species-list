@@ -36,7 +36,7 @@ export const App: FC<AppProps> = ({
     }
 
     return (
-      <Tabs value={tabIndex} onChange={onChangeTab}>
+      <Tabs value={tabIndex} onChange={onChangeTab} className="inat-curated-species-list-tabs">
         <Tab label="Species" />
         <Tab label="New Additions" />
       </Tabs>
