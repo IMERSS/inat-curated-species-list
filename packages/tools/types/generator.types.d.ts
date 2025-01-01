@@ -100,6 +100,8 @@ export type GetDataPacketResponse = {
       // user info about who made the observation
       user: {
         login: string;
+        name: string;
+        id: number;
       };
 
       // the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made

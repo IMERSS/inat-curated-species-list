@@ -12,12 +12,16 @@ const parseDataFile = (file: string, curators: string[], taxonsToReturn: Taxon[]
     if (!processedData[taxonId]) {
       processedData[taxonId] = {
         species: '',
+        id: obs.id,
         observations: [],
+        user: {
+          username: '',
+          name: '',
+          id: null,
+        },
         taxonomy: null,
       };
     }
-
-    processedData[taxonId].observations.push();
 
     // now loop through all identifications on this observation and log the first one that was confirmed or added by
     // one of our curators
@@ -32,6 +36,11 @@ const parseDataFile = (file: string, curators: string[], taxonsToReturn: Taxon[]
       }
 
       processedData[taxonId].species = obs.taxon.name;
+      processedData[taxonId].user = {
+        username: obs.user.login,
+        name: obs.user.name,
+        id: obs.user.id,
+      };
       processedData[taxonId].observations.push({
         timeObserved: obs.observed_on_details ? obs.observed_on_details.date : null,
         createdAt: obs.created_at_details.date,
@@ -62,43 +71,51 @@ const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxon[]) =>
 
 const sortByConfirmationDate = (a, b) => {
   if (a.confirmationDateUnix < b.confirmationDateUnix) {
-    return 1;
-  } else if (a.confirmationDateUnix > b.confirmationDateUnix) {
     return -1;
+  } else if (a.confirmationDateUnix > b.confirmationDateUnix) {
+    return 1;
   }
   return 0;
 };
 
 // temporary
 (async () => {
-  // first extract the info we want
-  const processedData = parseDataFiles(
-    161,
-    ['oneofthedavesiknow', 'gpohl', 'crispinguppy'],
-    ['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species'],
-  );
+  // to be passed via config
+  const curatorUsernames = ['oneofthedavesiknow', 'gpohl', 'crispinguppy'];
+  const taxons: Taxon[] = ['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species'];
+  const newAdditionsStartDate = '2023-01-01';
 
-  // now whittle down the identification to the earliest record on the species
+  // -----------------------
+
+  // first extract the info we want
+  const processedData = parseDataFiles(161, curatorUsernames, taxons);
+
   const dataArray = [];
   Object.keys(processedData).forEach((taxonId) => {
     processedData[taxonId].observations.sort(sortByConfirmationDate);
 
-    // strip out observations before the specified start date
+    // if there are observations prior to the newAdditionsStartDate, ignore the taxon
+    if (processedData[taxonId].observations[0].confirmationDate < newAdditionsStartDate) {
+      return;
+    }
 
-    processedData[taxonId].observations = [processedData[taxonId].observations[0]];
-
+    // const firstSpeciesObservation = processedData[taxonId].observations[0];
     dataArray.push({
+      id: processedData[taxonId].id,
       taxonId,
       species: processedData[taxonId].species,
       ...processedData[taxonId].observations[0],
+      user: processedData[taxonId].user,
       taxonomy: processedData[taxonId].taxonomy,
     });
   });
 
-  // convert data structure to an array, sorted by reverse confirmation date
+  // sort remaining data
   dataArray.sort(sortByConfirmationDate);
 
   // filter out any that were made before the start cutoff date
   const newAdditionsFile = path.resolve('./temp/new-additions-data.json');
   fs.writeFileSync(newAdditionsFile, JSON.stringify(dataArray), 'utf-8');
 })();
+
+// TODO taxon switches. Example: https://www.inaturalist.org/observations/143778176
