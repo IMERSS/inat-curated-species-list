@@ -99,7 +99,6 @@ const sortByConfirmationDate = (a, b) => {
       return;
     }
 
-    // const firstSpeciesObservation = processedData[taxonId].observations[0];
     dataArray.push({
       id: processedData[taxonId].id,
       taxonId,
@@ -119,3 +118,24 @@ const sortByConfirmationDate = (a, b) => {
 })();
 
 // TODO taxon switches. Example: https://www.inaturalist.org/observations/143778176
+
+/*
+
+
+taxon.is_active: false
+taxon_change?: { 
+  id: number;
+  type: 'TaxonSwap'
+}
+
+Scenario:
+
+Here it was uploaded on Dec 5th, 2022 and approved the same day by a curator. 
+In Jan 2023 there was a taxon change, so the OLD identification entries now get a new date. 
+
+This is why it's appearing in the results, even though it was added to our checklist prior before our start date. 
+
+Solution:
+- parse the identifications. Look for 
+
+*/

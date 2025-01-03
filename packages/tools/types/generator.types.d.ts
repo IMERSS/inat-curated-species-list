@@ -104,11 +104,18 @@ export type GetDataPacketResponse = {
         id: number;
       };
 
-      // the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made
+      // the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made.
+      // For taxon changes it correctly shows the new taxon info
       taxon: {
         id: number;
         rank: Taxon;
         name: string;
+        is_active: boolean; // false when there's been a taxon swap (and perhaps newly extinct)
+      };
+
+      taxon_change?: {
+        id: number;
+        type: 'TaxonSwap';
       };
 
       // an array of identifications made on this observation
