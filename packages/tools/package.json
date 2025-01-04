@@ -8,6 +8,9 @@
   },
   "main": "./src/generator.ts",
   "types": "./types/generator.types.d.ts",
+  "scripts": {
+    "test": "vitest"
+  },
   "dependencies": {
     "ansi-colors": "^4.1.3",
     "cli-progress": "^3.12.0",
@@ -26,6 +29,8 @@
     "@imerss/inat-curated-species-list-common": "workspace:*",
     "@turbo/gen": "^1.12.4",
     "@types/node": "^20.11.24",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "vite": "^6.0.7",
+    "vitest": "^2.1.8"
   }
 }

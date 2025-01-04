@@ -85,60 +85,60 @@ export type GeneratorConfig = {
   readonly tempFolder?: string;
 };
 
+export type Identification = {
+  taxon_id: number;
+  user: {
+    login: string;
+  };
+
+  // this seems to indicate whether the user has overwritten it with a newer one, or maybe removed. Regardless: it's
+  // needed to filter out dud identifications
+  current: boolean;
+  created_at: string;
+  taxon: {
+    name: string;
+    rank: Taxon;
+    ancestors: [];
+  };
+
+  taxon_change?: {
+    id: number;
+    type: 'TaxonSwap';
+  };
+};
+
+export type Observation = {
+  id: number;
+  observed_on_details: {
+    date: string;
+  };
+  created_at_details: {
+    date: string;
+  };
+
+  // user info about who made the observation
+  user: {
+    login: string;
+    name: string;
+    id: number;
+  };
+
+  // the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made.
+  // For taxon changes it correctly shows the new taxon info
+  taxon: {
+    id: number;
+    rank: Taxon;
+    name: string;
+    is_active: boolean; // false when there's been a taxon swap (and perhaps newly extinct)
+  };
+
+  // an array of identifications made on this observation
+  identifications: [Identification];
+};
+
 export type GetDataPacketResponse = {
   readonly total_results: number;
-  readonly results: [
-    {
-      id: number;
-      observed_on_details: {
-        date: string;
-      };
-      created_at_details: {
-        date: string;
-      };
-
-      // user info about who made the observation
-      user: {
-        login: string;
-        name: string;
-        id: number;
-      };
-
-      // the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made.
-      // For taxon changes it correctly shows the new taxon info
-      taxon: {
-        id: number;
-        rank: Taxon;
-        name: string;
-        is_active: boolean; // false when there's been a taxon swap (and perhaps newly extinct)
-      };
-
-      taxon_change?: {
-        id: number;
-        type: 'TaxonSwap';
-      };
-
-      // an array of identifications made on this observation
-      identifications: [
-        {
-          taxon_id: string;
-          user: {
-            login: string;
-          };
-
-          // this seems to indicate whether the user has overwritten it with a newer one, or maybe removed. Regardless: it's
-          // needed to filter out dud identifications
-          current: boolean;
-          created_at: string;
-          taxon: {
-            name: string;
-            rank: Taxon;
-            ancestors: [];
-          };
-        },
-      ];
-    },
-  ];
+  readonly results: [Observation];
 };
 
 export type DownloadDataPacketResponse = {

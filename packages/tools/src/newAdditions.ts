@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { GetDataPacketResponse } from '../types/generator.types';
 import { Taxon } from '@imerss/inat-curated-species-list-common';
-import { getTaxonomy } from './helpers';
+import { getTaxonomy, getConfirmationDateAccountingForTaxonChanges } from './helpers';
 
 const parseDataFile = (file: string, curators: string[], taxonsToReturn: Taxon[], processedData) => {
   const content: GetDataPacketResponse = JSON.parse(fs.readFileSync(file, 'utf-8'));
@@ -35,6 +35,12 @@ const parseDataFile = (file: string, curators: string[], taxonsToReturn: Taxon[]
         continue;
       }
 
+      const confirmationDate = getConfirmationDateAccountingForTaxonChanges(i, obs);
+
+      if (!confirmationDate) {
+        continue;
+      }
+
       processedData[taxonId].species = obs.taxon.name;
       processedData[taxonId].user = {
         username: obs.user.login,
@@ -44,8 +50,8 @@ const parseDataFile = (file: string, curators: string[], taxonsToReturn: Taxon[]
       processedData[taxonId].observations.push({
         timeObserved: obs.observed_on_details ? obs.observed_on_details.date : null,
         createdAt: obs.created_at_details.date,
-        confirmationDate: obs.identifications[i].created_at,
-        confirmationDateUnix: new Date(obs.identifications[i].created_at).getTime(),
+        confirmationDate: confirmationDate,
+        confirmationDateUnix: new Date(confirmationDate).getTime(),
       });
 
       // only bother storing the taxonomy for this taxon once
@@ -55,6 +61,12 @@ const parseDataFile = (file: string, curators: string[], taxonsToReturn: Taxon[]
 
       // we ignore any later identifications; we're only interested in the earliest one that met our curator requirement
       break;
+    }
+
+    // if there weren't any identifications added, delete the taxon - it will get automatically added later if there
+    // are other records with valid observations
+    if (!processedData[taxonId].observations.length) {
+      delete processedData[taxonId];
     }
   });
 };
@@ -116,26 +128,3 @@ const sortByConfirmationDate = (a, b) => {
   const newAdditionsFile = path.resolve('./temp/new-additions-data.json');
   fs.writeFileSync(newAdditionsFile, JSON.stringify(dataArray), 'utf-8');
 })();
-
-// TODO taxon switches. Example: https://www.inaturalist.org/observations/143778176
-
-/*
-
-
-taxon.is_active: false
-taxon_change?: { 
-  id: number;
-  type: 'TaxonSwap'
-}
-
-Scenario:
-
-Here it was uploaded on Dec 5th, 2022 and approved the same day by a curator. 
-In Jan 2023 there was a taxon change, so the OLD identification entries now get a new date. 
-
-This is why it's appearing in the results, even though it was added to our checklist prior before our start date. 
-
-Solution:
-- parse the identifications. Look for 
-
-*/
