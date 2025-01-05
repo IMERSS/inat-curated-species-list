@@ -2,9 +2,18 @@ import fs from 'fs';
 import path from 'path';
 import { GetDataPacketResponse } from '../types/generator.types';
 import { Taxon } from '@imerss/inat-curated-species-list-common';
-import { getTaxonomy, getConfirmationDateAccountingForTaxonChanges } from './helpers';
+import { getTaxonomy, getUniqueItems, getConfirmationDateAccountingForTaxonChanges } from './helpers';
 
-const parseDataFile = (file: string, curators: string[], taxonsToReturn: Taxon[], processedData) => {
+// TODO problem: taxon ID "227436" shouldn't show up in the final list
+// https://www.inaturalist.org/observations?place_id=7085&taxon_id=227436&verifiable=any
+// the issue is that a curator has approved a higher-level taxon, but not the same as the original observation.
+const parseDataFile = (
+  file: string,
+  curators: string[],
+  taxonsToReturn: Taxon[],
+  processedData,
+  taxonsToRemove: number[],
+) => {
   const content: GetDataPacketResponse = JSON.parse(fs.readFileSync(file, 'utf-8'));
 
   content.results.forEach((obs) => {
@@ -35,11 +44,12 @@ const parseDataFile = (file: string, curators: string[], taxonsToReturn: Taxon[]
         continue;
       }
 
-      const confirmationDate = getConfirmationDateAccountingForTaxonChanges(i, obs);
-
-      if (!confirmationDate) {
+      if (obs.identifications[i].taxon.rank !== 'species') {
         continue;
       }
+
+      const { oldTaxonIds, originalConfirmationDate } = getConfirmationDateAccountingForTaxonChanges(i, obs);
+      taxonsToRemove.push(...oldTaxonIds);
 
       processedData[taxonId].species = obs.taxon.name;
       processedData[taxonId].user = {
@@ -50,8 +60,8 @@ const parseDataFile = (file: string, curators: string[], taxonsToReturn: Taxon[]
       processedData[taxonId].observations.push({
         timeObserved: obs.observed_on_details ? obs.observed_on_details.date : null,
         createdAt: obs.created_at_details.date,
-        confirmationDate: confirmationDate,
-        confirmationDateUnix: new Date(confirmationDate).getTime(),
+        confirmationDate: originalConfirmationDate,
+        confirmationDateUnix: new Date(originalConfirmationDate).getTime(),
       });
 
       // only bother storing the taxonomy for this taxon once
@@ -63,8 +73,8 @@ const parseDataFile = (file: string, curators: string[], taxonsToReturn: Taxon[]
       break;
     }
 
-    // if there weren't any identifications added, delete the taxon - it will get automatically added later if there
-    // are other records with valid observations
+    // if there aren't any identifications added, delete the taxon - it will get automatically added later if there
+    // are other records with valid observations. (This can happen when ???)
     if (!processedData[taxonId].observations.length) {
       delete processedData[taxonId];
     }
@@ -73,10 +83,16 @@ const parseDataFile = (file: string, curators: string[], taxonsToReturn: Taxon[]
 
 const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxon[]) => {
   const processedData = {};
+  const taxonsToRemove: number[] = [];
 
   for (let i = 1; i <= numFiles; i++) {
-    parseDataFile(path.resolve(`./temp/packet-${i}.json`), curators, taxon, processedData);
+    parseDataFile(path.resolve(`./temp/packet-${i}.json`), curators, taxon, processedData, taxonsToRemove);
   }
+
+  const items = getUniqueItems(taxonsToRemove);
+  items.forEach((taxonId) => {
+    delete processedData[taxonId];
+  });
 
   return processedData;
 };
@@ -90,9 +106,8 @@ const sortByConfirmationDate = (a, b) => {
   return 0;
 };
 
-// temporary
+// temporary. Args to be passed via config
 (async () => {
-  // to be passed via config
   const curatorUsernames = ['oneofthedavesiknow', 'gpohl', 'crispinguppy'];
   const taxons: Taxon[] = ['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species'];
   const newAdditionsStartDate = '2023-01-01';
@@ -101,6 +116,9 @@ const sortByConfirmationDate = (a, b) => {
 
   // first extract the info we want
   const processedData = parseDataFiles(161, curatorUsernames, taxons);
+
+  // console.log(processedData['1373714']);
+  // return;
 
   const dataArray = [];
   Object.keys(processedData).forEach((taxonId) => {

@@ -103,7 +103,11 @@ export type Identification = {
 
   taxon_change?: {
     id: number;
-    type: 'TaxonSwap';
+    type: 'TaxonSwap' | 'TaxonSplit' | 'TaxonMerge';
+  };
+
+  previous_observation_taxon: {
+    id: number;
   };
 };
 
@@ -123,8 +127,11 @@ export type Observation = {
     id: number;
   };
 
-  // the full taxonomy of the observation. This looks like it's the latest best reflection of the identifications made.
-  // For taxon changes it correctly shows the new taxon info
+  // the full, current taxon info of the observation as according to identifications made. However, note:
+  // 1. curators may have approved genus or higher, but not species, so this information may be a species that hasn't been corroborated
+  //    by one of our curators, and
+  // 2. it may even contain different info than we care about. A curator may have asserted an observation is something quite different
+  //    than what was originally asserted
   taxon: {
     id: number;
     rank: Taxon;
@@ -133,12 +140,12 @@ export type Observation = {
   };
 
   // an array of identifications made on this observation
-  identifications: [Identification];
+  identifications: Identification[];
 };
 
 export type GetDataPacketResponse = {
   readonly total_results: number;
-  readonly results: [Observation];
+  readonly results: Observation[];
 };
 
 export type DownloadDataPacketResponse = {
