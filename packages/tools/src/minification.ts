@@ -4,7 +4,8 @@
  */
 import { CuratedSpeciesData, Taxon, CuratedSpeciesDataMinified } from '@imerss/inat-curated-species-list-common';
 import { getShortestUniqueKey } from './helpers';
-const { version } = require('../package.json');
+
+import { version } from '../package.json';
 
 export type TaxonsToMinifyMap = Partial<Record<Taxon, boolean>>;
 
@@ -61,22 +62,3 @@ export const minifySpeciesData = (data: CuratedSpeciesData, targetTaxons: Taxon[
 
   return minifiedData;
 };
-
-// export const minifyNewAdditionsData = (newAdditions) => {
-//   const newAdditionsByYear = {};
-//   Object.keys(newAdditions).forEach((taxonId) => {
-//     const row = newAdditions[taxonId];
-//     const curatorConfirmationDate = new Date(row.curatorConfirmationDate);
-//     const year = curatorConfirmationDate.getFullYear();
-
-//     // if (!newAdditionsByYear[year]) {
-//     //   newAdditionsByYear[year] = [];
-//     // }
-
-//     // newAdditionsByYear[year].push(newAdditions[taxonId]);
-//   });
-
-//   console.log({ before: newAdditions, newAdditionsByYear });
-
-//   return newAdditions;
-// };

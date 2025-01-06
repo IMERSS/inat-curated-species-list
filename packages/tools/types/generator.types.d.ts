@@ -52,12 +52,7 @@ export type GeneratorConfig = {
   /**
    * The name of the generated data file for the species data.
    */
-  readonly speciesDataFilename: string;
-
-  /**
-   * The name of the generated data file for the new additions data.
-   */
-  readonly newAdditionsFilename: string;
+  readonly speciesDataFilename?: string;
 
   /**
    * If enabled, generates a separate data file containing the list of "new additions". The idea is to be able to show newly
@@ -67,8 +62,17 @@ export type GeneratorConfig = {
    * The very first observation to have been confirmed by a curator is the one that'll be shown up: NOT the first *observed*
    * species.
    */
-  readonly trackNewAdditions?: boolean;
+  readonly trackNewAdditions: boolean;
 
+  /**
+   * The name of the generated data file for the new additions data.
+   */
+  readonly newAdditionsFilename?: string;
+
+  /**
+   * If set, only tracks new additions to the list from this date onwards.
+   * Format: YYYY-MM-DD
+   */
   readonly newAdditionsStartDate?: string;
 
   /**
@@ -85,6 +89,12 @@ export type GeneratorConfig = {
   readonly tempFolder?: string;
 };
 
+export type TaxonAncestor = {
+  readonly id: number;
+  readonly rank: Taxon;
+  readonly name: string;
+};
+
 export type Identification = {
   taxon_id: number;
   user: {
@@ -99,7 +109,7 @@ export type Identification = {
     id: number;
     name: string;
     rank: Taxon;
-    ancestors: [];
+    ancestors: TaxonAncestor[];
   };
 
   taxon_change?: {

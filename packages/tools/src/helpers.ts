@@ -113,11 +113,16 @@ export const getUniqueItems = (arr: number[]) => arr.filter((value, index, array
 /*
 Scenario:
 
-Digrammia extenuata
-https://www.inaturalist.org/observations/195907292
+Papilio bairdii
+71 results: https://www.inaturalist.org/observations?ident_user_id=oneofthedavesiknow,gpohl,crispinguppy&place_id=7085&taxon_id=1510921&verifiable=any
 
-Showing up in list, but there's an older record here:
-https://www.inaturalist.org/observations?ident_user_id=oneofthedavesiknow,gpohl,crispinguppy&place_id=7085&taxon_id=452657&verifiable=any
+Current showing up as new due to this observation:
+https://www.inaturalist.org/observations/161739910
 
-Taxon ID: 452657
+I think it's because all other observations are pinned down to subspecies, so this is the first on the species level.
+
+New logic: 
+- when parsing the data, if a curator has made an ID on the subspecies level, track it under a "subspeseparately
+- 
+
 */

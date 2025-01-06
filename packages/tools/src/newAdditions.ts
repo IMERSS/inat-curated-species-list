@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { GetDataPacketResponse } from '../types/generator.types';
+import { GeneratorConfig, GetDataPacketResponse } from '../types/generator.types';
 import { Taxon } from '@imerss/inat-curated-species-list-common';
 import { getTaxonomy, getUniqueItems, getConfirmationDateAccountingForTaxonChanges } from './helpers';
 
@@ -30,21 +30,29 @@ const parseDataFile = (
         continue;
       }
 
-      if (obs.identifications[i].taxon.rank !== 'species') {
+      if (obs.identifications[i].taxon.rank !== 'species' && obs.identifications[i].taxon.rank !== 'subspecies') {
         continue;
       }
 
-      curatorTaxonId = obs.identifications[i].taxon.id;
+      const isSubspeciesIdent = obs.identifications[i].taxon.rank === 'subspecies';
+
+      // we're not currently interested in subspecies, but need to factor in confirmed subspecies observations.
+      let speciesName: string;
+      if (isSubspeciesIdent) {
+        const speciesAncestor =
+          obs.identifications[i].taxon.ancestors[obs.identifications[i].taxon.ancestors.length - 1];
+        curatorTaxonId = speciesAncestor.id;
+        speciesName = speciesAncestor.name;
+      } else {
+        curatorTaxonId = obs.identifications[i].taxon.id;
+        speciesName = obs.identifications[i].taxon.name;
+      }
+
+      // as noted, group all species + subspecies under the species taxon ID.
       if (!processedData[curatorTaxonId]) {
         processedData[curatorTaxonId] = {
-          species: '',
-          id: obs.id,
+          speciesName: null,
           observations: [],
-          user: {
-            username: '',
-            name: '',
-            id: null,
-          },
           taxonomy: null,
         };
       }
@@ -52,20 +60,22 @@ const parseDataFile = (
       const { deprecatedTaxonIds, originalConfirmationDate } = getConfirmationDateAccountingForTaxonChanges(i, obs);
       taxonsToRemove.push(...deprecatedTaxonIds);
 
-      processedData[curatorTaxonId].species = obs.identifications[i].taxon.name;
-      processedData[curatorTaxonId].user = {
-        username: obs.user.login,
-        name: obs.user.name,
-        id: obs.user.id,
-      };
+      processedData[curatorTaxonId].speciesName = speciesName;
       processedData[curatorTaxonId].observations.push({
-        timeObserved: obs.observed_on_details ? obs.observed_on_details.date : null,
-        createdAt: obs.created_at_details.date,
+        observationId: obs.id,
+        dateObserved: obs.observed_on_details ? obs.observed_on_details.date : null,
+        observationCreatedAt: obs.created_at_details.date,
         confirmationDate: originalConfirmationDate,
         confirmationDateUnix: new Date(originalConfirmationDate).getTime(),
+        curator: obs.identifications[i].user.login,
+        observer: {
+          username: obs.user.login,
+          name: obs.user.name,
+          id: obs.user.id,
+        },
       });
 
-      // only bother storing the taxonomy for this taxon once
+      // only bother calculating the taxonomy for this taxon once
       if (!processedData[curatorTaxonId].taxonomy) {
         processedData[curatorTaxonId].taxonomy = getTaxonomy(obs.identifications[i].taxon.ancestors, taxonsToReturn);
       }
@@ -107,25 +117,15 @@ const sortByConfirmationDate = (a, b) => {
   return 0;
 };
 
-// temporary. Args to be passed via config
-(async () => {
-  const curatorUsernames = ['oneofthedavesiknow', 'gpohl', 'crispinguppy'];
-  const taxons: Taxon[] = ['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species'];
-  const newAdditionsStartDate = '2024-01-01';
-
-  // -----------------------
-
-  // first extract the info we want
-  const processedData = parseDataFiles(161, curatorUsernames, taxons);
-
-  // console.log(processedData['1373714']);
-  // return;
+export const generateNewAdditionsDataFile = (config: GeneratorConfig, numDataFiles: number) => {
+  const { curators, taxons, newAdditionsStartDate } = config;
+  const processedData = parseDataFiles(numDataFiles, curators, taxons);
 
   const dataArray = [];
   Object.keys(processedData).forEach((taxonId) => {
     processedData[taxonId].observations.sort(sortByConfirmationDate);
 
-    // if there are observations prior to the newAdditionsStartDate, ignore the taxon
+    // ignore any taxons that have confirmed observations prior to `newAdditionsStartDate`
     if (processedData[taxonId].observations[0].confirmationDate < newAdditionsStartDate) {
       return;
     }
@@ -135,7 +135,7 @@ const sortByConfirmationDate = (a, b) => {
       taxonId,
       species: processedData[taxonId].species,
       ...processedData[taxonId].observations[0],
-      user: processedData[taxonId].user,
+      user: processedData[taxonId].observations[0].user,
       taxonomy: processedData[taxonId].taxonomy,
     });
   });
@@ -146,4 +146,4 @@ const sortByConfirmationDate = (a, b) => {
   // filter out any that were made before the start cutoff date
   const newAdditionsFile = path.resolve('./temp/new-additions-data.json');
   fs.writeFileSync(newAdditionsFile, JSON.stringify(dataArray), 'utf-8');
-})();
+};

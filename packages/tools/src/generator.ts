@@ -8,6 +8,7 @@ import fs from 'fs';
 import { downloadDataPackets } from './request';
 import { extractSpeciesList } from './extraction';
 import { minifySpeciesData } from './minification';
+import { generateNewAdditionsDataFile } from './newAdditions';
 import { clearTempFolder, initLogger } from './logs';
 import { DEFAULT_TAXONS } from './constants';
 import { GeneratorConfig } from '../types/generator.types';
@@ -19,7 +20,7 @@ const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
 const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesData, tempFolder: string) => {
   const minifiedSpeciesData = minifySpeciesData(speciesData, config.taxons);
 
-  const filename = path.resolve(tempFolder, config.dataFilename);
+  const filename = path.resolve(tempFolder, config.speciesDataFilename);
   if (!fs.existsSync(tempFolder)) {
     fs.mkdirSync(tempFolder);
   }
@@ -49,7 +50,8 @@ const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesDa
   const config = await import(configFile);
   const cleanConfig = {
     tempFolder: './temp',
-    dataFilename: 'data.json',
+    speciesDataFilename: 'species-data.json',
+    newAdditionsFilename: 'new-additions-data.json',
     taxons: DEFAULT_TAXONS,
     ...config.default,
   };
@@ -72,11 +74,11 @@ const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesDa
   console.log('\nStep 3: generate data file');
   const filename = generateDataFile(cleanConfig, speciesData, tempFolderFullPath);
 
-  if (config.trackNewAdditions) {
+  if (cleanConfig.trackNewAdditions) {
     console.log('\nStep 4: generate new additions data file');
-    // ...
+    generateNewAdditionsDataFile(cleanConfig, numRequests);
   }
 
-  console.log('__________________________________________');
-  console.log(`Complete. Data file generated: ${filename}`);
+  console.log('\n__________________________________________');
+  console.log(`Complete. Data file generated: ${filename}\n\n`);
 })();
