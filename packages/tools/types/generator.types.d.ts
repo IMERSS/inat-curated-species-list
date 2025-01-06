@@ -96,6 +96,7 @@ export type Identification = {
   current: boolean;
   created_at: string;
   taxon: {
+    id: number;
     name: string;
     rank: Taxon;
     ancestors: [];

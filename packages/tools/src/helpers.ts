@@ -41,49 +41,19 @@ export const getTaxonomy = (ancestors: INatTaxonAncestor[], taxonsToReturn: Taxo
     }
     return acc;
   }, {} as TaxonomyMap);
-/*
-
-Scenario
---------
-
-Here it was uploaded on Dec 5th, 2022 and approved the same day by a curator. 
-In Jan 2023 there was a taxon change, so the OLD identification entries now get a new date. 
-
-This is why it's appearing in the results, even though it was added to our checklist prior before our start date. 
-
-Question: how to accurately map a confirmed observation by a curator over potentially multiple taxon changes? 
-  
-For that, a taxon change observation has `taxon_change` data + previous_observation_taxon data. Every observation with the 
-old taxon gets a new entry flagged as a "taxon_change", but only the first identification added as part of the taxon change
-(i.e. the original observation that first selected the now older taxon) will have a previous_observation_taxon with the ID 
-of the previous taxon.
-
-So basically just create a data structure that finds the original DATE of the confirmation observation. Then:
-- ignore the entry if it's before the start date. 
-- if it's AFTER, add it to the list of 
-
-previous_observation_taxon: { id: [taxon ID] }
-
-*/
-
-type HistoricalCuratorObsIdentification = {
-  readonly taxonId: number;
-  readonly confirmationDate: string;
-  readonly isTaxonChange: boolean;
-};
 
 export const getConfirmationDateAccountingForTaxonChanges = (
   curatorIdentificationIndex: number,
   obs: Observation,
 ): {
-  oldTaxonIds: number[];
+  deprecatedTaxonIds: number[];
   originalConfirmationDate: string;
 } => {
   const curatorConfirmationDate = obs.identifications[curatorIdentificationIndex].created_at;
 
   // if this observation wasn't part of a taxon swap, we're good. Just return the confirmation date
   if (!obs.identifications[curatorIdentificationIndex].taxon_change) {
-    return { oldTaxonIds: [], originalConfirmationDate: curatorConfirmationDate };
+    return { deprecatedTaxonIds: [], originalConfirmationDate: curatorConfirmationDate };
   }
 
   // confirm that the data model is one of the known taxon change types. If not, abort.
@@ -98,6 +68,12 @@ export const getConfirmationDateAccountingForTaxonChanges = (
     });
     process.exit(1);
   }
+
+  type HistoricalCuratorObsIdentification = {
+    readonly taxonId: number;
+    readonly confirmationDate: string;
+    readonly isTaxonChange: boolean;
+  };
 
   const curatorObservations: HistoricalCuratorObsIdentification[] = [];
   const targetCurator = obs.identifications[curatorIdentificationIndex].user.login;
@@ -117,11 +93,11 @@ export const getConfirmationDateAccountingForTaxonChanges = (
 
   // now loop through the curator obseervations. The first one that ISN'T a taxon change will be the original observation.
   // this could be a single taxon swap or a series. Any earlier identifications by the curator don't matter.
-  const oldTaxonIds: number[] = [];
+  const deprecatedTaxonIds: number[] = [];
   let originalConfirmationDate: string;
   for (let i = 0; i < curatorObservations.length; i++) {
     if (i !== 0) {
-      oldTaxonIds.push(curatorObservations[i].taxonId);
+      deprecatedTaxonIds.push(curatorObservations[i].taxonId);
     }
     if (!curatorObservations[i].isTaxonChange) {
       originalConfirmationDate = curatorObservations[i].confirmationDate;
@@ -129,7 +105,19 @@ export const getConfirmationDateAccountingForTaxonChanges = (
     }
   }
 
-  return { oldTaxonIds, originalConfirmationDate };
+  return { deprecatedTaxonIds, originalConfirmationDate };
 };
 
 export const getUniqueItems = (arr: number[]) => arr.filter((value, index, array) => array.indexOf(value) === index);
+
+/*
+Scenario:
+
+Digrammia extenuata
+https://www.inaturalist.org/observations/195907292
+
+Showing up in list, but there's an older record here:
+https://www.inaturalist.org/observations?ident_user_id=oneofthedavesiknow,gpohl,crispinguppy&place_id=7085&taxon_id=452657&verifiable=any
+
+Taxon ID: 452657
+*/

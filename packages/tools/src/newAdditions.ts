@@ -17,24 +17,10 @@ const parseDataFile = (
   const content: GetDataPacketResponse = JSON.parse(fs.readFileSync(file, 'utf-8'));
 
   content.results.forEach((obs) => {
-    const { id: taxonId } = obs.taxon;
-    if (!processedData[taxonId]) {
-      processedData[taxonId] = {
-        species: '',
-        id: obs.id,
-        observations: [],
-        user: {
-          username: '',
-          name: '',
-          id: null,
-        },
-        taxonomy: null,
-      };
-    }
-
     // now loop through all identifications on this observation and log the first one that was confirmed or added by
     // one of our curators
     // *** assumption: the array is ordered oldest to newest
+    let curatorTaxonId: number | null = null;
     for (let i = 0; i < obs.identifications.length; i++) {
       if (!obs.identifications[i].current) {
         continue;
@@ -48,16 +34,31 @@ const parseDataFile = (
         continue;
       }
 
-      const { oldTaxonIds, originalConfirmationDate } = getConfirmationDateAccountingForTaxonChanges(i, obs);
-      taxonsToRemove.push(...oldTaxonIds);
+      curatorTaxonId = obs.identifications[i].taxon.id;
+      if (!processedData[curatorTaxonId]) {
+        processedData[curatorTaxonId] = {
+          species: '',
+          id: obs.id,
+          observations: [],
+          user: {
+            username: '',
+            name: '',
+            id: null,
+          },
+          taxonomy: null,
+        };
+      }
 
-      processedData[taxonId].species = obs.taxon.name;
-      processedData[taxonId].user = {
+      const { deprecatedTaxonIds, originalConfirmationDate } = getConfirmationDateAccountingForTaxonChanges(i, obs);
+      taxonsToRemove.push(...deprecatedTaxonIds);
+
+      processedData[curatorTaxonId].species = obs.identifications[i].taxon.name;
+      processedData[curatorTaxonId].user = {
         username: obs.user.login,
         name: obs.user.name,
         id: obs.user.id,
       };
-      processedData[taxonId].observations.push({
+      processedData[curatorTaxonId].observations.push({
         timeObserved: obs.observed_on_details ? obs.observed_on_details.date : null,
         createdAt: obs.created_at_details.date,
         confirmationDate: originalConfirmationDate,
@@ -65,8 +66,8 @@ const parseDataFile = (
       });
 
       // only bother storing the taxonomy for this taxon once
-      if (!processedData[taxonId].taxonomy) {
-        processedData[taxonId].taxonomy = getTaxonomy(obs.identifications[i].taxon.ancestors, taxonsToReturn);
+      if (!processedData[curatorTaxonId].taxonomy) {
+        processedData[curatorTaxonId].taxonomy = getTaxonomy(obs.identifications[i].taxon.ancestors, taxonsToReturn);
       }
 
       // we ignore any later identifications; we're only interested in the earliest one that met our curator requirement
@@ -75,8 +76,8 @@ const parseDataFile = (
 
     // if there aren't any identifications added, delete the taxon - it will get automatically added later if there
     // are other records with valid observations. (This can happen when ???)
-    if (!processedData[taxonId].observations.length) {
-      delete processedData[taxonId];
+    if (curatorTaxonId && !processedData[curatorTaxonId].observations.length) {
+      delete processedData[curatorTaxonId];
     }
   });
 };
@@ -110,7 +111,7 @@ const sortByConfirmationDate = (a, b) => {
 (async () => {
   const curatorUsernames = ['oneofthedavesiknow', 'gpohl', 'crispinguppy'];
   const taxons: Taxon[] = ['superfamily', 'family', 'subfamily', 'tribe', 'genus', 'species'];
-  const newAdditionsStartDate = '2023-01-01';
+  const newAdditionsStartDate = '2024-01-01';
 
   // -----------------------
 
