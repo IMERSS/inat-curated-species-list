@@ -26,8 +26,9 @@ export const App: FC<AppProps> = ({
 }) => {
   const [tabIndex, setTabIndex] = useState(0);
 
-  const onChangeTab = (_e: React.SyntheticEvent, newValue: number) => {
+  const onChangeTab = (_e: React.SyntheticEvent | null, newValue: number) => {
     setTabIndex(newValue);
+    console.log('changed tab');
   };
 
   const getTabs = () => {
@@ -37,8 +38,9 @@ export const App: FC<AppProps> = ({
 
     return (
       <Tabs value={tabIndex} onChange={onChangeTab} className="inat-curated-species-list-tabs">
-        <Tab label="Species" />
-        <Tab label="New Additions" />
+        <Tab label="Species" disableRipple />
+        <Tab label="New Additions" disableRipple />
+        <Tab label="Taxon Changes" disableRipple />
       </Tabs>
     );
   };

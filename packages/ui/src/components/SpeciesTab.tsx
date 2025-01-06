@@ -45,6 +45,7 @@ export const SpeciesTab: FC<SpeciesTabProps> = ({
     }, 200),
     [],
   );
+
   useEffect(() => {
     fetch(dataUrl, {
       headers: {

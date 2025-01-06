@@ -94,9 +94,12 @@ export const DataTable: FC<DataTableProps> = ({
       <thead>
         <tr key="header">
           {showRowNumbers && <th></th>}
-          {taxonCols.map((rank) => (
-            <th key={rank}>{rank}</th>
-          ))}
+          {taxonCols.map((rank) => {
+            if (rank === 'genus') {
+              return null;
+            }
+            return <th key={rank}>{rank}</th>;
+          })}
           {showReviewerCount && <th></th>}
           <th></th>
         </tr>
@@ -109,9 +112,15 @@ export const DataTable: FC<DataTableProps> = ({
                 <b>{index + 1}</b>
               </td>
             )}
-            {taxonCols.map((currentRank) => (
-              <td key={`${row.taxonId}-${currentRank}`}>{row.data[currentRank] ? row.data[currentRank] : ''}</td>
-            ))}
+            {taxonCols.map((currentRank) => {
+              if (currentRank === 'genus') {
+                return null;
+              }
+
+              return (
+                <td key={`${row.taxonId}-${currentRank}`}>{row.data[currentRank] ? row.data[currentRank] : ''}</td>
+              );
+            })}
             {showReviewerCount && <td>({row.count})</td>}
             <td style={{ display: 'flex' }}>
               <a

@@ -7,7 +7,7 @@ const config: GeneratorConfig = {
   speciesDataFilename: 'species-data.json',
   newAdditionsFilename: 'new-additions-data.json',
   trackNewAdditions: true,
-  newAdditionsStartDate: '2022-01-01',
+  newAdditionsStartDate: '2024-01-01',
 };
 
 export default config;

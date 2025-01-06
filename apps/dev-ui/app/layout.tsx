@@ -17,7 +17,7 @@ const RootLayout: FC = () => {
           curatorUsernames={config.curators}
           placeId={config.placeId}
           showRowNumbers={false}
-          showReviewerCount={true}
+          showReviewerCount={false}
           newAdditionsDataUrl={`./${config.newAdditionsFilename}`}
           showNewAdditions={config.trackNewAdditions || false}
         />
