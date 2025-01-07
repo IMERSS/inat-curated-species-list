@@ -1,11 +1,11 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import { constants } from '@imerss/inat-curated-species-list-common';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { NewAdditions } from '@imerss/inat-curated-species-list-tools';
 import { YearDropdown } from './YearDropdown';
-import { groupByYear } from '../utils/helpers';
+import { getNewAdditionDataForUI } from '../utils/helpers';
 import { NewAdditionsByYear } from '../ui.types';
+import { NewAddition } from '@imerss/inat-curated-species-list-tools';
 
 const { INAT_OBSERVATIONS_URL } = constants;
 
@@ -28,9 +28,9 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({
   const [error, setError] = useState(false);
   const [data, setData] = useState<NewAdditionsByYear[]>();
   const [years, setYears] = useState<string[]>([]);
-  const [currentYear, setCurrentYear] = useState<string[]>([]);
+  const [currentYear, setCurrentYear] = useState<string>();
 
-  const onChangeYear = () => {};
+  const onChangeYear = (year: string) => setCurrentYear(year);
 
   useEffect(() => {
     fetch(dataUrl, {
@@ -40,15 +40,20 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({
     })
       .then((resp) => resp.json())
       .then((data) => {
-        const dataGroupedByYear = groupByYear(data);
-        setYears(Object.keys(dataGroupedByYear));
-        setData(data);
+        const { years, groupedByYear } = getNewAdditionDataForUI(data);
+        setCurrentYear(new Date().getFullYear() as unknown as string);
+        setYears(years);
+        setData(groupedByYear);
         setLoaded(true);
       })
       .catch(() => setError(true));
   }, [dataUrl]);
 
-  if ((!loaded || !data) && !error) {
+  if (error) {
+    return <p>Sorry, there was an error loading the data.</p>;
+  }
+
+  if (!loaded || !data || !currentYear) {
     return (
       <div className="inat-curated-species-standalone-loader">
         <Loader />
@@ -56,13 +61,12 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({
     );
   }
 
-  if (error) {
-    return <p>Sorry, there was an error loading the data.</p>;
-  }
+  const newYearRecords = data[currentYear];
 
-  return (
-    <>
-      <YearDropdown years={years} onChange={onChangeYear} />
+  let dataContent = <p>There are no new records for this year</p>;
+
+  if (newYearRecords) {
+    dataContent = (
       <table className="inat-curated-species-table" cellSpacing={0} cellPadding={2}>
         <thead>
           <tr>
@@ -75,26 +79,35 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({
           </tr>
         </thead>
         <tbody>
-          {data!.map(({ speciesName, taxonId, observationId, curator, dateObserved, confirmationDate, observer }) => {
-            return (
-              <tr key={taxonId}>
-                <td>
-                  <a href={`${INAT_OBSERVATIONS_URL}/${observationId}`}>
-                    <i>{speciesName}</i>
-                  </a>
-                </td>
-                <td>{observer.username}</td>
-                <td>{dateObserved}</td>
-                <td>{confirmationDate}</td>
-                <td>{curator}</td>
-                <td>
-                  <VisibilityIcon />
-                </td>
-              </tr>
-            );
-          })}
+          {(newYearRecords as unknown as NewAddition[]).map(
+            ({ speciesName, taxonId, observationId, curator, dateObserved, confirmationDate, observer }) => {
+              return (
+                <tr key={taxonId}>
+                  <td>
+                    <a href={`${INAT_OBSERVATIONS_URL}/${observationId}`} target="_blank" rel="noreferrer">
+                      <i>{speciesName}</i>
+                    </a>
+                  </td>
+                  <td>{observer.username}</td>
+                  <td>{dateObserved}</td>
+                  <td>{confirmationDate}</td>
+                  <td>{curator}</td>
+                  <td>
+                    <VisibilityIcon />
+                  </td>
+                </tr>
+              );
+            },
+          )}
         </tbody>
       </table>
+    );
+  }
+
+  return (
+    <>
+      <YearDropdown years={years} onChange={onChangeYear} />
+      {dataContent}
     </>
   );
 };

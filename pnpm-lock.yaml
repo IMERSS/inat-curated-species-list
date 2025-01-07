@@ -160,6 +160,8 @@ importers:
       react-spinners: ^0.15.0
       thenby: ^1.3.4
       typescript: 5.5.4
+      vite: ^6.0.7
+      vitest: ^2.1.8
     dependencies:
       '@emotion/react': 11.14.0_6lnu5ymwu5qq22hjmxugwl5akq
       '@emotion/styled': 11.14.0_cbpnrdkh2dy2uprn4pgq64q7xa
@@ -181,6 +183,8 @@ importers:
       '@types/react-dom': 18.3.1
       '@types/react-spinner': 0.2.3
       typescript: 5.5.4
+      vite: 6.0.7_@types+node@20.17.10
+      vitest: 2.1.8_@types+node@20.17.10
 
 packages:
 
