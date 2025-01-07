@@ -17,7 +17,7 @@ import { performance } from 'perf_hooks';
 
 const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
 
-const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesData, tempFolder: string) => {
+const generateSpeciesDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesData, tempFolder: string) => {
   const minifiedSpeciesData = minifySpeciesData(speciesData, config.taxons);
 
   const filename = path.resolve(tempFolder, config.speciesDataFilename);
@@ -60,8 +60,8 @@ const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesDa
 
   clearTempFolder(tempFolderFullPath);
   const logger = initLogger(tempFolderFullPath);
-
   const start = performance.now();
+
   console.log('Step 1: download data from iNat');
   const { numRequests } = await downloadDataPackets(cleanConfig, tempFolderFullPath, logger);
   const end = performance.now();
@@ -72,13 +72,18 @@ const generateDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesDa
   const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numRequests);
 
   console.log('\nStep 3: generate data file');
-  const filename = generateDataFile(cleanConfig, speciesData, tempFolderFullPath);
+  const speciesDataFilename = generateSpeciesDataFile(cleanConfig, speciesData, tempFolderFullPath);
 
+  let newAdditionsDataFile = null;
   if (cleanConfig.trackNewAdditions) {
     console.log('\nStep 4: generate new additions data file');
-    generateNewAdditionsDataFile(cleanConfig, numRequests);
+    newAdditionsDataFile = generateNewAdditionsDataFile(cleanConfig, 162, tempFolderFullPath);
   }
 
   console.log('\n__________________________________________');
-  console.log(`Complete. Data file generated: ${filename}\n\n`);
+  console.log(`Complete. Data file(s) generated:`);
+  console.log(speciesDataFilename);
+  if (newAdditionsDataFile) {
+    console.log(newAdditionsDataFile);
+  }
 })();

@@ -89,6 +89,20 @@ export type GeneratorConfig = {
   readonly tempFolder?: string;
 };
 
+export type NewAddition = {
+  readonly observationId: number;
+  readonly speciesName: string;
+  readonly taxonId: number; // TODO this is a string right now
+  readonly confirmationDate: string;
+  readonly curator: string;
+  readonly dateObserved: string;
+  readonly observer: {
+    id: number;
+    name: string;
+    username: string;
+  };
+};
+
 export type TaxonAncestor = {
   readonly id: number;
   readonly rank: Taxon;

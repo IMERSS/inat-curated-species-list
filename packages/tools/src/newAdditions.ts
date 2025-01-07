@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { GeneratorConfig, GetDataPacketResponse } from '../types/generator.types';
+import { GeneratorConfig, GetDataPacketResponse, NewAdditions } from '../types/generator.types';
 import { Taxon } from '@imerss/inat-curated-species-list-common';
 import { getTaxonomy, getUniqueItems, getConfirmationDateAccountingForTaxonChanges } from './helpers';
 
@@ -97,6 +97,7 @@ const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxon[]) =>
   const taxonsToRemove: number[] = [];
 
   for (let i = 1; i <= numFiles; i++) {
+    // TODO path
     parseDataFile(path.resolve(`./temp/packet-${i}.json`), curators, taxon, processedData, taxonsToRemove);
   }
 
@@ -117,11 +118,11 @@ const sortByConfirmationDate = (a, b) => {
   return 0;
 };
 
-export const generateNewAdditionsDataFile = (config: GeneratorConfig, numDataFiles: number) => {
-  const { curators, taxons, newAdditionsStartDate } = config;
+export const generateNewAdditionsDataFile = (config: GeneratorConfig, numDataFiles: number, tempFolder: string) => {
+  const { curators, taxons, newAdditionsFilename, newAdditionsStartDate } = config;
   const processedData = parseDataFiles(numDataFiles, curators, taxons);
 
-  const dataArray = [];
+  const dataArray: NewAdditions[] = [];
   Object.keys(processedData).forEach((taxonId) => {
     processedData[taxonId].observations.sort(sortByConfirmationDate);
 
@@ -131,10 +132,9 @@ export const generateNewAdditionsDataFile = (config: GeneratorConfig, numDataFil
     }
 
     dataArray.push({
-      id: processedData[taxonId].id,
-      taxonId,
-      species: processedData[taxonId].species,
       ...processedData[taxonId].observations[0],
+      taxonId,
+      speciesName: processedData[taxonId].speciesName,
       user: processedData[taxonId].observations[0].user,
       taxonomy: processedData[taxonId].taxonomy,
     });
@@ -144,6 +144,8 @@ export const generateNewAdditionsDataFile = (config: GeneratorConfig, numDataFil
   dataArray.sort(sortByConfirmationDate);
 
   // filter out any that were made before the start cutoff date
-  const newAdditionsFile = path.resolve('./temp/new-additions-data.json');
+  const newAdditionsFile = path.resolve(`${tempFolder}/${newAdditionsFilename}`);
   fs.writeFileSync(newAdditionsFile, JSON.stringify(dataArray), 'utf-8');
+
+  return newAdditionsFile;
 };

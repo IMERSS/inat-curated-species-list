@@ -28,7 +28,6 @@ export const App: FC<AppProps> = ({
 
   const onChangeTab = (_e: React.SyntheticEvent | null, newValue: number) => {
     setTabIndex(newValue);
-    console.log('changed tab');
   };
 
   const getTabs = () => {
