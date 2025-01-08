@@ -133,6 +133,8 @@ export type Identification = {
 
   previous_observation_taxon: {
     id: number;
+    name: string;
+    rank: Taxon;
   };
 };
 

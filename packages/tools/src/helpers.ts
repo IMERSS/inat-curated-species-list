@@ -77,9 +77,23 @@ export const getConfirmationDateAccountingForTaxonChanges = (
 
   const curatorObservations: HistoricalCuratorObsIdentification[] = [];
   const targetCurator = obs.identifications[curatorIdentificationIndex].user.login;
+  const taxonChangeData = [];
 
   for (let i = curatorIdentificationIndex; i >= 0; i--) {
     const currIdentification = obs.identifications[i];
+
+    if (
+      (currIdentification.previous_observation_taxon &&
+        ['species', 'subspecies'].indexOf(currIdentification.previous_observation_taxon.rank) !== -1,
+      currIdentification.previous_observation_taxon.id !== currIdentification.taxon.id)
+    ) {
+      taxonChangeData.push({
+        id: obs.id,
+        previousSpeciesName: currIdentification.previous_observation_taxon.name,
+        newSpeciesName: currIdentification.taxon.name,
+      });
+    }
+
     if (currIdentification.user.login !== targetCurator) {
       continue;
     }
@@ -90,6 +104,9 @@ export const getConfirmationDateAccountingForTaxonChanges = (
       isTaxonChange: !!currIdentification.taxon_change,
     });
   }
+
+  // to debug: https://www.inaturalist.org/observations/187802334
+  console.log(taxonChangeData);
 
   // now loop through the curator observations. The first one that ISN'T a taxon change will be the original observation.
   // This could be a single taxon swap or a series. Any earlier identifications by the curator don't matter.
@@ -104,8 +121,6 @@ export const getConfirmationDateAccountingForTaxonChanges = (
       break;
     }
   }
-
-  console.log(obs);
 
   return { deprecatedTaxonIds, originalConfirmationDate };
 };
