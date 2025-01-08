@@ -4,29 +4,19 @@ import { constants } from '@imerss/inat-curated-species-list-common';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { YearDropdown } from './YearDropdown';
 import { getNewAdditionDataForUI } from '../utils/helpers';
-import { NewAdditionsByYear } from '../ui.types';
 import { NewAddition } from '@imerss/inat-curated-species-list-tools';
+import { NewAdditionsByYear } from '../ui.types';
 
 const { INAT_OBSERVATIONS_URL } = constants;
 
 export interface NewAdditionsTabProps {
   readonly dataUrl: string;
-  readonly curatorUsernames: string[];
-  readonly placeId: number;
-  readonly showRowNumbers?: boolean;
-  readonly showReviewerCount?: boolean;
 }
 
-export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({
-  dataUrl,
-  curatorUsernames,
-  placeId,
-  showRowNumbers,
-  showReviewerCount,
-}) => {
+export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({ dataUrl }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
-  const [data, setData] = useState<NewAdditionsByYear[]>();
+  const [data, setData] = useState<NewAdditionsByYear>();
   const [years, setYears] = useState<string[]>([]);
   const [currentYear, setCurrentYear] = useState<string>();
 
@@ -40,8 +30,8 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({
     })
       .then((resp) => resp.json())
       .then((data) => {
-        const { years, groupedByYear } = getNewAdditionDataForUI(data);
-        setCurrentYear(new Date().getFullYear() as unknown as string);
+        const { currentYear, years, groupedByYear } = getNewAdditionDataForUI(data);
+        setCurrentYear(currentYear);
         setYears(years);
         setData(groupedByYear);
         setLoaded(true);
@@ -93,7 +83,9 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({
                   <td>{confirmationDate}</td>
                   <td>{curator}</td>
                   <td>
-                    <VisibilityIcon />
+                    <a href={`${INAT_OBSERVATIONS_URL}/${observationId}`}>
+                      <VisibilityIcon />
+                    </a>
                   </td>
                 </tr>
               );

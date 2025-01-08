@@ -58,21 +58,21 @@ const generateSpeciesDataFile = (config: GeneratorConfig, speciesData: CuratedSp
 
   const tempFolderFullPath = path.resolve(process.cwd(), cleanConfig.tempFolder);
 
-  clearTempFolder(tempFolderFullPath);
-  const logger = initLogger(tempFolderFullPath);
-  const start = performance.now();
+  // clearTempFolder(tempFolderFullPath);
+  // const logger = initLogger(tempFolderFullPath);
+  // const start = performance.now();
 
-  console.log('Step 1: download data from iNat');
-  const { numRequests } = await downloadDataPackets(cleanConfig, tempFolderFullPath, logger);
-  const end = performance.now();
-  const date = new Date(end - start);
-  console.log(`Time taken: ${date.getMinutes()}:${date.getSeconds()}s`);
+  // console.log('Step 1: download data from iNat');
+  // const { numRequests } = await downloadDataPackets(cleanConfig, tempFolderFullPath, logger);
+  // const end = performance.now();
+  // const date = new Date(end - start);
+  // console.log(`Time taken: ${date.getMinutes()}:${date.getSeconds()}s`);
 
-  console.log('\nStep 2: extract species list');
-  const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numRequests);
+  // console.log('\nStep 2: extract species list');
+  // const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numRequests);
 
-  console.log('\nStep 3: generate data file');
-  const speciesDataFilename = generateSpeciesDataFile(cleanConfig, speciesData, tempFolderFullPath);
+  // console.log('\nStep 3: generate data file');
+  // const speciesDataFilename = generateSpeciesDataFile(cleanConfig, speciesData, tempFolderFullPath);
 
   let newAdditionsDataFile = null;
   if (cleanConfig.trackNewAdditions) {
@@ -82,7 +82,7 @@ const generateSpeciesDataFile = (config: GeneratorConfig, speciesData: CuratedSp
 
   console.log('\n__________________________________________');
   console.log(`Complete. Data file(s) generated:`);
-  console.log(speciesDataFilename);
+  // console.log(speciesDataFilename);
   if (newAdditionsDataFile) {
     console.log(newAdditionsDataFile);
   }

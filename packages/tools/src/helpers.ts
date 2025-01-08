@@ -91,8 +91,8 @@ export const getConfirmationDateAccountingForTaxonChanges = (
     });
   }
 
-  // now loop through the curator obseervations. The first one that ISN'T a taxon change will be the original observation.
-  // this could be a single taxon swap or a series. Any earlier identifications by the curator don't matter.
+  // now loop through the curator observations. The first one that ISN'T a taxon change will be the original observation.
+  // This could be a single taxon swap or a series. Any earlier identifications by the curator don't matter.
   const deprecatedTaxonIds: number[] = [];
   let originalConfirmationDate: string;
   for (let i = 0; i < curatorObservations.length; i++) {
@@ -104,6 +104,8 @@ export const getConfirmationDateAccountingForTaxonChanges = (
       break;
     }
   }
+
+  console.log(obs);
 
   return { deprecatedTaxonIds, originalConfirmationDate };
 };

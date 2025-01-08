@@ -3,7 +3,13 @@ import { NewAdditionsByYear } from '../ui.types';
 
 export const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-export const getNewAdditionDataForUI = (data: NewAddition[]) => {
+export type NewAdditionsUIData = {
+  readonly currentYear: string;
+  readonly years: string[];
+  readonly groupedByYear: NewAdditionsByYear;
+};
+
+export const getNewAdditionDataForUI = (data: NewAddition[]): NewAdditionsUIData => {
   const groupedByYear: NewAdditionsByYear = {};
   data.forEach((row) => {
     const { confirmationDate } = row;
@@ -17,16 +23,17 @@ export const getNewAdditionDataForUI = (data: NewAddition[]) => {
   });
 
   const years = Object.keys(groupedByYear);
+  const currentYear = new Date().getFullYear();
 
   if (!years.length) {
     return {
+      currentYear: currentYear.toString(),
       years: [],
       groupedByYear: {},
     };
   }
 
   const yearsWithNewAdditions = years.sort();
-  const currentYear = new Date().getFullYear();
   const earliestYear = parseInt(yearsWithNewAdditions[0] as string);
 
   const yearArray = [];
@@ -35,7 +42,7 @@ export const getNewAdditionDataForUI = (data: NewAddition[]) => {
   }
 
   return {
-    currentYear,
+    currentYear: currentYear.toString(),
     years: yearArray,
     groupedByYear,
   };

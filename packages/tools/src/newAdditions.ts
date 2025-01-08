@@ -92,13 +92,12 @@ const parseDataFile = (
   });
 };
 
-const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxon[]) => {
+const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxon[], tempFolder: string) => {
   const processedData = {};
   const taxonsToRemove: number[] = [];
 
   for (let i = 1; i <= numFiles; i++) {
-    // TODO path
-    parseDataFile(path.resolve(`./temp/packet-${i}.json`), curators, taxon, processedData, taxonsToRemove);
+    parseDataFile(path.resolve(`${tempFolder}/packet-${i}.json`), curators, taxon, processedData, taxonsToRemove);
   }
 
   const items = getUniqueItems(taxonsToRemove);
@@ -120,7 +119,7 @@ const sortByConfirmationDate = (a, b) => {
 
 export const generateNewAdditionsDataFile = (config: GeneratorConfig, numDataFiles: number, tempFolder: string) => {
   const { curators, taxons, newAdditionsFilename, newAdditionsStartDate } = config;
-  const processedData = parseDataFiles(numDataFiles, curators, taxons);
+  const processedData = parseDataFiles(numDataFiles, curators, taxons, tempFolder);
 
   const dataArray: NewAdditions[] = [];
   Object.keys(processedData).forEach((taxonId) => {

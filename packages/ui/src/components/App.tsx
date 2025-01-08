@@ -58,13 +58,7 @@ export const App: FC<AppProps> = ({
       </div>
 
       <div style={{ display: tabIndex === 1 ? 'block' : 'none' }}>
-        <NewAdditionsTab
-          dataUrl={newAdditionsDataUrl}
-          curatorUsernames={curatorUsernames}
-          placeId={placeId}
-          showRowNumbers={showRowNumbers}
-          showReviewerCount={showReviewerCount}
-        />
+        <NewAdditionsTab dataUrl={newAdditionsDataUrl} />
       </div>
     </>
   );
