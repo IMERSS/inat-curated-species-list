@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { GeneratorConfig, GetDataPacketResponse, NewAdditions } from '../types/generator.types';
+import { GeneratorConfig, GetDataPacketResponse, NewAddition, TaxonChangeData } from '../types/generator.types';
 import { Taxon } from '@imerss/inat-curated-species-list-common';
 import { getTaxonomy, getUniqueItems, getConfirmationDateAccountingForTaxonChanges } from './helpers';
 
@@ -13,6 +13,7 @@ const parseDataFile = (
   taxonsToReturn: Taxon[],
   processedData,
   taxonsToRemove: number[],
+  taxonChangeData: TaxonChangeData[],
 ) => {
   const content: GetDataPacketResponse = JSON.parse(fs.readFileSync(file, 'utf-8'));
 
@@ -57,7 +58,11 @@ const parseDataFile = (
         };
       }
 
-      const { deprecatedTaxonIds, originalConfirmationDate } = getConfirmationDateAccountingForTaxonChanges(i, obs);
+      const { deprecatedTaxonIds, originalConfirmationDate } = getConfirmationDateAccountingForTaxonChanges(
+        i,
+        obs,
+        taxonChangeData,
+      );
       taxonsToRemove.push(...deprecatedTaxonIds);
 
       processedData[curatorTaxonId].speciesName = speciesName;
@@ -95,15 +100,44 @@ const parseDataFile = (
 const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxon[], tempFolder: string) => {
   const processedData = {};
   const taxonsToRemove: number[] = [];
+  const taxonChangeData = [];
 
   for (let i = 1; i <= numFiles; i++) {
-    parseDataFile(path.resolve(`${tempFolder}/packet-${i}.json`), curators, taxon, processedData, taxonsToRemove);
+    parseDataFile(
+      path.resolve(`${tempFolder}/packet-${i}.json`),
+      curators,
+      taxon,
+      processedData,
+      taxonsToRemove,
+      taxonChangeData,
+    );
   }
 
+  // remove any taxons that we're not interested in (i.e. old, replaced ones)
   const items = getUniqueItems(taxonsToRemove);
   items.forEach((taxonId) => {
     delete processedData[taxonId];
   });
+
+  const taxonChangeDataGroupedByYear = {};
+  taxonChangeData.forEach((row) => {
+    if (!taxonChangeDataGroupedByYear[row.yearChanged]) {
+      taxonChangeDataGroupedByYear[row.yearChanged] = {};
+    }
+
+    if (!taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName]) {
+      taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] = row.newSpeciesName;
+    } else {
+      if (taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] !== row.newSpeciesName) {
+        console.log('Error: ', row.previousSpeciesName, [
+          taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName],
+          row.newSpeciesName,
+        ]);
+      }
+    }
+  });
+
+  console.log(taxonChangeDataGroupedByYear);
 
   return processedData;
 };
@@ -121,7 +155,7 @@ export const generateNewAdditionsDataFile = (config: GeneratorConfig, numDataFil
   const { curators, taxons, newAdditionsFilename, newAdditionsStartDate } = config;
   const processedData = parseDataFiles(numDataFiles, curators, taxons, tempFolder);
 
-  const dataArray: NewAdditions[] = [];
+  const dataArray: NewAddition[] = [];
   Object.keys(processedData).forEach((taxonId) => {
     processedData[taxonId].observations.sort(sortByConfirmationDate);
 

@@ -179,3 +179,10 @@ export type DownloadDataPacketResponse = {
   readonly totalResults: number;
   readonly numRequests: number;
 };
+
+export type TaxonChangeData = {
+  readonly id: number;
+  readonly previousSpeciesName: string;
+  readonly newSpeciesName: string;
+  yearChanged: number;
+};

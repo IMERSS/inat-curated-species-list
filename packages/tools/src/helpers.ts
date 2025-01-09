@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { Taxon, TaxonomyMap } from '@imerss/inat-curated-species-list-common';
-import { Identification, INatTaxonAncestor, Observation } from '../types/generator.types';
+import { INatTaxonAncestor, Observation, TaxonChangeData } from '../types/generator.types';
 
 export const formatNum = (num: number) => new Intl.NumberFormat('en-US').format(num);
 
@@ -45,6 +45,7 @@ export const getTaxonomy = (ancestors: INatTaxonAncestor[], taxonsToReturn: Taxo
 export const getConfirmationDateAccountingForTaxonChanges = (
   curatorIdentificationIndex: number,
   obs: Observation,
+  taxonChangeData: TaxonChangeData[],
 ): {
   deprecatedTaxonIds: number[];
   originalConfirmationDate: string;
@@ -77,25 +78,31 @@ export const getConfirmationDateAccountingForTaxonChanges = (
 
   const curatorObservations: HistoricalCuratorObsIdentification[] = [];
   const targetCurator = obs.identifications[curatorIdentificationIndex].user.login;
-  const taxonChangeData = [];
+  let lastCuratorObservation = obs.identifications[curatorIdentificationIndex];
 
   for (let i = curatorIdentificationIndex; i >= 0; i--) {
     const currIdentification = obs.identifications[i];
 
+    if (currIdentification.user.login !== targetCurator) {
+      continue;
+    }
+
     if (
-      (currIdentification.previous_observation_taxon &&
-        ['species', 'subspecies'].indexOf(currIdentification.previous_observation_taxon.rank) !== -1,
-      currIdentification.previous_observation_taxon.id !== currIdentification.taxon.id)
+      // ignore the most recent curator identification on the observation - we know it's a taxon change
+      i !== curatorIdentificationIndex
     ) {
       taxonChangeData.push({
         id: obs.id,
-        previousSpeciesName: currIdentification.previous_observation_taxon.name,
-        newSpeciesName: currIdentification.taxon.name,
+        previousSpeciesName: currIdentification.taxon.name,
+        newSpeciesName: lastCuratorObservation.taxon.name,
+        yearChanged: new Date(lastCuratorObservation.created_at).getFullYear(),
       });
-    }
 
-    if (currIdentification.user.login !== targetCurator) {
-      continue;
+      // if this is also a taxon switch, reset the "last" curator identification to this one and keep going back through
+      // the earlier identifications
+      if (currIdentification.taxon_change) {
+        lastCuratorObservation = currIdentification;
+      }
     }
 
     curatorObservations.push({
@@ -104,9 +111,6 @@ export const getConfirmationDateAccountingForTaxonChanges = (
       isTaxonChange: !!currIdentification.taxon_change,
     });
   }
-
-  // to debug: https://www.inaturalist.org/observations/187802334
-  console.log(taxonChangeData);
 
   // now loop through the curator observations. The first one that ISN'T a taxon change will be the original observation.
   // This could be a single taxon swap or a series. Any earlier identifications by the curator don't matter.
@@ -126,20 +130,3 @@ export const getConfirmationDateAccountingForTaxonChanges = (
 };
 
 export const getUniqueItems = (arr: number[]) => arr.filter((value, index, array) => array.indexOf(value) === index);
-
-/*
-Scenario:
-
-Papilio bairdii
-71 results: https://www.inaturalist.org/observations?ident_user_id=oneofthedavesiknow,gpohl,crispinguppy&place_id=7085&taxon_id=1510921&verifiable=any
-
-Current showing up as new due to this observation:
-https://www.inaturalist.org/observations/161739910
-
-I think it's because all other observations are pinned down to subspecies, so this is the first on the species level.
-
-New logic: 
-- when parsing the data, if a curator has made an ID on the subspecies level, track it under a "subspeseparately
-- 
-
-*/
