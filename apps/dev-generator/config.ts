@@ -8,6 +8,7 @@ const config: GeneratorConfig = {
   newAdditionsFilename: 'new-additions-data.json',
   trackNewAdditions: true,
   newAdditionsStartDate: '2024-01-01',
+  trackTaxonChanges: true,
 };
 
 export default config;

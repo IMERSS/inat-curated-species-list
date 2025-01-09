@@ -75,6 +75,13 @@ export type GeneratorConfig = {
    */
   readonly newAdditionsStartDate?: string;
 
+  readonly trackTaxonChanges: boolean;
+
+  /**
+   * This file gets generated whenever you
+   */
+  readonly taxonChangesFilename?: string;
+
   /**
    * The iNat data contains the (vast!) full taxonomy for all observations. You won't be interested in displaying all that
    * info. This setting controls which taxons will be retrieved and stored in the data file for display in your table.
