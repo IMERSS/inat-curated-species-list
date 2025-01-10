@@ -98,6 +98,7 @@ export const getConfirmationDateAccountingForTaxonChanges = (
         previousSpeciesName: currIdentification.taxon.name,
         newSpeciesName: lastCuratorObservation.taxon.name,
         yearChanged: new Date(lastCuratorObservation.created_at).getFullYear(),
+        taxonChangeId: lastCuratorObservation.taxon_change.id,
       });
 
       // if this is also a taxon switch, reset the "last" curator identification to this one and keep going back through
@@ -255,7 +256,10 @@ export const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxo
     }
 
     if (!taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName]) {
-      taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] = row.newSpeciesName;
+      taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] = {
+        newSpeciesName: row.newSpeciesName,
+        taxonChangeId: row.taxonChangeId,
+      };
     } else {
       // TODO
       // if (taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] !== row.newSpeciesName) {

@@ -182,6 +182,7 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
             login: 'curator-jim',
           },
           taxon: {
+            id: 4,
             name: 'Schizura unicornis',
             rank: 'species',
             ancestors: [],
@@ -203,6 +204,7 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
             login: 'curator-jim',
           },
           taxon: {
+            id: 5,
             name: 'Coelodasys unicornis',
             rank: 'species',
             ancestors: [],
@@ -224,6 +226,7 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
             login: 'curator-jim',
           },
           taxon: {
+            id: 6,
             name: 'Coelodasys totallymadeupius',
             rank: 'species',
             ancestors: [],

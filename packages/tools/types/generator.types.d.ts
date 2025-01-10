@@ -191,5 +191,6 @@ export type TaxonChangeData = {
   readonly id: number;
   readonly previousSpeciesName: string;
   readonly newSpeciesName: string;
-  yearChanged: number;
+  readonly yearChanged: number;
+  readonly taxonChangeId: number;
 };

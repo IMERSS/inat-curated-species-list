@@ -3,6 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { SpeciesTab } from './SpeciesTab';
 import { NewAdditionsTab } from './NewAdditionsTab';
+import { TaxonChangesTab } from './TaxonChangesTab';
 
 export interface AppProps {
   readonly speciesDataUrl: string;
@@ -10,8 +11,10 @@ export interface AppProps {
   readonly placeId: number;
   readonly showRowNumbers?: boolean;
   readonly showReviewerCount?: boolean;
-  readonly newAdditionsDataUrl: string;
+  readonly newAdditionsDataUrl?: string;
   readonly showNewAdditions?: boolean;
+  readonly showTaxonChanges?: boolean;
+  readonly taxonChangesDataUrl?: string;
   readonly lang?: any;
 }
 
@@ -23,6 +26,8 @@ export const App: FC<AppProps> = ({
   showReviewerCount,
   newAdditionsDataUrl,
   showNewAdditions,
+  showTaxonChanges,
+  taxonChangesDataUrl,
 }) => {
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -30,16 +35,19 @@ export const App: FC<AppProps> = ({
     setTabIndex(newValue);
   };
 
+  const hasNewAdditions = showNewAdditions && newAdditionsDataUrl;
+  const hasTaxonChanges = showTaxonChanges && taxonChangesDataUrl;
+
   const getTabs = () => {
-    if (!showNewAdditions) {
+    if (!hasNewAdditions && !hasTaxonChanges) {
       return null;
     }
 
     return (
       <Tabs value={tabIndex} onChange={onChangeTab} className="inat-curated-species-list-tabs">
         <Tab label="Species" disableRipple />
-        <Tab label="New Additions" disableRipple />
-        <Tab label="Taxon Changes" disableRipple />
+        {hasNewAdditions && <Tab label="New Additions" disableRipple />}
+        {hasTaxonChanges && <Tab label="Taxon Changes" disableRipple />}
       </Tabs>
     );
   };
@@ -57,9 +65,17 @@ export const App: FC<AppProps> = ({
         />
       </div>
 
-      <div style={{ display: tabIndex === 1 ? 'block' : 'none' }}>
-        <NewAdditionsTab dataUrl={newAdditionsDataUrl} />
-      </div>
+      {hasNewAdditions && (
+        <div style={{ display: tabIndex === 1 ? 'block' : 'none' }}>
+          <NewAdditionsTab dataUrl={newAdditionsDataUrl} />
+        </div>
+      )}
+
+      {hasTaxonChanges && (
+        <div style={{ display: tabIndex === 2 ? 'block' : 'none' }}>
+          <TaxonChangesTab dataUrl={taxonChangesDataUrl} />
+        </div>
+      )}
     </>
   );
 };
