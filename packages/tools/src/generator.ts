@@ -92,57 +92,49 @@ export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: numbe
     tempFolder: './temp',
     speciesDataFilename: 'species-data.json',
     newAdditionsFilename: 'new-additions-data.json',
-    taxonChangesFilename: 'taxon-changes-data.json',
     taxons: DEFAULT_TAXONS,
     ...config.default,
   };
 
   const tempFolderFullPath = path.resolve(process.cwd(), cleanConfig.tempFolder);
 
-  // clearTempFolder(tempFolderFullPath);
-  // const logger = initLogger(tempFolderFullPath);
-  // const start = performance.now();
+  clearTempFolder(tempFolderFullPath);
+  const logger = initLogger(tempFolderFullPath);
+  const start = performance.now();
 
-  // console.log('Step 1: download data from iNat');
-  // const { numRequests } = await downloadDataPackets(cleanConfig, tempFolderFullPath, logger);
-  // const end = performance.now();
-  // const date = new Date(end - start);
-  // console.log(`Time taken: ${date.getMinutes()}:${date.getSeconds()}s`);
+  console.log('Step 1: download data from iNat');
+  const { numRequests } = await downloadDataPackets(cleanConfig, tempFolderFullPath, logger);
+  const end = performance.now();
+  const date = new Date(end - start);
+  console.log(`Time taken: ${date.getMinutes()}:${date.getSeconds()}s`);
 
-  // console.log('\nStep 2: extract species list');
-  // const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numRequests);
+  console.log('\nStep 2: extract species list');
+  const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numRequests);
 
-  // console.log('\nStep 3: generate data file');
-  // const speciesDataFilename = generateSpeciesDataFile(cleanConfig, speciesData, tempFolderFullPath);
+  console.log('\nStep 3: generate data file');
+  const speciesDataFilename = generateSpeciesDataFile(cleanConfig, speciesData, tempFolderFullPath);
 
-  // console.log('\nStep 4: parsing data');
-  const { newAdditionsArray, taxonChangeDataGroupedByYear } = getDataFilesContent(
-    cleanConfig,
-    162, //numRequests,
-    tempFolderFullPath,
-  );
+  console.log('\nStep 4: parsing data');
+  const { newAdditionsArray } = getDataFilesContent(cleanConfig, numRequests, tempFolderFullPath);
 
-  // let newAdditionsDataFilename = null;
-  // if (cleanConfig.trackNewAdditions) {
-  //   console.log('\nStep 5: generate new additions data file');
-  //   const newAdditionsFile = path.resolve(`${tempFolderFullPath}/${cleanConfig.newAdditionsFilename}`);
-  //   fs.writeFileSync(newAdditionsFile, JSON.stringify(newAdditionsArray), 'utf-8');
-  // }
-
-  let taxonChangesFilename = null;
-  if (cleanConfig.trackTaxonChanges) {
-    console.log('\nStep 6: generate taxon changes data file');
-    taxonChangesFilename = path.resolve(`${tempFolderFullPath}/${cleanConfig.taxonChangesFilename}`);
-    fs.writeFileSync(taxonChangesFilename, JSON.stringify(taxonChangeDataGroupedByYear), 'utf-8');
+  let newAdditionsDataFilename = null;
+  if (cleanConfig.trackNewAdditions) {
+    console.log('\nStep 5: generate new additions data file');
+    const newAdditionsFile = path.resolve(`${tempFolderFullPath}/${cleanConfig.newAdditionsFilename}`);
+    fs.writeFileSync(newAdditionsFile, JSON.stringify(newAdditionsArray), 'utf-8');
   }
+
+  // let taxonChangesFilename = null;
+  // if (cleanConfig.trackTaxonChanges) {
+  //   console.log('\nStep 6: generate taxon changes data file');
+  //   taxonChangesFilename = path.resolve(`${tempFolderFullPath}/${cleanConfig.taxonChangesFilename}`);
+  //   fs.writeFileSync(taxonChangesFilename, JSON.stringify(taxonChangeDataGroupedByYear), 'utf-8');
+  // }
 
   console.log('\n__________________________________________');
   console.log(`Complete. Data file(s) generated:`);
-  // console.log(speciesDataFilename);
-  // if (newAdditionsDataFilename) {
-  //   console.log(newAdditionsDataFilename);
-  // }
-  if (taxonChangesFilename) {
-    console.log(taxonChangesFilename);
+  console.log(speciesDataFilename);
+  if (newAdditionsDataFilename) {
+    console.log(newAdditionsDataFilename);
   }
 })();

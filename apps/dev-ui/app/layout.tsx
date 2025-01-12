@@ -20,8 +20,7 @@ const RootLayout: FC = () => {
           showReviewerCount={false}
           newAdditionsDataUrl={`./${config.newAdditionsFilename}`}
           showNewAdditions={config.trackNewAdditions || false}
-          showTaxonChanges={config.trackTaxonChanges || false}
-          taxonChangesDataUrl={`./${config.taxonChangesFilename}`}
+          showLastGeneratedDate={config.showLastGeneratedDate}
         />
       </body>
     </html>

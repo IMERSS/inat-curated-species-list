@@ -70,17 +70,15 @@ export type GeneratorConfig = {
   readonly newAdditionsFilename?: string;
 
   /**
+   * Shows the date of when the data was last generated.
+   */
+  readonly showLastGeneratedDate: boolean;
+
+  /**
    * If set, only tracks new additions to the list from this date onwards.
    * Format: YYYY-MM-DD
    */
   readonly newAdditionsStartDate?: string;
-
-  readonly trackTaxonChanges: boolean;
-
-  /**
-   * This file gets generated whenever you
-   */
-  readonly taxonChangesFilename?: string;
 
   /**
    * The iNat data contains the (vast!) full taxonomy for all observations. You won't be interested in displaying all that
@@ -94,6 +92,18 @@ export type GeneratorConfig = {
    * The name of a temporary folder where all the data will be generated.
    */
   readonly tempFolder?: string;
+
+  // incomplete. I found the taxon change information very confusing to present. Sometimes users would do a taxon change then
+  // reverse it (see changes on this observation, for example: https://www.inaturalist.org/observations/32189129). Perhaps
+  // we could look for circular taxon changes and only present the latest change, but I think that would be incorrect in some
+  // cases: there are probably legitimate scenarios where a taxon is changed then changed back.
+  //
+  // readonly trackTaxonChanges?: boolean;
+
+  /**
+   * This file gets generated whenever you
+   */
+  // readonly taxonChangesFilename?: string;
 };
 
 export type NewAddition = {

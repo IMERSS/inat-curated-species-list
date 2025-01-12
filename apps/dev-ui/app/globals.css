@@ -15,6 +15,10 @@ table th {
   margin-bottom: 20px;
 }
 
+.inat-curated-species-filter label {
+  margin-right: 10px;
+}
+
 .inat-curated-species-filter-counts {
   margin-left: 10px;
   color: #3366cc;
@@ -61,4 +65,32 @@ svg.MuiSvgIcon-fontSizeMedium {
 }
 .inat-curated-species-list-tabs {
   margin-bottom: 20px;
+}
+
+.inat-curated-species-list-last-generated-date {
+  float: right;
+  color: #999999;
+  font-size: 13px;
+}
+.inat-curated-species-list-last-generated-date span {
+  font-weight: bold;
+}
+
+.inat-curated-species-list-tabs {
+  list-style-type: none;
+  margin: 0;
+  padding: 0 0 30px;
+}
+.inat-curated-species-list-tabs button {
+  all: unset;
+}
+
+.inat-curated-species-list-tabs li {
+  display: inline-block;
+  padding: 6px 20px;
+  cursor: pointer;
+}
+
+.inat-curated-species-list-tabs li.inat-curated-species-list-tab-selected {
+  border-bottom: 3px solid #3366cc;
 }

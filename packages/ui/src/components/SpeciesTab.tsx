@@ -12,6 +12,7 @@ import {
 
 export interface SpeciesTabProps {
   readonly dataUrl: string;
+  readonly onLoad: (data: CuratedSpeciesDataMinified) => void;
   readonly curatorUsernames: string[];
   readonly placeId: number;
   readonly showRowNumbers?: boolean;
@@ -20,6 +21,7 @@ export interface SpeciesTabProps {
 
 export const SpeciesTab: FC<SpeciesTabProps> = ({
   dataUrl,
+  onLoad,
   curatorUsernames,
   placeId,
   showRowNumbers,
@@ -54,6 +56,7 @@ export const SpeciesTab: FC<SpeciesTabProps> = ({
     })
       .then((resp) => resp.json())
       .then((minifiedData: CuratedSpeciesDataMinified) => {
+        onLoad(minifiedData);
         setTaxons(minifiedData.taxons);
         setData(unminifySpeciesData(minifiedData));
         setLoaded(true);

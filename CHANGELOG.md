@@ -8,7 +8,7 @@
   - `@imerss/inat-curated-species-list-ui` - React components to render the data
   - `@imerss/inat-curated-species-list-tools` - CLI script for extracting the data from iNat's API and generating the data files
   - `@imerss/inat-curated-species-list-generator` - simple package that illustrates the use of `@imerss/inat-curated-species-list-tools`
-  - `@imerss/inat-curated-species-list-standalone` - a package
+  - `@imerss/inat-curated-species-list-standalone` - ...
 
 - Adding option to show _recent additions to the curated list_.
 - Remove front-end logic to dynamically ping iNat for the data.

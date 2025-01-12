@@ -256,19 +256,18 @@ export const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxo
     }
 
     if (!taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName]) {
-      taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] = {
-        newSpeciesName: row.newSpeciesName,
-        taxonChangeId: row.taxonChangeId,
-      };
-    } else {
-      // TODO
-      // if (taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] !== row.newSpeciesName) {
-      //   console.log('Error: ', row.previousSpeciesName, [
-      //     taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName],
-      //     row.newSpeciesName,
-      //   ]);
-      // }
+      taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] = [];
     }
+
+    taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName].push(row);
+
+    // TODO
+    // if (taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] !== row.newSpeciesName) {
+    //   console.log('Error: ', row.previousSpeciesName, [
+    //     taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName],
+    //     row.newSpeciesName,
+    //   ]);
+    // }
   });
 
   return {
