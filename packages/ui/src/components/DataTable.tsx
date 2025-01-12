@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { firstBy } from 'thenby';
 import { CuratedSpeciesData, CuratedSpeciesArrayItem, Taxon } from '@imerss/inat-curated-species-list-common';
 import { constants } from '@imerss/inat-curated-species-list-common';
@@ -100,7 +99,7 @@ export const DataTable: FC<DataTableProps> = ({
                 target="_blank"
                 rel="noreferrer"
               >
-                <VisibilityIcon />
+                <span>icon</span>
               </a>
             </td>
           </tr>

@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import { constants } from '@imerss/inat-curated-species-list-common';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+// import VisibilityIcon from '@mui/icons-material/Visibility';
 import { YearDropdown } from './YearDropdown';
 import { TaxonChangeData } from '@imerss/inat-curated-species-list-tools';
 import { NewAdditionsByYear } from '../ui.types';
@@ -72,7 +72,7 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl }) => {
                   </td>
                   <td>
                     <a href={`${INAT_TAXON_CHANGES_URL}/${taxonChangeId}`}>
-                      <VisibilityIcon />
+                      <span>icon</span>
                     </a>
                   </td>
                 </tr>

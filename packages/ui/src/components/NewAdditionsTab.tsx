@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import { constants } from '@imerss/inat-curated-species-list-common';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+// import VisibilityIcon from '@mui/icons-material/Visibility';
 import { YearDropdown } from './YearDropdown';
 import { getNewAdditionDataForUI, formatDate } from '../utils/helpers';
 import { NewAddition } from '@imerss/inat-curated-species-list-tools';
@@ -84,7 +84,7 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({ dataUrl }) => {
                   <td>{curator}</td>
                   <td>
                     <a href={`${INAT_OBSERVATIONS_URL}/${observationId}`}>
-                      <VisibilityIcon />
+                      <span>icon</span>
                     </a>
                   </td>
                 </tr>
