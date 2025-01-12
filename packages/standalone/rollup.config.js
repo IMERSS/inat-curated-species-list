@@ -5,7 +5,7 @@ import resolve from '@rollup/plugin-node-resolve';
 export default {
   input: 'src/index.tsx',
   output: {
-    file: 'build/inat-curated-species-list-standalone.js',
+    file: 'generated/inat-curated-species-list-standalone.js',
     format: 'cjs',
   },
   plugins: [resolve(), typescript(), commonjs()],
