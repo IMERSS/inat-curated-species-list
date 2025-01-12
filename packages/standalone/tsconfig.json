@@ -1,0 +1,10 @@
+{
+  "include": ["src/**/*", "types/"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "jsx": "react",
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  }
+}

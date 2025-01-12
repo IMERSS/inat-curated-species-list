@@ -1,5 +1,3 @@
-'use client';
-
 import { FC } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 

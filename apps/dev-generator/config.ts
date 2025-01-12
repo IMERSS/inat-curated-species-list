@@ -5,8 +5,8 @@ const config: GeneratorConfig = {
   taxonId: 47157,
   placeId: 7085,
   speciesDataFilename: 'species-data.json',
-  newAdditionsFilename: 'new-additions-data.json',
   trackNewAdditions: true,
+  newAdditionsFilename: 'new-additions-data.json',
   newAdditionsStartDate: '2024-01-01',
   showLastGeneratedDate: true,
 };

@@ -11,20 +11,19 @@ export interface CuratedSpeciesTableProps {
   readonly showLastGeneratedDate: boolean;
   readonly showRowNumbers?: boolean;
   readonly showReviewerCount?: boolean;
-  readonly newAdditionsDataUrl?: string;
   readonly showNewAdditions?: boolean;
-  readonly showTaxonChanges?: boolean;
+  readonly newAdditionsDataUrl?: string;
 }
 
 export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({
   speciesDataUrl,
   curatorUsernames,
   placeId,
+  showLastGeneratedDate,
   showRowNumbers,
   showReviewerCount,
-  newAdditionsDataUrl,
   showNewAdditions,
-  showLastGeneratedDate,
+  newAdditionsDataUrl,
 }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const [lastGenerated, setLastGeneratedDate] = useState('');
