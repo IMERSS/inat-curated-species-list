@@ -1,6 +1,6 @@
 import { NewAddition } from '@imerss/inat-curated-species-list-tools';
 
-export type AppProps = {
+export type CuratedSpeciesTableProps = {
   readonly placeId: number;
   readonly taxonId: number;
   readonly curatorUsernames: string[];

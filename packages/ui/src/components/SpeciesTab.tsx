@@ -97,7 +97,7 @@ export const SpeciesTab: FC<SpeciesTabProps> = ({
 
   if ((!loaded || !data || !filteredData || !taxons) && !error) {
     return (
-      <div className="inat-curated-species-standalone-loader">
+      <div className="icsl-loader">
         <Loader />
       </div>
     );
@@ -111,10 +111,10 @@ export const SpeciesTab: FC<SpeciesTabProps> = ({
 
   return (
     <>
-      <div className="inat-curated-species-filter">
+      <div className="icsl-filter">
         <label>Filter:</label>
         <input type="text" value={filter} onChange={updateFilter} />
-        <span className="inat-curated-species-filter-counts">
+        <span className="icsl-filter-counts">
           <b>
             {numFilteredItems} / {Object.keys(data!).length}
           </b>
@@ -131,7 +131,6 @@ export const SpeciesTab: FC<SpeciesTabProps> = ({
           placeId={placeId}
           showRowNumbers={showRowNumbers}
           showReviewerCount={showReviewerCount}
-          allowDownload={false}
         />
       )}
     </>

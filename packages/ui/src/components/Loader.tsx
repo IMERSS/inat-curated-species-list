@@ -4,8 +4,8 @@ import { FC } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export const Loader: FC = () => (
-  <div className="inat-curated-species-loader-outer">
-    <div className="inat-curated-species-loader-inner" />
-    <CircularProgress className="inat-curated-species-loader" />
+  <div className="icsl-loader-outer">
+    <div className="icsl-loader-inner" />
+    <CircularProgress className="icsl-loader-graphic" />
   </div>
 );

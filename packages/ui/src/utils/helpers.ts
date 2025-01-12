@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { NewAddition } from '@imerss/inat-curated-species-list-tools';
 import { NewAdditionsByYear } from '../ui.types';
 
@@ -47,3 +48,5 @@ export const getNewAdditionDataForUI = (data: NewAddition[]): NewAdditionsUIData
     groupedByYear,
   };
 };
+
+export const formatDate = (date: string) => format(new Date(date), 'MMM d, yyyy');

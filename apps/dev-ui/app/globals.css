@@ -11,24 +11,24 @@ table th {
   text-transform: capitalize;
 }
 
-.inat-curated-species-filter {
+.icsl-filter {
   margin-bottom: 20px;
 }
 
-.inat-curated-species-filter label {
+.icsl-filter label {
   margin-right: 10px;
 }
 
-.inat-curated-species-filter-counts {
+.icsl-filter-counts {
   margin-left: 10px;
   color: #3366cc;
 }
 
-.inat-curated-species-table {
+.icsl-table {
   width: 100%;
 }
 
-.inat-curated-species-table tr:nth-child(even) {
+.icsl-table tr:nth-child(even) {
   background-color: #efefef;
 }
 
@@ -36,11 +36,11 @@ svg.MuiSvgIcon-fontSizeMedium {
   color: #3366cc;
 }
 
-.inat-curated-species-standalone-loader {
+.icsl-loader {
   position: relative;
 }
 
-.inat-curated-species-loader-outer {
+.icsl-loader-outer {
   position: absolute;
   top: 50px;
   left: 0;
@@ -51,7 +51,7 @@ svg.MuiSvgIcon-fontSizeMedium {
   align-items: center;
   justify-content: center;
 }
-.inat-curated-species-loader-inner {
+.icsl-loader-inner {
   position: absolute;
   background-color: #efefef;
   padding: 20px;
@@ -60,37 +60,42 @@ svg.MuiSvgIcon-fontSizeMedium {
   height: 100%;
   opacity: 0.8;
 }
-.inat-curated-species-loader {
+.icsl-loader-graphic {
   color: #3366cc !important;
 }
-.inat-curated-species-list-tabs {
+.icsl-tabs {
   margin-bottom: 20px;
 }
 
-.inat-curated-species-list-last-generated-date {
+.icsl-last-generated-date {
   float: right;
   color: #999999;
   font-size: 13px;
 }
-.inat-curated-species-list-last-generated-date span {
+.icsl-last-generated-date span {
   font-weight: bold;
 }
 
-.inat-curated-species-list-tabs {
+.icsl-tabs {
   list-style-type: none;
   margin: 0;
   padding: 0 0 30px;
 }
-.inat-curated-species-list-tabs button {
+
+.icsl-tabs button {
   all: unset;
 }
 
-.inat-curated-species-list-tabs li {
+.icsl-tabs li {
   display: inline-block;
   padding: 6px 20px;
   cursor: pointer;
 }
 
-.inat-curated-species-list-tabs li.inat-curated-species-list-tab-selected {
+.icsl-tabs li.icsl-tab-selected {
   border-bottom: 3px solid #3366cc;
+}
+
+.icsl-new-additions-year-filter {
+  margin-bottom: 20px;
 }

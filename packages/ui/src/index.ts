@@ -1,2 +1,2 @@
-export * from './components/App';
-export type { AppProps } from './components/App';
+export * from './components/CuratedSpeciesTable';
+export type { CuratedSpeciesTableProps } from './components/CuratedSpeciesTable';

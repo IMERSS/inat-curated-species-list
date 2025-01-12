@@ -1,9 +1,10 @@
 import { FC, useCallback, useState } from 'react';
 import { SpeciesTab } from './SpeciesTab';
 import { NewAdditionsTab } from './NewAdditionsTab';
+import { formatDate } from '../utils/helpers';
 import { CuratedSpeciesDataMinified } from '@imerss/inat-curated-species-list-common';
 
-export interface AppProps {
+export interface CuratedSpeciesTableProps {
   readonly speciesDataUrl: string;
   readonly curatorUsernames: string[];
   readonly placeId: number;
@@ -13,10 +14,9 @@ export interface AppProps {
   readonly newAdditionsDataUrl?: string;
   readonly showNewAdditions?: boolean;
   readonly showTaxonChanges?: boolean;
-  readonly lang?: any;
 }
 
-export const App: FC<AppProps> = ({
+export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({
   speciesDataUrl,
   curatorUsernames,
   placeId,
@@ -31,7 +31,7 @@ export const App: FC<AppProps> = ({
   const hasNewAdditions = showNewAdditions && newAdditionsDataUrl;
 
   const onLoadSpeciesData = useCallback((data: CuratedSpeciesDataMinified) => {
-    setLastGeneratedDate(new Date(data.dateGenerated).toISOString().split('T')[0] as string);
+    setLastGeneratedDate(formatDate(data.dateGenerated));
   }, []);
 
   const getTabs = () => {
@@ -39,17 +39,17 @@ export const App: FC<AppProps> = ({
       return null;
     }
 
-    const speciesTabClass = tabIndex === 0 ? 'inat-curated-species-list-tab-selected' : '';
-    const newAdditionsTabClass = tabIndex === 1 ? 'inat-curated-species-list-tab-selected' : '';
+    const speciesTabClass = tabIndex === 0 ? 'icsl-tab-selected' : '';
+    const newAdditionsTabClass = tabIndex === 1 ? 'icsl-tab-selected' : '';
 
     return (
       <div style={{ position: 'relative' }}>
         {showLastGeneratedDate && lastGenerated && (
-          <div className="inat-curated-species-list-last-generated-date">
+          <div className="icsl-last-generated-date">
             Last generated: <span>{lastGenerated}</span>
           </div>
         )}
-        <ul className="inat-curated-species-list-tabs">
+        <ul className="icsl-tabs">
           <li className={speciesTabClass} onClick={() => setTabIndex(0)}>
             <button>Species</button>
           </li>

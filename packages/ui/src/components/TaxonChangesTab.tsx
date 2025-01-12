@@ -18,7 +18,6 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl }) => {
   const [data, setData] = useState<NewAdditionsByYear>();
   const [years, setYears] = useState<string[]>([]);
   const [currentYear, setCurrentYear] = useState<string>();
-
   const onChangeYear = (year: string) => setCurrentYear(year);
 
   useEffect(() => {
@@ -44,7 +43,7 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl }) => {
 
   if (!loaded || !data || !currentYear) {
     return (
-      <div className="inat-curated-species-standalone-loader">
+      <div className="icsl-loader">
         <Loader />
       </div>
     );

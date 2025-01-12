@@ -1,7 +1,7 @@
 'use client';
 
 import { FC } from 'react';
-import { App } from '@imerss/inat-curated-species-list-ui';
+import { CuratedSpeciesTable } from '@imerss/inat-curated-species-list-ui';
 import config from '../../dev-generator/config';
 
 import './globals.css';
@@ -12,7 +12,7 @@ const RootLayout: FC = () => {
       <body>
         <h1>Demo</h1>
 
-        <App
+        <CuratedSpeciesTable
           speciesDataUrl={`./${config.speciesDataFilename}`}
           curatorUsernames={config.curators}
           placeId={config.placeId}

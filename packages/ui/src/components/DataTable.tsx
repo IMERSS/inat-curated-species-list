@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { firstBy } from 'thenby';
-import { capitalizeFirstLetter } from '../utils/helpers';
 import { CuratedSpeciesData, CuratedSpeciesArrayItem, Taxon } from '@imerss/inat-curated-species-list-common';
 import { constants } from '@imerss/inat-curated-species-list-common';
 
@@ -14,8 +13,6 @@ interface DataTableProps {
   readonly placeId: number;
   readonly showRowNumbers?: boolean;
   readonly showReviewerCount?: boolean;
-  readonly allowedCols?: Taxon[];
-  readonly allowDownload?: boolean;
 }
 
 /**
@@ -28,10 +25,8 @@ export const DataTable: FC<DataTableProps> = ({
   placeId,
   showRowNumbers = true,
   showReviewerCount = false,
-  // allowDownload = true,
 }) => {
   const [sortedData, setSortedData] = useState<CuratedSpeciesArrayItem[]>([]);
-  // const [downloadData, setDownloadData] = useState<string[][]>([]);
   const [taxonCols, setTaxonCols] = useState<Taxon[]>([]);
 
   useEffect(() => {
@@ -44,7 +39,6 @@ export const DataTable: FC<DataTableProps> = ({
     }));
 
     let sorted: IThenBy<CuratedSpeciesArrayItem> | null = null;
-    const csvData = [];
     taxonCols.forEach((taxon) => {
       if (!sorted) {
         sorted = firstBy((a) => a.data[taxon] || 'Zzzzz', {
@@ -60,37 +54,15 @@ export const DataTable: FC<DataTableProps> = ({
     if (sorted) {
       arr.sort(sorted);
       setSortedData(arr);
-
-      const titleRow: string[] = [];
-      taxonCols.forEach((col) => {
-        titleRow.push(capitalizeFirstLetter(col));
-      });
-      csvData.push(titleRow);
-
-      arr.forEach((a) => {
-        const row: string[] = [];
-        taxonCols.forEach((col) => {
-          row.push(a.data[col] ? a.data[col] : '');
-        });
-        csvData.push(row);
-      });
-
-      // setDownloadData(csvData);
     }
   }, [data, taxonCols, taxons]);
-
-  // this ensures correct sorting of the taxonomical levels in the table
-
-  // const onChange = (cols: string[]) => {
-  //   setTaxonCols(orderedCols.filter((col) => cols.indexOf(col) !== -1));
-  // };
 
   if (!sortedData.length) {
     return null;
   }
 
   return (
-    <table className="inat-curated-species-table" cellSpacing={0} cellPadding={2}>
+    <table className="icsl-table" cellSpacing={0} cellPadding={2}>
       <thead>
         <tr key="header">
           {showRowNumbers && <th></th>}
