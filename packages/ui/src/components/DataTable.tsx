@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { firstBy } from 'thenby';
 import { CuratedSpeciesData, CuratedSpeciesArrayItem, Taxon } from '@imerss/inat-curated-species-list-common';
 import { constants } from '@imerss/inat-curated-species-list-common';
+import { ViewIcon } from './ViewIcon';
 
 const { INAT_OBSERVATIONS_URL } = constants;
 
@@ -72,7 +73,7 @@ export const DataTable: FC<DataTableProps> = ({
             return <th key={rank}>{rank}</th>;
           })}
           {showReviewerCount && <th></th>}
-          <th></th>
+          <th style={{ width: 40 }}></th>
         </tr>
       </thead>
       <tbody>
@@ -99,7 +100,7 @@ export const DataTable: FC<DataTableProps> = ({
                 target="_blank"
                 rel="noreferrer"
               >
-                <span>icon</span>
+                <ViewIcon />
               </a>
             </td>
           </tr>

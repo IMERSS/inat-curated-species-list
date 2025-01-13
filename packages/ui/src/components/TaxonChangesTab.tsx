@@ -5,6 +5,7 @@ import { constants } from '@imerss/inat-curated-species-list-common';
 import { YearDropdown } from './YearDropdown';
 import { TaxonChangeData } from '@imerss/inat-curated-species-list-tools';
 import { NewAdditionsByYear } from '../ui.types';
+import { ViewIcon } from './ViewIcon';
 
 const { INAT_TAXON_CHANGES_URL } = constants;
 
@@ -72,7 +73,7 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl }) => {
                   </td>
                   <td>
                     <a href={`${INAT_TAXON_CHANGES_URL}/${taxonChangeId}`}>
-                      <span>icon</span>
+                      <ViewIcon />
                     </a>
                   </td>
                 </tr>

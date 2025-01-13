@@ -6,7 +6,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "NODE_ENV=production rollup --config"
+    "build": "rollup --config"
   },
   "dependencies": {
     "react": "^18.0.0",
@@ -16,6 +16,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
