@@ -11,9 +11,11 @@ const { INAT_OBSERVATIONS_URL } = constants;
 
 export interface NewAdditionsTabProps {
   readonly dataUrl: string;
+  readonly showRowNumbers: boolean;
+  readonly tabText?: any;
 }
 
-export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({ dataUrl }) => {
+export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({ dataUrl, tabText, showRowNumbers }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [data, setData] = useState<NewAdditionsByYear>();
@@ -60,6 +62,7 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({ dataUrl }) => {
       <table className="icsl-table" cellSpacing={0} cellPadding={2}>
         <thead>
           <tr>
+            {showRowNumbers && <th></th>}
             <th>Species</th>
             <th>Observer</th>
             <th>Date observed</th>
@@ -70,9 +73,15 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({ dataUrl }) => {
         </thead>
         <tbody>
           {(newYearRecords as unknown as NewAddition[]).map(
-            ({ speciesName, taxonId, observationId, curator, dateObserved, confirmationDate, observer }) => {
+            ({ speciesName, taxonId, observationId, curator, dateObserved, confirmationDate, observer }, index) => {
+              const rowNum = newYearRecords.length - index;
               return (
                 <tr key={taxonId}>
+                  {showRowNumbers && (
+                    <th>
+                      <b>{rowNum}</b>
+                    </th>
+                  )}
                   <td>
                     <a href={`${INAT_OBSERVATIONS_URL}/${observationId}`} target="_blank" rel="noreferrer">
                       <i>{speciesName}</i>
@@ -96,8 +105,11 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({ dataUrl }) => {
     );
   }
 
+  const tabTextHtml = tabText ? <div className="icsl-tab-text" dangerouslySetInnerHTML={{ __html: tabText }} /> : null;
+
   return (
     <>
+      {tabTextHtml}
       <div className="icsl-new-additions-year-filter">
         <label>Filter by year:</label> <YearDropdown years={years} onChange={onChangeYear} />
       </div>

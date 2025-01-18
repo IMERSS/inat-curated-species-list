@@ -23,7 +23,7 @@ export const DataTable: FC<DataTableProps> = ({
   taxons,
   curatorUsernames,
   placeId,
-  showRowNumbers = true,
+  showRowNumbers,
   showReviewerCount = false,
 }) => {
   const [sortedData, setSortedData] = useState<CuratedSpeciesArrayItem[]>([]);

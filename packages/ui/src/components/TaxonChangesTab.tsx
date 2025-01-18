@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import { constants } from '@imerss/inat-curated-species-list-common';
-// import VisibilityIcon from '@mui/icons-material/Visibility';
 import { YearDropdown } from './YearDropdown';
 import { TaxonChangeData } from '@imerss/inat-curated-species-list-tools';
 import { NewAdditionsByYear } from '../ui.types';
@@ -11,9 +10,10 @@ const { INAT_TAXON_CHANGES_URL } = constants;
 
 export interface TaxonChangesTabProps {
   readonly dataUrl: string;
+  readonly showRowNumbers: boolean;
 }
 
-export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl }) => {
+export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumbers }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [data, setData] = useState<NewAdditionsByYear>();
@@ -52,22 +52,30 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl }) => {
 
   const records = data[currentYear];
 
-  let dataContent = <p>There are no new records for this year</p>;
+  let dataContent = <p className="icsl-new-additions-none">There are no new records for this year.</p>;
 
   if (records) {
     dataContent = (
       <table cellSpacing={0} cellPadding={2}>
         <thead>
           <tr>
+            {showRowNumbers && <th></th>}
+            <th>Date</th>
             <th>Taxon Change</th>
             <th>View Details</th>
           </tr>
         </thead>
         <tbody>
           {(records as unknown as TaxonChangeData[]).map(
-            ({ id, previousSpeciesName, newSpeciesName, taxonChangeId }) => {
+            ({ previousSpeciesName, newSpeciesName, taxonChangeId }, index) => {
               return (
                 <tr key={taxonChangeId}>
+                  {showRowNumbers && (
+                    <th>
+                      <b>{index + 1}</b>
+                    </th>
+                  )}
+                  <td>...</td>
                   <td>
                     {previousSpeciesName} &raquo; {newSpeciesName}
                   </td>

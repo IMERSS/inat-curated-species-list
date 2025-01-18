@@ -52,6 +52,7 @@ Okay! At this point, here's how regular usage of the script will work.
 
 - Q: What about taxon changes for the baseline data that HAVE no observations?
 
+  - these won't get updated and are effectively orphaned.
   - other than looping through each one (slow!) and updating, what options do we have? Though perhaps a script to do this could be ran very rarely.
 
 - So part of this script would be describing how to manually create the baseline data - or providing a script to generate it from iNat.

@@ -17,6 +17,7 @@ export interface SpeciesTabProps {
   readonly placeId: number;
   readonly showRowNumbers?: boolean;
   readonly showReviewerCount?: boolean;
+  readonly tabText?: any;
 }
 
 export const SpeciesTab: FC<SpeciesTabProps> = ({
@@ -26,6 +27,7 @@ export const SpeciesTab: FC<SpeciesTabProps> = ({
   placeId,
   showRowNumbers,
   showReviewerCount,
+  tabText,
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
@@ -108,9 +110,11 @@ export const SpeciesTab: FC<SpeciesTabProps> = ({
   }
 
   const numFilteredItems = Object.keys(filteredData!).length;
+  const tabTextHtml = tabText ? <div className="icsl-tab-text" dangerouslySetInnerHTML={{ __html: tabText }} /> : null;
 
   return (
     <>
+      {tabTextHtml}
       <div className="icsl-filter">
         <label>Filter:</label>
         <input type="text" value={filter} onChange={updateFilter} />
