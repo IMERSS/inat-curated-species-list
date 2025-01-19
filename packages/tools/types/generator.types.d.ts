@@ -75,10 +75,13 @@ export type GeneratorConfig = {
   readonly showLastGeneratedDate: boolean;
 
   /**
-   * If set, only tracks new additions to the list from this date onwards.
+   * If you're using the new additions or taxon changes feature, this has to be set to specify the date at which the
+   * baseline data is considered to already be in iNaturalist. In other words, any identifications by curators made for
+   * species after this date will cause the species to get listed in the New Additions sections, plus it'll track taxon
+   * changes made after the same date.
    * Format: YYYY-MM-DD
    */
-  readonly newAdditionsStartDate?: string;
+  readonly baselineEndDate?: string;
 
   /**
    * The iNat data contains the (vast!) full taxonomy for all observations. You won't be interested in displaying all that
@@ -98,12 +101,9 @@ export type GeneratorConfig = {
   // we could look for circular taxon changes and only present the latest change, but I think that would be incorrect in some
   // cases: there are probably legitimate scenarios where a taxon is changed then changed back.
   //
-  // readonly trackTaxonChanges?: boolean;
+  readonly trackTaxonChanges?: boolean;
 
-  /**
-   * This file gets generated whenever you
-   */
-  // readonly taxonChangesFilename?: string;
+  readonly taxonChangesFilename?: string;
 };
 
 export type NewAddition = {

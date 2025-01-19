@@ -55,7 +55,7 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({ dataUrl, tabText, sh
 
   const newYearRecords = data[currentYear];
 
-  let dataContent = <p>There are no new records for this year</p>;
+  let dataContent = <p className="icsl-empty-tab icsl-new-additions-none">There are no new records for this year</p>;
 
   if (newYearRecords) {
     dataContent = (

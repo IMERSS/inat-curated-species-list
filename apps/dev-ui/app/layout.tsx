@@ -17,10 +17,12 @@ const RootLayout: FC = () => {
           curatorUsernames={config.curators}
           placeId={config.placeId}
           showRowNumbers={true}
+          showLastGeneratedDate={config.showLastGeneratedDate}
           showReviewerCount={false}
           newAdditionsDataUrl={`./${config.newAdditionsFilename}`}
           showNewAdditions={config.trackNewAdditions || false}
-          showLastGeneratedDate={config.showLastGeneratedDate}
+          showTaxonChanges={config.trackTaxonChanges || false}
+          taxonChangesDataUrl={`./${config.taxonChangesFilename}`}
         />
       </body>
     </html>

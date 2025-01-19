@@ -24,7 +24,7 @@ export const getNewAdditionDataForUI = (data: NewAddition[]): NewAdditionsUIData
   });
 
   const years = Object.keys(groupedByYear);
-  const currentYear = new Date().getFullYear();
+  const currentYear = getCurrentYear();
 
   if (!years.length) {
     return {
@@ -50,3 +50,5 @@ export const getNewAdditionDataForUI = (data: NewAddition[]): NewAdditionsUIData
 };
 
 export const formatDate = (date: string) => format(new Date(date), 'MMM d, yyyy');
+
+export const getCurrentYear = () => new Date().getFullYear();

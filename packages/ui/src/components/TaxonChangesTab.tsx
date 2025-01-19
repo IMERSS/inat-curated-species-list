@@ -3,6 +3,7 @@ import { Loader } from './Loader';
 import { constants } from '@imerss/inat-curated-species-list-common';
 import { YearDropdown } from './YearDropdown';
 import { TaxonChangeData } from '@imerss/inat-curated-species-list-tools';
+import { getCurrentYear } from '../utils/helpers';
 import { NewAdditionsByYear } from '../ui.types';
 import { ViewIcon } from './ViewIcon';
 
@@ -11,14 +12,15 @@ const { INAT_TAXON_CHANGES_URL } = constants;
 export interface TaxonChangesTabProps {
   readonly dataUrl: string;
   readonly showRowNumbers: boolean;
+  readonly tabText?: any;
 }
 
-export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumbers }) => {
+export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumbers, tabText }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [data, setData] = useState<NewAdditionsByYear>();
   const [years, setYears] = useState<string[]>([]);
-  const [currentYear, setCurrentYear] = useState<string>();
+  const [currentYear, setCurrentYear] = useState<string>(() => getCurrentYear().toString());
   const onChangeYear = (year: string) => setCurrentYear(year);
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
       .then((resp) => resp.json())
       .then((data) => {
         setCurrentYear(currentYear);
-        setYears(Object.keys(years));
+        setYears(Object.keys(data));
         setData(data);
         setLoaded(true);
       })
@@ -52,7 +54,10 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
 
   const records = data[currentYear];
 
-  let dataContent = <p className="icsl-new-additions-none">There are no new records for this year.</p>;
+  let dataContent = (
+    <p className="icsl-empty-tab icsl-taxon-changes-none">There are no new taxon changes for this year.</p>
+  );
+  const tabTextHtml = tabText ? <div className="icsl-tab-text" dangerouslySetInnerHTML={{ __html: tabText }} /> : null;
 
   if (records) {
     dataContent = (
@@ -95,6 +100,7 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
 
   return (
     <>
+      {tabTextHtml}
       <YearDropdown years={years} onChange={onChangeYear} />
       {dataContent}
     </>

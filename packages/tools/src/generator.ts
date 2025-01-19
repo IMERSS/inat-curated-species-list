@@ -42,15 +42,15 @@ const sortByConfirmationDate = (a, b) => {
 };
 
 export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: number, tempFolder: string) => {
-  const { curators, taxons, newAdditionsStartDate } = config;
+  const { curators, taxons, baselineEndDate } = config;
   const { newAdditions, taxonChangeDataGroupedByYear } = parseDataFiles(numDataFiles, curators, taxons, tempFolder);
 
   const newAdditionsArray: NewAddition[] = [];
   Object.keys(newAdditions).forEach((taxonId) => {
     newAdditions[taxonId].observations.sort(sortByConfirmationDate);
 
-    // ignore any taxons that have confirmed observations prior to `newAdditionsStartDate`
-    if (newAdditions[taxonId].observations[0].confirmationDate < newAdditionsStartDate) {
+    // ignore any taxons that have confirmed observations prior to `baselineEndDate`
+    if (newAdditions[taxonId].observations[0].confirmationDate < baselineEndDate) {
       return;
     }
 
@@ -115,7 +115,11 @@ export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: numbe
   const speciesDataFilename = generateSpeciesDataFile(cleanConfig, speciesData, tempFolderFullPath);
 
   console.log('\nStep 4: parsing data');
-  const { newAdditionsArray } = getDataFilesContent(cleanConfig, numRequests, tempFolderFullPath);
+  const { newAdditionsArray, taxonChangeDataGroupedByYear } = getDataFilesContent(
+    cleanConfig,
+    numRequests,
+    tempFolderFullPath,
+  );
 
   let newAdditionsDataFilename = null;
   if (cleanConfig.trackNewAdditions) {
@@ -124,12 +128,12 @@ export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: numbe
     fs.writeFileSync(newAdditionsFile, JSON.stringify(newAdditionsArray), 'utf-8');
   }
 
-  // let taxonChangesFilename = null;
-  // if (cleanConfig.trackTaxonChanges) {
-  //   console.log('\nStep 6: generate taxon changes data file');
-  //   taxonChangesFilename = path.resolve(`${tempFolderFullPath}/${cleanConfig.taxonChangesFilename}`);
-  //   fs.writeFileSync(taxonChangesFilename, JSON.stringify(taxonChangeDataGroupedByYear), 'utf-8');
-  // }
+  let taxonChangesFilename = null;
+  if (cleanConfig.trackTaxonChanges) {
+    console.log('\nStep 6: generate taxon changes data file');
+    taxonChangesFilename = path.resolve(`${tempFolderFullPath}/${cleanConfig.taxonChangesFilename}`);
+    fs.writeFileSync(taxonChangesFilename, JSON.stringify(taxonChangeDataGroupedByYear), 'utf-8');
+  }
 
   console.log('\n__________________________________________');
   console.log(`Complete. Data file(s) generated:`);

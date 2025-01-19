@@ -5,10 +5,12 @@ const config: GeneratorConfig = {
   taxonId: 47157,
   placeId: 7085,
   speciesDataFilename: 'species-data.json',
+  showLastGeneratedDate: true,
+  baselineEndDate: '2024-01-01',
   trackNewAdditions: true,
   newAdditionsFilename: 'new-additions-data.json',
-  newAdditionsStartDate: '2024-01-01',
-  showLastGeneratedDate: true,
+  trackTaxonChanges: true,
+  taxonChangesFilename: 'taxon-changes-data.json',
 };
 
 export default config;

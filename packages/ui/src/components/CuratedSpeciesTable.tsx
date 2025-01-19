@@ -105,7 +105,7 @@ export const CuratedSpeciesTable: FC<CuratedSpeciesTableProps> = ({
       )}
 
       {hasTaxonChanges && (
-        <div style={{ display: tabIndex === 1 ? 'block' : 'none' }}>
+        <div style={{ display: tabIndex === 2 ? 'block' : 'none' }}>
           <TaxonChangesTab dataUrl={taxonChangesDataUrl} showRowNumbers={showRowNumbers} />
         </div>
       )}
