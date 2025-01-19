@@ -20,7 +20,7 @@ export const getNewAdditionDataForUI = (data: NewAddition[]): NewAdditionsUIData
       groupedByYear[year] = [];
     }
 
-    groupedByYear[year].push(row);
+    groupedByYear[year].unshift(row);
   });
 
   const years = Object.keys(groupedByYear);

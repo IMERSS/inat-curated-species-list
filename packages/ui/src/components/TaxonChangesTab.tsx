@@ -31,6 +31,7 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
     })
       .then((resp) => resp.json())
       .then((data) => {
+        console.log(data);
         setCurrentYear(currentYear);
         setYears(Object.keys(data));
         setData(data);

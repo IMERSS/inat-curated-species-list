@@ -262,12 +262,12 @@ export const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxo
     taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName].push(row);
 
     // TODO
-    // if (taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] !== row.newSpeciesName) {
-    //   console.log('Error: ', row.previousSpeciesName, [
-    //     taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName],
-    //     row.newSpeciesName,
-    //   ]);
-    // }
+    if (taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] !== row.newSpeciesName) {
+      console.log('Error: ', row.previousSpeciesName, [
+        taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName],
+        row.newSpeciesName,
+      ]);
+    }
   });
 
   return {
