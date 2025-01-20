@@ -10,7 +10,7 @@ import { extractSpeciesList } from './extraction';
 import { minifySpeciesData } from './minification';
 import { clearTempFolder, initLogger } from './logs';
 import { DEFAULT_TAXONS } from './constants';
-import { parseDataFiles } from './helpers';
+import { getNumINatPacketFiles, parseDataFiles } from './helpers';
 import { GeneratorConfig, NewAddition } from '../types/generator.types';
 import { CuratedSpeciesData } from '@imerss/inat-curated-species-list-common';
 import { performance } from 'perf_hooks';
@@ -93,52 +93,75 @@ export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: numbe
     speciesDataFilename: 'species-data.json',
     newAdditionsFilename: 'new-additions-data.json',
     taxons: DEFAULT_TAXONS,
+    debug: {
+      enabled: false,
+      species: false,
+      newAdditions: false,
+      taxonChanges: false,
+      ...config.default.debug,
+    },
     ...config.default,
   };
 
   const tempFolderFullPath = path.resolve(process.cwd(), cleanConfig.tempFolder);
+  const debugMode = cleanConfig.debug.enabled;
 
-  clearTempFolder(tempFolderFullPath);
-  const logger = initLogger(tempFolderFullPath);
-  const start = performance.now();
+  let currentStep = 1;
 
-  console.log('Step 1: download data from iNat');
-  const { numRequests } = await downloadDataPackets(cleanConfig, tempFolderFullPath, logger);
-  const end = performance.now();
-  const date = new Date(end - start);
-  console.log(`Time taken: ${date.getMinutes()}:${date.getSeconds()}s`);
+  // when debugging is enabled, the iNat data has already been generated and is present on disk under `packet-X.json` files.
+  let numPacketFiles: number;
+  if (debugMode) {
+    numPacketFiles = getNumINatPacketFiles(tempFolderFullPath);
+  } else {
+    clearTempFolder(tempFolderFullPath);
+    const logger = initLogger(tempFolderFullPath);
+    const start = performance.now();
 
-  console.log('\nStep 2: extract species list');
-  const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numRequests);
+    console.log(`Step ${currentStep}: download data from iNat`);
+    numPacketFiles = await downloadDataPackets(cleanConfig, tempFolderFullPath, logger);
+    const end = performance.now();
+    const date = new Date(end - start);
+    console.log(`Time taken: ${date.getMinutes()}:${date.getSeconds()}s`);
+    currentStep++;
+  }
 
-  console.log('\nStep 3: generate data file');
-  const speciesDataFilename = generateSpeciesDataFile(cleanConfig, speciesData, tempFolderFullPath);
+  const generatedFiles = [];
+  if (cleanConfig.debug.species) {
+    console.log(`\nStep ${currentStep}: extract species list`);
+    const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numPacketFiles);
+    currentStep++;
 
-  console.log('\nStep 4: parsing data');
+    console.log(`\nStep ${currentStep}: generate data file`);
+    const speciesDataFilename = generateSpeciesDataFile(cleanConfig, speciesData, tempFolderFullPath);
+    generatedFiles.push(speciesDataFilename);
+    currentStep++;
+  }
+
+  console.log(`\nStep ${currentStep}: parsing data`);
   const { newAdditionsArray, taxonChangeDataGroupedByYear } = getDataFilesContent(
     cleanConfig,
-    numRequests,
+    numPacketFiles,
     tempFolderFullPath,
   );
+  currentStep++;
 
-  let newAdditionsDataFilename = null;
-  if (cleanConfig.trackNewAdditions) {
-    console.log('\nStep 5: generate new additions data file');
-    const newAdditionsFile = path.resolve(`${tempFolderFullPath}/${cleanConfig.newAdditionsFilename}`);
-    fs.writeFileSync(newAdditionsFile, JSON.stringify(newAdditionsArray), 'utf-8');
+  if ((cleanConfig.trackNewAdditions && !debugMode) || (cleanConfig.debug.newAdditions && debugMode)) {
+    console.log(`\nStep ${currentStep}: generate new additions data file`);
+    const newAdditionsFilename = path.resolve(`${tempFolderFullPath}/${cleanConfig.newAdditionsFilename}`);
+    fs.writeFileSync(newAdditionsFilename, JSON.stringify(newAdditionsArray), 'utf-8');
+    generatedFiles.push(newAdditionsFilename);
+    currentStep++;
   }
 
-  let taxonChangesFilename = null;
-  if (cleanConfig.trackTaxonChanges) {
-    console.log('\nStep 6: generate taxon changes data file');
-    taxonChangesFilename = path.resolve(`${tempFolderFullPath}/${cleanConfig.taxonChangesFilename}`);
+  if ((cleanConfig.trackTaxonChanges && !debugMode) || (cleanConfig.debug.taxonChanges && debugMode)) {
+    console.log(`\nStep ${currentStep}: generate taxon changes data file`);
+    const taxonChangesFilename = path.resolve(`${tempFolderFullPath}/${cleanConfig.taxonChangesFilename}`);
     fs.writeFileSync(taxonChangesFilename, JSON.stringify(taxonChangeDataGroupedByYear), 'utf-8');
+    generatedFiles.push(taxonChangesFilename);
+    currentStep++;
   }
 
-  console.log('\n__________________________________________');
+  console.log('\n__________________________________________\n');
   console.log(`Complete. Data file(s) generated:`);
-  console.log(speciesDataFilename);
-  if (newAdditionsDataFilename) {
-    console.log(newAdditionsDataFilename);
-  }
+  console.log(generatedFiles.join('\n') + '\n\n');
 })();

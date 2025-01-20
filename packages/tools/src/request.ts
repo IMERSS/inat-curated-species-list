@@ -94,9 +94,7 @@ export const downloadDataPackets = async (config: GeneratorConfig, tempFolder: s
 
   progress.stop();
 
-  return {
-    numRequests,
-  };
+  return numRequests;
 };
 
 // TODO

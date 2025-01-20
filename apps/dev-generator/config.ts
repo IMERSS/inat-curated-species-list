@@ -11,6 +11,13 @@ const config: GeneratorConfig = {
   newAdditionsFilename: 'new-additions-data.json',
   trackTaxonChanges: true,
   taxonChangesFilename: 'taxon-changes-data.json',
+
+  debug: {
+    enabled: true,
+    species: false,
+    newAdditions: false,
+    taxonChanges: true,
+  },
 };
 
 export default config;

@@ -104,6 +104,32 @@ export type GeneratorConfig = {
   readonly trackTaxonChanges?: boolean;
 
   readonly taxonChangesFilename?: string;
+
+  /**
+   * Used for debugging the generation script. This can be used after the raw packet-X.json files are generated on disk,
+   * housing the response from the iNat API. Each setting lets you regenerate the corresponding data file
+   */
+  readonly debug?: {
+    /**
+     * This has to be set to true to use this feature.
+     */
+    enabled?: boolean;
+
+    /**
+     * When true, will regenerate the species-data.json file.
+     */
+    species: boolean;
+
+    /**
+     * When true, will regenerate the new-additions-data.json file.
+     */
+    newAdditions: boolean;
+
+    /**
+     * When true, will regenerate the taxon-changes-data.json file.
+     */
+    taxonChanges: boolean;
+  };
 };
 
 export type NewAddition = {

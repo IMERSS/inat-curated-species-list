@@ -275,3 +275,19 @@ export const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxo
     taxonChangeDataGroupedByYear,
   };
 };
+
+/**
+ * Used in debugging once the iNat packet files have been created on disk. It loops through all available files on disk
+ * with the expected file name and returns the number of the last available file. If a file had been deleted in the
+ * middle, say, it'll return the number of the file before that - but the script won't work properly without all
+ * the data files anyway.
+ */
+export const getNumINatPacketFiles = (tempFolder: string) => {
+  const files = fs.readdirSync(tempFolder);
+
+  let lastPacketNum = 1;
+  while (files.includes(`packet-${lastPacketNum}.json`)) {
+    lastPacketNum++;
+  }
+  return lastPacketNum - 1;
+};
