@@ -27,12 +27,15 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
             login: 'curator-jim',
           },
           taxon: {
+            id: 999,
             name: 'Orthosia hibisci',
             rank: 'species',
             ancestors: [],
           },
           previous_observation_taxon: {
             id: 123,
+            name: 'previous species',
+            rank: 'species',
           },
         },
       ],
@@ -43,8 +46,10 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
         is_active: true,
       },
     };
-    expect(getConfirmationDateAccountingForTaxonChanges(0, obs)).toEqual({
-      oldTaxonIds: [],
+
+    const taxonChanges = [];
+    expect(getConfirmationDateAccountingForTaxonChanges(0, obs, taxonChanges)).toEqual({
+      deprecatedTaxonIds: [],
       originalConfirmationDate: '2024-01-01',
     });
   });
@@ -74,12 +79,15 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
             login: 'observer-bob',
           },
           taxon: {
+            id: 2222,
             name: 'Schizura unicornis',
             rank: 'species',
             ancestors: [],
           },
           previous_observation_taxon: {
             id: 126207,
+            name: 'previous species',
+            rank: 'species',
           },
         },
         // [1]: confirmed observation by curator-jim
@@ -92,12 +100,15 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
             login: 'curator-jim',
           },
           taxon: {
+            id: 1357,
             name: 'Schizura unicornis',
             rank: 'species',
             ancestors: [],
           },
           previous_observation_taxon: {
             id: 126207,
+            name: 'previous species',
+            rank: 'species',
           },
         },
         // [2]: first auto-generated taxon swap observation for observer-bob's record
@@ -113,12 +124,15 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
             login: 'observer-bob',
           },
           taxon: {
+            id: 135,
             name: 'Schizura unicornis',
             rank: 'species',
             ancestors: [],
           },
           previous_observation_taxon: {
             id: 126207,
+            name: 'previous species',
+            rank: 'species',
           },
         },
         // [3]: second auto-generated taxon swap observation for curator-jims's record
@@ -134,12 +148,15 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
             login: 'curator-jim',
           },
           taxon: {
+            id: 12345,
             name: 'Coelodasys unicornis',
             rank: 'species',
             ancestors: [],
           },
           previous_observation_taxon: {
             id: 1373714,
+            name: 'previous species',
+            rank: 'species',
           },
         },
       ],
@@ -151,8 +168,9 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
       },
     };
 
-    expect(getConfirmationDateAccountingForTaxonChanges(3, obs)).toEqual({
-      oldTaxonIds: [126207],
+    const taxonChanges = [];
+    expect(getConfirmationDateAccountingForTaxonChanges(3, obs, taxonChanges)).toEqual({
+      deprecatedTaxonIds: [126207],
       originalConfirmationDate: '2023-05-05',
     });
   });
@@ -189,6 +207,8 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
           },
           previous_observation_taxon: {
             id: 1,
+            name: 'taxon',
+            rank: 'species',
           },
         },
         // [1]: auto-generated taxon swap observation for curator-jims's record
@@ -211,6 +231,8 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
           },
           previous_observation_taxon: {
             id: 1,
+            name: 'taxon',
+            rank: 'species',
           },
         },
         // [2]: second auto-generated taxon swap observation for curator-jims's record
@@ -233,6 +255,8 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
           },
           previous_observation_taxon: {
             id: 2,
+            name: 'taxon',
+            rank: 'species',
           },
         },
       ],
@@ -244,8 +268,9 @@ describe('getConfirmationDateAccountingForTaxonChanges', () => {
       },
     };
 
-    expect(getConfirmationDateAccountingForTaxonChanges(2, obs)).toEqual({
-      oldTaxonIds: [2, 1],
+    const taxonChanges = [];
+    expect(getConfirmationDateAccountingForTaxonChanges(2, obs, taxonChanges)).toEqual({
+      deprecatedTaxonIds: [2, 1],
       originalConfirmationDate: '2023-01-01',
     });
   });

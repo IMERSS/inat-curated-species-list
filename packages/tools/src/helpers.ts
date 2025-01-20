@@ -94,10 +94,10 @@ export const getConfirmationDateAccountingForTaxonChanges = (
       i !== curatorIdentificationIndex
     ) {
       taxonChangeData.push({
-        id: obs.id,
+        observationId: obs.id, // not strictly needed, but useful for tracing purposes. Might want to remove to reduce size of data file
         previousSpeciesName: currIdentification.taxon.name,
         newSpeciesName: lastCuratorObservation.taxon.name,
-        yearChanged: new Date(lastCuratorObservation.created_at).getFullYear(),
+        taxonChangeObsCreatedAt: lastCuratorObservation.created_at,
         taxonChangeId: lastCuratorObservation.taxon_change.id,
       });
 
@@ -227,6 +227,10 @@ const parseDataFile = (
   });
 };
 
+type TaxonChangesBySpecies = {
+  [species: string]: TaxonChangeData[];
+};
+
 export const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxon[], tempFolder: string) => {
   const newAdditions = {};
   const taxonsToRemove: number[] = [];
@@ -249,31 +253,44 @@ export const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxo
     delete newAdditions[taxonId];
   });
 
-  const taxonChangeDataGroupedByYear = {};
-  taxonChangeData.forEach((row) => {
-    if (!taxonChangeDataGroupedByYear[row.yearChanged]) {
-      taxonChangeDataGroupedByYear[row.yearChanged] = {};
-    }
-
-    if (!taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName]) {
-      taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] = [];
-    }
-
-    taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName].push(row);
-
-    // TODO
-    if (taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName] !== row.newSpeciesName) {
-      console.log('Error: ', row.previousSpeciesName, [
-        taxonChangeDataGroupedByYear[row.yearChanged][row.previousSpeciesName],
-        row.newSpeciesName,
-      ]);
-    }
-  });
-
   return {
     newAdditions,
-    taxonChangeDataGroupedByYear,
+    taxonChangeDataGroupedByYear: getTaxonChangeDataGroupedByYear(taxonChangeData),
   };
+};
+
+export const getTaxonChangeDataGroupedByYear = (taxonChangeData: TaxonChangeData[]) => {
+  const taxonChangesBySpecies: TaxonChangesBySpecies = {};
+  taxonChangeData.forEach((row) => {
+    if (!taxonChangesBySpecies[row.previousSpeciesName]) {
+      taxonChangesBySpecies[row.previousSpeciesName] = [];
+    }
+
+    taxonChangesBySpecies[row.previousSpeciesName].push(row);
+  });
+  const sortByCreationDate = (a, b) => {
+    if (a.taxonChangeObsCreatedAt > b.taxonChangeObsCreatedAt) {
+      return 1;
+    } else if (a.taxonChangeObsCreatedAt < b.taxonChangeObsCreatedAt) {
+      return -1;
+    }
+    return 0;
+  };
+
+  // sort them by creation date so the earliest taxon change observation is first
+  const taxonChangeDataGroupedByYear = {};
+  Object.keys(taxonChangesBySpecies).forEach((species) => {
+    taxonChangesBySpecies[species].sort(sortByCreationDate);
+    const firstLoggedTaxonChangeForSpecies = taxonChangesBySpecies[species][0];
+    const year = new Date(firstLoggedTaxonChangeForSpecies.taxonChangeObsCreatedAt).getFullYear();
+
+    if (!taxonChangeDataGroupedByYear[year]) {
+      taxonChangeDataGroupedByYear[year] = {};
+    }
+    taxonChangeDataGroupedByYear[year][species] = firstLoggedTaxonChangeForSpecies;
+  });
+
+  return taxonChangeDataGroupedByYear;
 };
 
 /**

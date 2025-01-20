@@ -131,13 +131,13 @@ export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: numbe
     const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numPacketFiles);
     currentStep++;
 
-    console.log(`\nStep ${currentStep}: generate data file`);
+    console.log(`\nStep ${currentStep}: generate species data file`);
     const speciesDataFilename = generateSpeciesDataFile(cleanConfig, speciesData, tempFolderFullPath);
     generatedFiles.push(speciesDataFilename);
     currentStep++;
   }
 
-  console.log(`\nStep ${currentStep}: parsing data`);
+  console.log(`\nStep ${currentStep}: parsing iNat data`);
   const { newAdditionsArray, taxonChangeDataGroupedByYear } = getDataFilesContent(
     cleanConfig,
     numPacketFiles,

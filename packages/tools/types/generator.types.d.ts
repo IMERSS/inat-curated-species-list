@@ -224,9 +224,9 @@ export type DownloadDataPacketResponse = {
 };
 
 export type TaxonChangeData = {
-  readonly id: number;
+  readonly observationId: number;
   readonly previousSpeciesName: string;
   readonly newSpeciesName: string;
-  readonly yearChanged: number;
+  readonly taxonChangeObsCreatedAt: string;
   readonly taxonChangeId: number;
 };
