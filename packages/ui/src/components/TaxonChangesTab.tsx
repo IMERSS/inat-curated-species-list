@@ -2,9 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import { constants } from '@imerss/inat-curated-species-list-common';
 import { YearDropdown } from './YearDropdown';
-import { TaxonChangeData } from '@imerss/inat-curated-species-list-tools';
-import { getCurrentYear } from '../utils/helpers';
-import { NewAdditionsByYear } from '../ui.types';
+import { formatDate, getCurrentYear } from '../utils/helpers';
 import { ViewIcon } from './ViewIcon';
 
 const { INAT_TAXON_CHANGES_URL } = constants;
@@ -18,7 +16,7 @@ export interface TaxonChangesTabProps {
 export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumbers, tabText }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
-  const [data, setData] = useState<NewAdditionsByYear>();
+  const [data, setData] = useState<any>();
   const [years, setYears] = useState<string[]>([]);
   const [currentYear, setCurrentYear] = useState<string>(() => getCurrentYear().toString());
   const onChangeYear = (year: string) => setCurrentYear(year);
@@ -31,7 +29,6 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
         setCurrentYear(currentYear);
         setYears(Object.keys(data));
         setData(data);
@@ -62,38 +59,37 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
 
   if (records) {
     dataContent = (
-      <table cellSpacing={0} cellPadding={2}>
+      <table className="icsl-table" cellSpacing={0} cellPadding={2}>
         <thead>
           <tr>
             {showRowNumbers && <th></th>}
             <th>Date</th>
-            <th>Taxon Change</th>
+            <th>Original Name</th>
+            <th>New Name</th>
             <th>View Details</th>
           </tr>
         </thead>
         <tbody>
-          {(records as unknown as TaxonChangeData[]).map(
-            ({ previousSpeciesName, newSpeciesName, taxonChangeId }, index) => {
-              return (
-                <tr key={taxonChangeId}>
-                  {showRowNumbers && (
-                    <th>
-                      <b>{index + 1}</b>
-                    </th>
-                  )}
-                  <td>...</td>
-                  <td>
-                    {previousSpeciesName} &raquo; {newSpeciesName}
-                  </td>
-                  <td>
-                    <a href={`${INAT_TAXON_CHANGES_URL}/${taxonChangeId}`}>
-                      <ViewIcon />
-                    </a>
-                  </td>
-                </tr>
-              );
-            },
-          )}
+          {Object.keys(records).map((species, index) => {
+            const taxonChange = records[species];
+            return (
+              <tr key={species}>
+                {showRowNumbers && (
+                  <th>
+                    <b>{index + 1}</b>
+                  </th>
+                )}
+                <td>{formatDate(taxonChange.taxonChangeObsCreatedAt)}</td>
+                <td>{taxonChange.previousSpeciesName}</td>
+                <td>{taxonChange.newSpeciesName}</td>
+                <td>
+                  <a href={`${INAT_TAXON_CHANGES_URL}/${taxonChange.taxonChangeId}`}>
+                    <ViewIcon />
+                  </a>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     );
@@ -102,7 +98,9 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
   return (
     <>
       {tabTextHtml}
-      <YearDropdown years={years} onChange={onChangeYear} />
+      <div className="icsl-new-additions-year-filter">
+        <label>View by year:</label> <YearDropdown years={years} onChange={onChangeYear} />
+      </div>
       {dataContent}
     </>
   );
