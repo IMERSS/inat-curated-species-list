@@ -285,10 +285,14 @@ export const getTaxonChangeDataGroupedByYear = (taxonChangeData: TaxonChangeData
     const year = new Date(firstLoggedTaxonChangeForSpecies.taxonChangeObsCreatedAt).getFullYear();
 
     if (!taxonChangeDataGroupedByYear[year]) {
-      taxonChangeDataGroupedByYear[year] = {};
+      taxonChangeDataGroupedByYear[year] = [];
     }
-    taxonChangeDataGroupedByYear[year][species] = firstLoggedTaxonChangeForSpecies;
+    taxonChangeDataGroupedByYear[year].push(firstLoggedTaxonChangeForSpecies);
   });
+
+  // sort each year's species changes by the reverse order that they were added (so the most recent shows up first)
+
+  // ensure all years from the earliest year onwards are covered
 
   return taxonChangeDataGroupedByYear;
 };
