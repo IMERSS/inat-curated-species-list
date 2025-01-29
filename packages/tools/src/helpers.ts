@@ -278,11 +278,17 @@ export const getTaxonChangeDataGroupedByYear = (taxonChangeData: TaxonChangeData
   };
 
   // sort them by creation date so the earliest taxon change observation is first
+  const currentYear = new Date().getFullYear();
+  let earliestYear = currentYear;
   const taxonChangeDataGroupedByYear = {};
   Object.keys(taxonChangesBySpecies).forEach((species) => {
     taxonChangesBySpecies[species].sort(sortByCreationDate);
     const firstLoggedTaxonChangeForSpecies = taxonChangesBySpecies[species][0];
     const year = new Date(firstLoggedTaxonChangeForSpecies.taxonChangeObsCreatedAt).getFullYear();
+
+    if (year < earliestYear) {
+      earliestYear = year;
+    }
 
     if (!taxonChangeDataGroupedByYear[year]) {
       taxonChangeDataGroupedByYear[year] = [];
@@ -290,11 +296,28 @@ export const getTaxonChangeDataGroupedByYear = (taxonChangeData: TaxonChangeData
     taxonChangeDataGroupedByYear[year].push(firstLoggedTaxonChangeForSpecies);
   });
 
+  const sortByCreationDateReversed = (a, b) => {
+    if (a.taxonChangeObsCreatedAt > b.taxonChangeObsCreatedAt) {
+      return -1;
+    } else if (a.taxonChangeObsCreatedAt < b.taxonChangeObsCreatedAt) {
+      return 1;
+    }
+    return 0;
+  };
+
   // sort each year's species changes by the reverse order that they were added (so the most recent shows up first)
+  const yearDataSortedByReverseAdditionDate = {};
+  for (let i = earliestYear; i <= currentYear; i++) {
+    yearDataSortedByReverseAdditionDate[i] = [];
 
-  // ensure all years from the earliest year onwards are covered
+    console.log('here... ', i);
 
-  return taxonChangeDataGroupedByYear;
+    if (taxonChangeDataGroupedByYear[i]) {
+      yearDataSortedByReverseAdditionDate[i] = taxonChangeDataGroupedByYear[i].sort(sortByCreationDateReversed);
+    }
+  }
+
+  return yearDataSortedByReverseAdditionDate;
 };
 
 /**

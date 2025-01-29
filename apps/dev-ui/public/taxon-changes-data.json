@@ -1,1 +1,664 @@
-{"2020":{"Catoptria oregonica":{"observationId":53755123,"previousSpeciesName":"Catoptria oregonica","newSpeciesName":"Catoptria oregonicus","taxonChangeObsCreatedAt":"2020-08-29T01:25:59+00:00","taxonChangeId":82064},"Itame plumosata":{"observationId":64717533,"previousSpeciesName":"Itame plumosata","newSpeciesName":"Macaria plumosata","taxonChangeObsCreatedAt":"2020-11-18T19:29:19+00:00","taxonChangeId":85308}},"2021":{"Lycaena helloides":{"observationId":386589,"previousSpeciesName":"Lycaena helloides","newSpeciesName":"Tharsalea helloides","taxonChangeObsCreatedAt":"2021-07-28T00:31:18-07:00","taxonChangeId":95422},"Lycaena mariposa":{"observationId":41021693,"previousSpeciesName":"Lycaena mariposa","newSpeciesName":"Tharsalea mariposa","taxonChangeObsCreatedAt":"2021-07-28T00:12:26-07:00","taxonChangeId":95421},"Lycaena heteronea":{"observationId":59020623,"previousSpeciesName":"Lycaena heteronea","newSpeciesName":"Tharsalea heteronea","taxonChangeObsCreatedAt":"2021-07-28T00:22:33-07:00","taxonChangeId":95420},"Coenonympha tullia":{"observationId":79848101,"previousSpeciesName":"Coenonympha tullia","newSpeciesName":"Coenonympha california","taxonChangeObsCreatedAt":"2021-07-30T00:39:31-07:00","taxonChangeId":95430},"Carterocephalus palaemon":{"observationId":46530931,"previousSpeciesName":"Carterocephalus palaemon","newSpeciesName":"Carterocephalus skada","taxonChangeObsCreatedAt":"2021-07-30T20:31:36+00:00","taxonChangeId":95753},"Lycaena dorcas":{"observationId":32189129,"previousSpeciesName":"Lycaena dorcas","newSpeciesName":"Tharsalea mariposa","taxonChangeObsCreatedAt":"2021-07-28T07:12:27+00:00","taxonChangeId":95421},"Pennisetia marginata":{"observationId":31455499,"previousSpeciesName":"Pennisetia marginata","newSpeciesName":"Pennisetia marginatum","taxonChangeObsCreatedAt":"2021-06-13T13:36:37+00:00","taxonChangeId":93445},"Pararctia yarrowii":{"observationId":56936104,"previousSpeciesName":"Pararctia yarrowii","newSpeciesName":"Arctia yarrowii","taxonChangeObsCreatedAt":"2021-03-18T05:32:56-07:00","taxonChangeId":90445},"Plutella vanella":{"observationId":50895895,"previousSpeciesName":"Plutella vanella","newSpeciesName":"Eidophasia vanella","taxonChangeObsCreatedAt":"2021-08-23T09:02:22-07:00","taxonChangeId":97522},"Lycaena editha":{"observationId":53102811,"previousSpeciesName":"Lycaena editha","newSpeciesName":"Tharsalea editha","taxonChangeObsCreatedAt":"2021-07-28T06:59:51+00:00","taxonChangeId":95416},"Amorbia cuneana":{"observationId":54190308,"previousSpeciesName":"Amorbia cuneana","newSpeciesName":"Amorbia cuneanum","taxonChangeObsCreatedAt":"2021-06-18T18:20:47+00:00","taxonChangeId":93454},"Lycaena cupreus":{"observationId":56464575,"previousSpeciesName":"Lycaena cupreus","newSpeciesName":"Tharsalea mariposa","taxonChangeObsCreatedAt":"2021-07-28T09:14:36+02:00","taxonChangeId":95421},"Lycaena dione":{"observationId":59289234,"previousSpeciesName":"Lycaena dione","newSpeciesName":"Tharsalea dione","taxonChangeObsCreatedAt":"2021-07-27T23:55:23-07:00","taxonChangeId":95415}},"2022":{"Tharsalea helloides":{"observationId":386589,"previousSpeciesName":"Tharsalea helloides","newSpeciesName":"Tharsalea helloides","taxonChangeObsCreatedAt":"2022-02-18T05:55:03-08:00","taxonChangeId":105637},"Tharsalea mariposa":{"observationId":41021693,"previousSpeciesName":"Tharsalea mariposa","newSpeciesName":"Lycaena mariposa","taxonChangeObsCreatedAt":"2022-02-18T05:18:13-08:00","taxonChangeId":105602},"Lycaena mariposa charlottensis":{"observationId":42329093,"previousSpeciesName":"Lycaena mariposa charlottensis","newSpeciesName":"Lycaena mariposa charlottensis","taxonChangeObsCreatedAt":"2022-02-18T13:16:10+00:00","taxonChangeId":105615},"Tharsalea heteronea":{"observationId":59020623,"previousSpeciesName":"Tharsalea heteronea","newSpeciesName":"Lycaena heteronea","taxonChangeObsCreatedAt":"2022-02-18T05:34:56-08:00","taxonChangeId":105612},"Oligocentria semirufescens":{"observationId":28982952,"previousSpeciesName":"Oligocentria semirufescens","newSpeciesName":"Oedemasia semirufescens","taxonChangeObsCreatedAt":"2022-04-07T10:08:17+00:00","taxonChangeId":108698},"Tharsalea dorcas":{"observationId":36481039,"previousSpeciesName":"Tharsalea dorcas","newSpeciesName":"Lycaena dorcas","taxonChangeObsCreatedAt":"2022-02-18T13:25:11+00:00","taxonChangeId":105631},"Neoarctia brucei":{"observationId":90853783,"previousSpeciesName":"Neoarctia brucei","newSpeciesName":"Chelis brucei","taxonChangeObsCreatedAt":"2022-12-06T03:40:21+00:00","taxonChangeId":117996},"Coryphista meadii":{"observationId":54084382,"previousSpeciesName":"Coryphista meadii","newSpeciesName":"Rheumaptera meadii","taxonChangeObsCreatedAt":"2022-04-24T21:14:22-07:00","taxonChangeId":109978},"Tharsalea editha":{"observationId":53102811,"previousSpeciesName":"Tharsalea editha","newSpeciesName":"Lycaena editha","taxonChangeObsCreatedAt":"2022-02-18T13:21:30+00:00","taxonChangeId":105614},"Schizura unicornis":{"observationId":54210663,"previousSpeciesName":"Schizura unicornis","newSpeciesName":"Coelodasys unicornis","taxonChangeObsCreatedAt":"2022-04-07T10:28:57+00:00","taxonChangeId":108693},"Oligocentria pallida":{"observationId":56666008,"previousSpeciesName":"Oligocentria pallida","newSpeciesName":"Ianassa pallida","taxonChangeObsCreatedAt":"2022-04-14T05:52:22-04:00","taxonChangeId":109313},"Enypia griseata":{"observationId":54339972,"previousSpeciesName":"Enypia griseata","newSpeciesName":"Sabulodes griseata","taxonChangeObsCreatedAt":"2022-04-25T04:30:02+00:00","taxonChangeId":109991},"Tharsalea dione":{"observationId":59289234,"previousSpeciesName":"Tharsalea dione","newSpeciesName":"Lycaena dione","taxonChangeObsCreatedAt":"2022-02-18T05:18:57-08:00","taxonChangeId":105609},"Caloreas leucobasis":{"observationId":61064609,"previousSpeciesName":"Caloreas leucobasis","newSpeciesName":"Neocaloreas leucobasis","taxonChangeObsCreatedAt":"2022-12-05T21:10:31-08:00","taxonChangeId":118016},"Lycaena dorcas dorcas":{"observationId":100630923,"previousSpeciesName":"Lycaena dorcas dorcas","newSpeciesName":"Tharsalea dorcas dorcas","taxonChangeObsCreatedAt":"2022-02-18T05:36:24-08:00","taxonChangeId":105647},"Tinagma giganteum":{"observationId":140123248,"previousSpeciesName":"Tinagma giganteum","newSpeciesName":"Tinagma gigantea","taxonChangeObsCreatedAt":"2022-11-16T07:38:33+00:00","taxonChangeId":116749},"Choristoneura freemani":{"observationId":143411419,"previousSpeciesName":"Choristoneura freemani","newSpeciesName":"Choristoneura occidentalis","taxonChangeObsCreatedAt":"2022-12-03T14:02:18-05:00","taxonChangeId":117851},"Parabagrotis exertistigma":{"observationId":143905056,"previousSpeciesName":"Parabagrotis exertistigma","newSpeciesName":"Parabagrotis exsertistigma","taxonChangeObsCreatedAt":"2022-12-08T21:23:01-08:00","taxonChangeId":118333}},"2023":{"Speyeria mormonia":{"observationId":29958933,"previousSpeciesName":"Speyeria mormonia","newSpeciesName":"Argynnis mormonia","taxonChangeObsCreatedAt":"2023-03-09T17:04:46-08:00","taxonChangeId":124329},"Speyeria aphrodite":{"observationId":18105683,"previousSpeciesName":"Speyeria aphrodite","newSpeciesName":"Argynnis aphrodite","taxonChangeObsCreatedAt":"2023-03-10T00:30:43+00:00","taxonChangeId":124278},"Speyeria cybele":{"observationId":31445554,"previousSpeciesName":"Speyeria cybele","newSpeciesName":"Argynnis cybele","taxonChangeObsCreatedAt":"2023-03-10T02:56:05+00:00","taxonChangeId":124255},"Speyeria hesperis":{"observationId":40045562,"previousSpeciesName":"Speyeria hesperis","newSpeciesName":"Argynnis hesperis","taxonChangeObsCreatedAt":"2023-03-09T15:59:38-07:00","taxonChangeId":124261},"Speyeria hydaspe":{"observationId":56195764,"previousSpeciesName":"Speyeria hydaspe","newSpeciesName":"Argynnis hydaspe","taxonChangeObsCreatedAt":"2023-03-09T16:39:04-08:00","taxonChangeId":124319},"Speyeria atlantis":{"observationId":56360877,"previousSpeciesName":"Speyeria atlantis","newSpeciesName":"Argynnis atlantis","taxonChangeObsCreatedAt":"2023-03-10T01:41:36+00:00","taxonChangeId":124333},"Speyeria":{"observationId":28746388,"previousSpeciesName":"Speyeria","newSpeciesName":"Argynnis hesperis","taxonChangeObsCreatedAt":"2023-03-09T23:01:57+00:00","taxonChangeId":124261},"Papilio machaon oregonius":{"observationId":29544051,"previousSpeciesName":"Papilio machaon oregonius","newSpeciesName":"Papilio bairdii oregonia","taxonChangeObsCreatedAt":"2023-11-19T23:07:13-08:00","taxonChangeId":134834},"Speyeria hydaspe rhodope":{"observationId":30212068,"previousSpeciesName":"Speyeria hydaspe rhodope","newSpeciesName":"Argynnis hydaspe rhodope","taxonChangeObsCreatedAt":"2023-03-10T02:23:59+00:00","taxonChangeId":124373},"Speyeria zerene":{"observationId":55962601,"previousSpeciesName":"Speyeria zerene","newSpeciesName":"Argynnis zerene","taxonChangeObsCreatedAt":"2023-03-09T23:59:46+00:00","taxonChangeId":124288},"Speyeria zerene bremnerii":{"observationId":38618299,"previousSpeciesName":"Speyeria zerene bremnerii","newSpeciesName":"Argynnis zerene","taxonChangeObsCreatedAt":"2023-03-10T00:00:44+00:00","taxonChangeId":124288},"Grapholita lunatana":{"observationId":75619492,"previousSpeciesName":"Grapholita lunatana","newSpeciesName":"Ephippiphora lunatana","taxonChangeObsCreatedAt":"2023-11-04T20:47:08-07:00","taxonChangeId":133931},"Boloria selene":{"observationId":48602588,"previousSpeciesName":"Boloria selene","newSpeciesName":"Boloria myrina","taxonChangeObsCreatedAt":"2023-03-09T14:04:15+00:00","taxonChangeId":124216},"Speyeria callippe":{"observationId":58391776,"previousSpeciesName":"Speyeria callippe","newSpeciesName":"Argynnis callippe","taxonChangeObsCreatedAt":"2023-03-09T15:31:11-08:00","taxonChangeId":124264},"Grapholita packardi":{"observationId":54362872,"previousSpeciesName":"Grapholita packardi","newSpeciesName":"Aspila packardi","taxonChangeObsCreatedAt":"2023-11-04T23:14:44-04:00","taxonChangeId":133916},"Lycaena phlaeas arethusa":{"observationId":55942743,"previousSpeciesName":"Lycaena phlaeas arethusa","newSpeciesName":"Lycaena hypophlaeas arethusa","taxonChangeObsCreatedAt":"2023-03-09T14:11:00+00:00","taxonChangeId":124227},"Papilio machaon bairdii":{"observationId":57273855,"previousSpeciesName":"Papilio machaon bairdii","newSpeciesName":"Papilio bairdii oregonia","taxonChangeObsCreatedAt":"2023-11-20T07:07:25+00:00","taxonChangeId":134834},"Rheumaptera undulata":{"observationId":130160731,"previousSpeciesName":"Rheumaptera undulata","newSpeciesName":"Hydria undulata","taxonChangeObsCreatedAt":"2023-02-28T00:34:32-08:00","taxonChangeId":123458},"Epelis truncataria":{"observationId":78798392,"previousSpeciesName":"Epelis truncataria","newSpeciesName":"Macaria truncataria","taxonChangeObsCreatedAt":"2023-12-22T13:45:34+00:00","taxonChangeId":136536},"Speyeria edwardsii":{"observationId":95076970,"previousSpeciesName":"Speyeria edwardsii","newSpeciesName":"Argynnis edwardsii","taxonChangeObsCreatedAt":"2023-03-09T14:58:06-08:00","taxonChangeId":124260},"Speyeria cybele leto":{"observationId":102029404,"previousSpeciesName":"Speyeria cybele leto","newSpeciesName":"Argynnis cybele leto","taxonChangeObsCreatedAt":"2023-03-09T15:41:37-08:00","taxonChangeId":124281},"Depressariodes canella":{"observationId":104999524,"previousSpeciesName":"Depressariodes canella","newSpeciesName":"Exaeretia canella","taxonChangeObsCreatedAt":"2023-12-28T11:33:08-08:00","taxonChangeId":136902},"Grapholita prunivora":{"observationId":129369897,"previousSpeciesName":"Grapholita prunivora","newSpeciesName":"Aspila prunivora","taxonChangeObsCreatedAt":"2023-11-04T20:12:11-07:00","taxonChangeId":133911},"Amydria effrentella":{"observationId":143778176,"previousSpeciesName":"Amydria effrentella","newSpeciesName":"Amydria effrenatella","taxonChangeObsCreatedAt":"2023-02-18T20:42:10+00:00","taxonChangeId":122766},"Olethreutes metallicana":{"observationId":143778976,"previousSpeciesName":"Olethreutes metallicana","newSpeciesName":"Phiaris metallicana","taxonChangeObsCreatedAt":"2023-12-24T13:55:30+00:00","taxonChangeId":136704},"Olethreutes nordeggana":{"observationId":143778977,"previousSpeciesName":"Olethreutes nordeggana","newSpeciesName":"Phiaris nordeggana","taxonChangeObsCreatedAt":"2023-12-24T13:55:24+00:00","taxonChangeId":136706},"Phiaris bipartitana":{"observationId":143778989,"previousSpeciesName":"Phiaris bipartitana","newSpeciesName":"Olethreutes bipartitana","taxonChangeObsCreatedAt":"2023-12-24T16:57:36+00:00","taxonChangeId":136713},"Olethreutes bipartitana":{"observationId":143778989,"previousSpeciesName":"Olethreutes bipartitana","newSpeciesName":"Phiaris bipartitana","taxonChangeObsCreatedAt":"2023-12-24T14:11:18+00:00","taxonChangeId":136709},"Olethreutes schulziana":{"observationId":143778993,"previousSpeciesName":"Olethreutes schulziana","newSpeciesName":"Phiaris schulziana","taxonChangeObsCreatedAt":"2023-12-24T13:55:55+00:00","taxonChangeId":136708},"Olethreutes turfosana":{"observationId":143778994,"previousSpeciesName":"Olethreutes turfosana","newSpeciesName":"Phiaris turfosana","taxonChangeObsCreatedAt":"2023-12-24T13:55:25+00:00","taxonChangeId":136707},"Olethreutes septentrionana":{"observationId":143778995,"previousSpeciesName":"Olethreutes septentrionana","newSpeciesName":"Phiaris septentrionana","taxonChangeObsCreatedAt":"2023-12-24T13:55:16+00:00","taxonChangeId":136702},"Olethreutes inquietana":{"observationId":143778996,"previousSpeciesName":"Olethreutes inquietana","newSpeciesName":"Phiaris inquietana","taxonChangeObsCreatedAt":"2023-12-24T13:55:19+00:00","taxonChangeId":136703},"Grapholita libertina":{"observationId":143779210,"previousSpeciesName":"Grapholita libertina","newSpeciesName":"Aspila libertina","taxonChangeObsCreatedAt":"2023-11-05T03:10:16+00:00","taxonChangeId":133905},"Grapholita caeruleana":{"observationId":143779213,"previousSpeciesName":"Grapholita caeruleana","newSpeciesName":"Ephippiphora caeruleana","taxonChangeObsCreatedAt":"2023-11-05T03:46:27+00:00","taxonChangeId":133920},"Grapholita vitrana":{"observationId":143779214,"previousSpeciesName":"Grapholita vitrana","newSpeciesName":"Ephippiphora vitrana","taxonChangeObsCreatedAt":"2023-11-05T03:47:02+00:00","taxonChangeId":133933},"Grapholita conversana":{"observationId":143779215,"previousSpeciesName":"Grapholita conversana","newSpeciesName":"Ephippiphora conversana","taxonChangeObsCreatedAt":"2023-11-05T03:47:15+00:00","taxonChangeId":133936},"Grapholita imitativa":{"observationId":145488360,"previousSpeciesName":"Grapholita imitativa","newSpeciesName":"Ephippiphora imitativa","taxonChangeObsCreatedAt":"2023-11-04T20:46:49-07:00","taxonChangeId":133929},"Lycaena phlaeas":{"observationId":143839118,"previousSpeciesName":"Lycaena phlaeas","newSpeciesName":"Lycaena hypophlaeas","taxonChangeObsCreatedAt":"2023-03-09T19:22:46+00:00","taxonChangeId":124224},"Crambus ainsliellus":{"observationId":143840589,"previousSpeciesName":"Crambus ainsliellus","newSpeciesName":"Crambus ainslieellus","taxonChangeObsCreatedAt":"2023-05-15T15:00:30+00:00","taxonChangeId":125889},"Perizoma grandis":{"observationId":143843537,"previousSpeciesName":"Perizoma grandis","newSpeciesName":"Martania grandis","taxonChangeObsCreatedAt":"2023-12-16T18:24:49+00:00","taxonChangeId":136216},"Venusia duodecemlineata":{"observationId":143843583,"previousSpeciesName":"Venusia duodecemlineata","newSpeciesName":"Nomenia duodecemlineata","taxonChangeObsCreatedAt":"2023-05-24T02:06:15+00:00","taxonChangeId":125629},"Venusia obsoleta":{"observationId":143843584,"previousSpeciesName":"Venusia obsoleta","newSpeciesName":"Nomenia obsoleta","taxonChangeObsCreatedAt":"2023-05-24T02:06:18+00:00","taxonChangeId":125630},"Eupithecia columbrata":{"observationId":143843652,"previousSpeciesName":"Eupithecia columbrata","newSpeciesName":"Eupithecia mutata","taxonChangeObsCreatedAt":"2023-02-19T19:29:29+00:00","taxonChangeId":122859},"Prorella leucata":{"observationId":143843661,"previousSpeciesName":"Prorella leucata","newSpeciesName":"Eupithecia leucata","taxonChangeObsCreatedAt":"2023-12-10T16:18:01+00:00","taxonChangeId":135913},"Prorella mellisa":{"observationId":143843662,"previousSpeciesName":"Prorella mellisa","newSpeciesName":"Eupithecia mellisa","taxonChangeObsCreatedAt":"2023-12-10T16:18:19+00:00","taxonChangeId":135919},"Macaria notata":{"observationId":143843730,"previousSpeciesName":"Macaria notata","newSpeciesName":"Macaria ulsterata","taxonChangeObsCreatedAt":"2023-12-15T15:05:04+00:00","taxonChangeId":136187}},"2024":{"Drepana bilineata":{"observationId":125125703,"previousSpeciesName":"Drepana bilineata","newSpeciesName":"Falcaria bilineata","taxonChangeObsCreatedAt":"2024-01-10T06:32:48-08:00","taxonChangeId":137481},"Coleophora sparsiatomella":{"observationId":143778639,"previousSpeciesName":"Coleophora sparsiatomella","newSpeciesName":"Coleophora sparsipulvella","taxonChangeObsCreatedAt":"2024-01-10T13:35:47+00:00","taxonChangeId":137376},"Holcocera concolor":{"observationId":143778662,"previousSpeciesName":"Holcocera concolor","newSpeciesName":"Holcocera immaculella","taxonChangeObsCreatedAt":"2024-01-10T13:40:45+00:00","taxonChangeId":137452},"Mompha murtfeldtella":{"observationId":143778674,"previousSpeciesName":"Mompha murtfeldtella","newSpeciesName":"Mompha albocapitella","taxonChangeObsCreatedAt":"2024-01-10T13:47:02+00:00","taxonChangeId":137454},"Lobophora montanata":{"observationId":144898116,"previousSpeciesName":"Lobophora montanata","newSpeciesName":"Lobophora nivigerata","taxonChangeObsCreatedAt":"2024-01-10T05:25:14-08:00","taxonChangeId":136212},"Lobophora simsata":{"observationId":143843671,"previousSpeciesName":"Lobophora simsata","newSpeciesName":"Lobophora nivigerata","taxonChangeObsCreatedAt":"2024-01-10T13:25:13+00:00","taxonChangeId":136212},"Lobophora magnoliatoidata":{"observationId":143843673,"previousSpeciesName":"Lobophora magnoliatoidata","newSpeciesName":"Lobophora nivigerata","taxonChangeObsCreatedAt":"2024-01-10T13:25:13+00:00","taxonChangeId":136212},"Lobophora canavestita":{"observationId":143843674,"previousSpeciesName":"Lobophora canavestita","newSpeciesName":"Lobophora nivigerata","taxonChangeObsCreatedAt":"2024-01-10T13:25:14+00:00","taxonChangeId":136212},"Protoperigea anotha":{"observationId":144208063,"previousSpeciesName":"Protoperigea anotha","newSpeciesName":"Caradrina anotha","taxonChangeObsCreatedAt":"2024-01-19T06:36:59-08:00","taxonChangeId":138125},"Protoperigea posticata":{"observationId":143844998,"previousSpeciesName":"Protoperigea posticata","newSpeciesName":"Caradrina posticata","taxonChangeObsCreatedAt":"2024-01-19T14:37:00+00:00","taxonChangeId":138124},"Protoperigea umbricata":{"observationId":143844999,"previousSpeciesName":"Protoperigea umbricata","newSpeciesName":"Caradrina umbricata","taxonChangeObsCreatedAt":"2024-01-19T14:37:07+00:00","taxonChangeId":138123},"Protorthodes curtica":{"observationId":143845344,"previousSpeciesName":"Protorthodes curtica","newSpeciesName":"Trichopolia curtica","taxonChangeObsCreatedAt":"2024-01-19T14:29:47+00:00","taxonChangeId":138112},"Protorthodes oviduca":{"observationId":143845345,"previousSpeciesName":"Protorthodes oviduca","newSpeciesName":"Trichopolia oviduca","taxonChangeObsCreatedAt":"2024-01-19T14:37:41+00:00","taxonChangeId":138120},"Protorthodes rufula":{"observationId":143845346,"previousSpeciesName":"Protorthodes rufula","newSpeciesName":"Trichopolia rufula","taxonChangeObsCreatedAt":"2024-01-19T14:30:53+00:00","taxonChangeId":138115}}}
+{
+  "2020": [
+    {
+      "observationId": 64717533,
+      "previousSpeciesName": "Itame plumosata",
+      "newSpeciesName": "Macaria plumosata",
+      "taxonChangeObsCreatedAt": "2020-11-18T19:29:19+00:00",
+      "taxonChangeId": 85308
+    },
+    {
+      "observationId": 53755123,
+      "previousSpeciesName": "Catoptria oregonica",
+      "newSpeciesName": "Catoptria oregonicus",
+      "taxonChangeObsCreatedAt": "2020-08-29T01:25:59+00:00",
+      "taxonChangeId": 82064
+    }
+  ],
+  "2021": [
+    {
+      "observationId": 50895895,
+      "previousSpeciesName": "Plutella vanella",
+      "newSpeciesName": "Eidophasia vanella",
+      "taxonChangeObsCreatedAt": "2021-08-23T09:02:22-07:00",
+      "taxonChangeId": 97522
+    },
+    {
+      "observationId": 46530931,
+      "previousSpeciesName": "Carterocephalus palaemon",
+      "newSpeciesName": "Carterocephalus skada",
+      "taxonChangeObsCreatedAt": "2021-07-30T20:31:36+00:00",
+      "taxonChangeId": 95753
+    },
+    {
+      "observationId": 79848101,
+      "previousSpeciesName": "Coenonympha tullia",
+      "newSpeciesName": "Coenonympha california",
+      "taxonChangeObsCreatedAt": "2021-07-30T00:39:31-07:00",
+      "taxonChangeId": 95430
+    },
+    {
+      "observationId": 56464575,
+      "previousSpeciesName": "Lycaena cupreus",
+      "newSpeciesName": "Tharsalea mariposa",
+      "taxonChangeObsCreatedAt": "2021-07-28T09:14:36+02:00",
+      "taxonChangeId": 95421
+    },
+    {
+      "observationId": 32189129,
+      "previousSpeciesName": "Lycaena dorcas",
+      "newSpeciesName": "Tharsalea mariposa",
+      "taxonChangeObsCreatedAt": "2021-07-28T07:12:27+00:00",
+      "taxonChangeId": 95421
+    },
+    {
+      "observationId": 53102811,
+      "previousSpeciesName": "Lycaena editha",
+      "newSpeciesName": "Tharsalea editha",
+      "taxonChangeObsCreatedAt": "2021-07-28T06:59:51+00:00",
+      "taxonChangeId": 95416
+    },
+    {
+      "observationId": 386589,
+      "previousSpeciesName": "Lycaena helloides",
+      "newSpeciesName": "Tharsalea helloides",
+      "taxonChangeObsCreatedAt": "2021-07-28T00:31:18-07:00",
+      "taxonChangeId": 95422
+    },
+    {
+      "observationId": 59020623,
+      "previousSpeciesName": "Lycaena heteronea",
+      "newSpeciesName": "Tharsalea heteronea",
+      "taxonChangeObsCreatedAt": "2021-07-28T00:22:33-07:00",
+      "taxonChangeId": 95420
+    },
+    {
+      "observationId": 41021693,
+      "previousSpeciesName": "Lycaena mariposa",
+      "newSpeciesName": "Tharsalea mariposa",
+      "taxonChangeObsCreatedAt": "2021-07-28T00:12:26-07:00",
+      "taxonChangeId": 95421
+    },
+    {
+      "observationId": 59289234,
+      "previousSpeciesName": "Lycaena dione",
+      "newSpeciesName": "Tharsalea dione",
+      "taxonChangeObsCreatedAt": "2021-07-27T23:55:23-07:00",
+      "taxonChangeId": 95415
+    },
+    {
+      "observationId": 54190308,
+      "previousSpeciesName": "Amorbia cuneana",
+      "newSpeciesName": "Amorbia cuneanum",
+      "taxonChangeObsCreatedAt": "2021-06-18T18:20:47+00:00",
+      "taxonChangeId": 93454
+    },
+    {
+      "observationId": 31455499,
+      "previousSpeciesName": "Pennisetia marginata",
+      "newSpeciesName": "Pennisetia marginatum",
+      "taxonChangeObsCreatedAt": "2021-06-13T13:36:37+00:00",
+      "taxonChangeId": 93445
+    },
+    {
+      "observationId": 56936104,
+      "previousSpeciesName": "Pararctia yarrowii",
+      "newSpeciesName": "Arctia yarrowii",
+      "taxonChangeObsCreatedAt": "2021-03-18T05:32:56-07:00",
+      "taxonChangeId": 90445
+    }
+  ],
+  "2022": [
+    {
+      "observationId": 143905056,
+      "previousSpeciesName": "Parabagrotis exertistigma",
+      "newSpeciesName": "Parabagrotis exsertistigma",
+      "taxonChangeObsCreatedAt": "2022-12-08T21:23:01-08:00",
+      "taxonChangeId": 118333
+    },
+    {
+      "observationId": 90853783,
+      "previousSpeciesName": "Neoarctia brucei",
+      "newSpeciesName": "Chelis brucei",
+      "taxonChangeObsCreatedAt": "2022-12-06T03:40:21+00:00",
+      "taxonChangeId": 117996
+    },
+    {
+      "observationId": 61064609,
+      "previousSpeciesName": "Caloreas leucobasis",
+      "newSpeciesName": "Neocaloreas leucobasis",
+      "taxonChangeObsCreatedAt": "2022-12-05T21:10:31-08:00",
+      "taxonChangeId": 118016
+    },
+    {
+      "observationId": 143411419,
+      "previousSpeciesName": "Choristoneura freemani",
+      "newSpeciesName": "Choristoneura occidentalis",
+      "taxonChangeObsCreatedAt": "2022-12-03T14:02:18-05:00",
+      "taxonChangeId": 117851
+    },
+    {
+      "observationId": 140123248,
+      "previousSpeciesName": "Tinagma giganteum",
+      "newSpeciesName": "Tinagma gigantea",
+      "taxonChangeObsCreatedAt": "2022-11-16T07:38:33+00:00",
+      "taxonChangeId": 116749
+    },
+    {
+      "observationId": 54339972,
+      "previousSpeciesName": "Enypia griseata",
+      "newSpeciesName": "Sabulodes griseata",
+      "taxonChangeObsCreatedAt": "2022-04-25T04:30:02+00:00",
+      "taxonChangeId": 109991
+    },
+    {
+      "observationId": 54084382,
+      "previousSpeciesName": "Coryphista meadii",
+      "newSpeciesName": "Rheumaptera meadii",
+      "taxonChangeObsCreatedAt": "2022-04-24T21:14:22-07:00",
+      "taxonChangeId": 109978
+    },
+    {
+      "observationId": 56666008,
+      "previousSpeciesName": "Oligocentria pallida",
+      "newSpeciesName": "Ianassa pallida",
+      "taxonChangeObsCreatedAt": "2022-04-14T05:52:22-04:00",
+      "taxonChangeId": 109313
+    },
+    {
+      "observationId": 54210663,
+      "previousSpeciesName": "Schizura unicornis",
+      "newSpeciesName": "Coelodasys unicornis",
+      "taxonChangeObsCreatedAt": "2022-04-07T10:28:57+00:00",
+      "taxonChangeId": 108693
+    },
+    {
+      "observationId": 28982952,
+      "previousSpeciesName": "Oligocentria semirufescens",
+      "newSpeciesName": "Oedemasia semirufescens",
+      "taxonChangeObsCreatedAt": "2022-04-07T10:08:17+00:00",
+      "taxonChangeId": 108698
+    },
+    {
+      "observationId": 36481039,
+      "previousSpeciesName": "Tharsalea dorcas",
+      "newSpeciesName": "Lycaena dorcas",
+      "taxonChangeObsCreatedAt": "2022-02-18T13:25:11+00:00",
+      "taxonChangeId": 105631
+    },
+    {
+      "observationId": 53102811,
+      "previousSpeciesName": "Tharsalea editha",
+      "newSpeciesName": "Lycaena editha",
+      "taxonChangeObsCreatedAt": "2022-02-18T13:21:30+00:00",
+      "taxonChangeId": 105614
+    },
+    {
+      "observationId": 42329093,
+      "previousSpeciesName": "Lycaena mariposa charlottensis",
+      "newSpeciesName": "Lycaena mariposa charlottensis",
+      "taxonChangeObsCreatedAt": "2022-02-18T13:16:10+00:00",
+      "taxonChangeId": 105615
+    },
+    {
+      "observationId": 386589,
+      "previousSpeciesName": "Tharsalea helloides",
+      "newSpeciesName": "Tharsalea helloides",
+      "taxonChangeObsCreatedAt": "2022-02-18T05:55:03-08:00",
+      "taxonChangeId": 105637
+    },
+    {
+      "observationId": 100630923,
+      "previousSpeciesName": "Lycaena dorcas dorcas",
+      "newSpeciesName": "Tharsalea dorcas dorcas",
+      "taxonChangeObsCreatedAt": "2022-02-18T05:36:24-08:00",
+      "taxonChangeId": 105647
+    },
+    {
+      "observationId": 59020623,
+      "previousSpeciesName": "Tharsalea heteronea",
+      "newSpeciesName": "Lycaena heteronea",
+      "taxonChangeObsCreatedAt": "2022-02-18T05:34:56-08:00",
+      "taxonChangeId": 105612
+    },
+    {
+      "observationId": 59289234,
+      "previousSpeciesName": "Tharsalea dione",
+      "newSpeciesName": "Lycaena dione",
+      "taxonChangeObsCreatedAt": "2022-02-18T05:18:57-08:00",
+      "taxonChangeId": 105609
+    },
+    {
+      "observationId": 41021693,
+      "previousSpeciesName": "Tharsalea mariposa",
+      "newSpeciesName": "Lycaena mariposa",
+      "taxonChangeObsCreatedAt": "2022-02-18T05:18:13-08:00",
+      "taxonChangeId": 105602
+    }
+  ],
+  "2023": [
+    {
+      "observationId": 104999524,
+      "previousSpeciesName": "Depressariodes canella",
+      "newSpeciesName": "Exaeretia canella",
+      "taxonChangeObsCreatedAt": "2023-12-28T11:33:08-08:00",
+      "taxonChangeId": 136902
+    },
+    {
+      "observationId": 143778989,
+      "previousSpeciesName": "Phiaris bipartitana",
+      "newSpeciesName": "Olethreutes bipartitana",
+      "taxonChangeObsCreatedAt": "2023-12-24T16:57:36+00:00",
+      "taxonChangeId": 136713
+    },
+    {
+      "observationId": 143778989,
+      "previousSpeciesName": "Olethreutes bipartitana",
+      "newSpeciesName": "Phiaris bipartitana",
+      "taxonChangeObsCreatedAt": "2023-12-24T14:11:18+00:00",
+      "taxonChangeId": 136709
+    },
+    {
+      "observationId": 143778993,
+      "previousSpeciesName": "Olethreutes schulziana",
+      "newSpeciesName": "Phiaris schulziana",
+      "taxonChangeObsCreatedAt": "2023-12-24T13:55:55+00:00",
+      "taxonChangeId": 136708
+    },
+    {
+      "observationId": 143778976,
+      "previousSpeciesName": "Olethreutes metallicana",
+      "newSpeciesName": "Phiaris metallicana",
+      "taxonChangeObsCreatedAt": "2023-12-24T13:55:30+00:00",
+      "taxonChangeId": 136704
+    },
+    {
+      "observationId": 143778994,
+      "previousSpeciesName": "Olethreutes turfosana",
+      "newSpeciesName": "Phiaris turfosana",
+      "taxonChangeObsCreatedAt": "2023-12-24T13:55:25+00:00",
+      "taxonChangeId": 136707
+    },
+    {
+      "observationId": 143778977,
+      "previousSpeciesName": "Olethreutes nordeggana",
+      "newSpeciesName": "Phiaris nordeggana",
+      "taxonChangeObsCreatedAt": "2023-12-24T13:55:24+00:00",
+      "taxonChangeId": 136706
+    },
+    {
+      "observationId": 143778996,
+      "previousSpeciesName": "Olethreutes inquietana",
+      "newSpeciesName": "Phiaris inquietana",
+      "taxonChangeObsCreatedAt": "2023-12-24T13:55:19+00:00",
+      "taxonChangeId": 136703
+    },
+    {
+      "observationId": 143778995,
+      "previousSpeciesName": "Olethreutes septentrionana",
+      "newSpeciesName": "Phiaris septentrionana",
+      "taxonChangeObsCreatedAt": "2023-12-24T13:55:16+00:00",
+      "taxonChangeId": 136702
+    },
+    {
+      "observationId": 78798392,
+      "previousSpeciesName": "Epelis truncataria",
+      "newSpeciesName": "Macaria truncataria",
+      "taxonChangeObsCreatedAt": "2023-12-22T13:45:34+00:00",
+      "taxonChangeId": 136536
+    },
+    {
+      "observationId": 143843537,
+      "previousSpeciesName": "Perizoma grandis",
+      "newSpeciesName": "Martania grandis",
+      "taxonChangeObsCreatedAt": "2023-12-16T18:24:49+00:00",
+      "taxonChangeId": 136216
+    },
+    {
+      "observationId": 143843730,
+      "previousSpeciesName": "Macaria notata",
+      "newSpeciesName": "Macaria ulsterata",
+      "taxonChangeObsCreatedAt": "2023-12-15T15:05:04+00:00",
+      "taxonChangeId": 136187
+    },
+    {
+      "observationId": 143843662,
+      "previousSpeciesName": "Prorella mellisa",
+      "newSpeciesName": "Eupithecia mellisa",
+      "taxonChangeObsCreatedAt": "2023-12-10T16:18:19+00:00",
+      "taxonChangeId": 135919
+    },
+    {
+      "observationId": 143843661,
+      "previousSpeciesName": "Prorella leucata",
+      "newSpeciesName": "Eupithecia leucata",
+      "taxonChangeObsCreatedAt": "2023-12-10T16:18:01+00:00",
+      "taxonChangeId": 135913
+    },
+    {
+      "observationId": 57273855,
+      "previousSpeciesName": "Papilio machaon bairdii",
+      "newSpeciesName": "Papilio bairdii oregonia",
+      "taxonChangeObsCreatedAt": "2023-11-20T07:07:25+00:00",
+      "taxonChangeId": 134834
+    },
+    {
+      "observationId": 29544051,
+      "previousSpeciesName": "Papilio machaon oregonius",
+      "newSpeciesName": "Papilio bairdii oregonia",
+      "taxonChangeObsCreatedAt": "2023-11-19T23:07:13-08:00",
+      "taxonChangeId": 134834
+    },
+    {
+      "observationId": 143779215,
+      "previousSpeciesName": "Grapholita conversana",
+      "newSpeciesName": "Ephippiphora conversana",
+      "taxonChangeObsCreatedAt": "2023-11-05T03:47:15+00:00",
+      "taxonChangeId": 133936
+    },
+    {
+      "observationId": 143779214,
+      "previousSpeciesName": "Grapholita vitrana",
+      "newSpeciesName": "Ephippiphora vitrana",
+      "taxonChangeObsCreatedAt": "2023-11-05T03:47:02+00:00",
+      "taxonChangeId": 133933
+    },
+    {
+      "observationId": 143779213,
+      "previousSpeciesName": "Grapholita caeruleana",
+      "newSpeciesName": "Ephippiphora caeruleana",
+      "taxonChangeObsCreatedAt": "2023-11-05T03:46:27+00:00",
+      "taxonChangeId": 133920
+    },
+    {
+      "observationId": 143779210,
+      "previousSpeciesName": "Grapholita libertina",
+      "newSpeciesName": "Aspila libertina",
+      "taxonChangeObsCreatedAt": "2023-11-05T03:10:16+00:00",
+      "taxonChangeId": 133905
+    },
+    {
+      "observationId": 54362872,
+      "previousSpeciesName": "Grapholita packardi",
+      "newSpeciesName": "Aspila packardi",
+      "taxonChangeObsCreatedAt": "2023-11-04T23:14:44-04:00",
+      "taxonChangeId": 133916
+    },
+    {
+      "observationId": 75619492,
+      "previousSpeciesName": "Grapholita lunatana",
+      "newSpeciesName": "Ephippiphora lunatana",
+      "taxonChangeObsCreatedAt": "2023-11-04T20:47:08-07:00",
+      "taxonChangeId": 133931
+    },
+    {
+      "observationId": 145488360,
+      "previousSpeciesName": "Grapholita imitativa",
+      "newSpeciesName": "Ephippiphora imitativa",
+      "taxonChangeObsCreatedAt": "2023-11-04T20:46:49-07:00",
+      "taxonChangeId": 133929
+    },
+    {
+      "observationId": 129369897,
+      "previousSpeciesName": "Grapholita prunivora",
+      "newSpeciesName": "Aspila prunivora",
+      "taxonChangeObsCreatedAt": "2023-11-04T20:12:11-07:00",
+      "taxonChangeId": 133911
+    },
+    {
+      "observationId": 143843584,
+      "previousSpeciesName": "Venusia obsoleta",
+      "newSpeciesName": "Nomenia obsoleta",
+      "taxonChangeObsCreatedAt": "2023-05-24T02:06:18+00:00",
+      "taxonChangeId": 125630
+    },
+    {
+      "observationId": 143843583,
+      "previousSpeciesName": "Venusia duodecemlineata",
+      "newSpeciesName": "Nomenia duodecemlineata",
+      "taxonChangeObsCreatedAt": "2023-05-24T02:06:15+00:00",
+      "taxonChangeId": 125629
+    },
+    {
+      "observationId": 143840589,
+      "previousSpeciesName": "Crambus ainsliellus",
+      "newSpeciesName": "Crambus ainslieellus",
+      "taxonChangeObsCreatedAt": "2023-05-15T15:00:30+00:00",
+      "taxonChangeId": 125889
+    },
+    {
+      "observationId": 31445554,
+      "previousSpeciesName": "Speyeria cybele",
+      "newSpeciesName": "Argynnis cybele",
+      "taxonChangeObsCreatedAt": "2023-03-10T02:56:05+00:00",
+      "taxonChangeId": 124255
+    },
+    {
+      "observationId": 30212068,
+      "previousSpeciesName": "Speyeria hydaspe rhodope",
+      "newSpeciesName": "Argynnis hydaspe rhodope",
+      "taxonChangeObsCreatedAt": "2023-03-10T02:23:59+00:00",
+      "taxonChangeId": 124373
+    },
+    {
+      "observationId": 56360877,
+      "previousSpeciesName": "Speyeria atlantis",
+      "newSpeciesName": "Argynnis atlantis",
+      "taxonChangeObsCreatedAt": "2023-03-10T01:41:36+00:00",
+      "taxonChangeId": 124333
+    },
+    {
+      "observationId": 18105683,
+      "previousSpeciesName": "Speyeria aphrodite",
+      "newSpeciesName": "Argynnis aphrodite",
+      "taxonChangeObsCreatedAt": "2023-03-10T00:30:43+00:00",
+      "taxonChangeId": 124278
+    },
+    {
+      "observationId": 38618299,
+      "previousSpeciesName": "Speyeria zerene bremnerii",
+      "newSpeciesName": "Argynnis zerene",
+      "taxonChangeObsCreatedAt": "2023-03-10T00:00:44+00:00",
+      "taxonChangeId": 124288
+    },
+    {
+      "observationId": 55962601,
+      "previousSpeciesName": "Speyeria zerene",
+      "newSpeciesName": "Argynnis zerene",
+      "taxonChangeObsCreatedAt": "2023-03-09T23:59:46+00:00",
+      "taxonChangeId": 124288
+    },
+    {
+      "observationId": 28746388,
+      "previousSpeciesName": "Speyeria",
+      "newSpeciesName": "Argynnis hesperis",
+      "taxonChangeObsCreatedAt": "2023-03-09T23:01:57+00:00",
+      "taxonChangeId": 124261
+    },
+    {
+      "observationId": 143839118,
+      "previousSpeciesName": "Lycaena phlaeas",
+      "newSpeciesName": "Lycaena hypophlaeas",
+      "taxonChangeObsCreatedAt": "2023-03-09T19:22:46+00:00",
+      "taxonChangeId": 124224
+    },
+    {
+      "observationId": 29958933,
+      "previousSpeciesName": "Speyeria mormonia",
+      "newSpeciesName": "Argynnis mormonia",
+      "taxonChangeObsCreatedAt": "2023-03-09T17:04:46-08:00",
+      "taxonChangeId": 124329
+    },
+    {
+      "observationId": 56195764,
+      "previousSpeciesName": "Speyeria hydaspe",
+      "newSpeciesName": "Argynnis hydaspe",
+      "taxonChangeObsCreatedAt": "2023-03-09T16:39:04-08:00",
+      "taxonChangeId": 124319
+    },
+    {
+      "observationId": 40045562,
+      "previousSpeciesName": "Speyeria hesperis",
+      "newSpeciesName": "Argynnis hesperis",
+      "taxonChangeObsCreatedAt": "2023-03-09T15:59:38-07:00",
+      "taxonChangeId": 124261
+    },
+    {
+      "observationId": 102029404,
+      "previousSpeciesName": "Speyeria cybele leto",
+      "newSpeciesName": "Argynnis cybele leto",
+      "taxonChangeObsCreatedAt": "2023-03-09T15:41:37-08:00",
+      "taxonChangeId": 124281
+    },
+    {
+      "observationId": 58391776,
+      "previousSpeciesName": "Speyeria callippe",
+      "newSpeciesName": "Argynnis callippe",
+      "taxonChangeObsCreatedAt": "2023-03-09T15:31:11-08:00",
+      "taxonChangeId": 124264
+    },
+    {
+      "observationId": 95076970,
+      "previousSpeciesName": "Speyeria edwardsii",
+      "newSpeciesName": "Argynnis edwardsii",
+      "taxonChangeObsCreatedAt": "2023-03-09T14:58:06-08:00",
+      "taxonChangeId": 124260
+    },
+    {
+      "observationId": 55942743,
+      "previousSpeciesName": "Lycaena phlaeas arethusa",
+      "newSpeciesName": "Lycaena hypophlaeas arethusa",
+      "taxonChangeObsCreatedAt": "2023-03-09T14:11:00+00:00",
+      "taxonChangeId": 124227
+    },
+    {
+      "observationId": 48602588,
+      "previousSpeciesName": "Boloria selene",
+      "newSpeciesName": "Boloria myrina",
+      "taxonChangeObsCreatedAt": "2023-03-09T14:04:15+00:00",
+      "taxonChangeId": 124216
+    },
+    {
+      "observationId": 130160731,
+      "previousSpeciesName": "Rheumaptera undulata",
+      "newSpeciesName": "Hydria undulata",
+      "taxonChangeObsCreatedAt": "2023-02-28T00:34:32-08:00",
+      "taxonChangeId": 123458
+    },
+    {
+      "observationId": 143843652,
+      "previousSpeciesName": "Eupithecia columbrata",
+      "newSpeciesName": "Eupithecia mutata",
+      "taxonChangeObsCreatedAt": "2023-02-19T19:29:29+00:00",
+      "taxonChangeId": 122859
+    },
+    {
+      "observationId": 143778176,
+      "previousSpeciesName": "Amydria effrentella",
+      "newSpeciesName": "Amydria effrenatella",
+      "taxonChangeObsCreatedAt": "2023-02-18T20:42:10+00:00",
+      "taxonChangeId": 122766
+    }
+  ],
+  "2024": [
+    {
+      "observationId": 143845345,
+      "previousSpeciesName": "Protorthodes oviduca",
+      "newSpeciesName": "Trichopolia oviduca",
+      "taxonChangeObsCreatedAt": "2024-01-19T14:37:41+00:00",
+      "taxonChangeId": 138120
+    },
+    {
+      "observationId": 143844999,
+      "previousSpeciesName": "Protoperigea umbricata",
+      "newSpeciesName": "Caradrina umbricata",
+      "taxonChangeObsCreatedAt": "2024-01-19T14:37:07+00:00",
+      "taxonChangeId": 138123
+    },
+    {
+      "observationId": 143844998,
+      "previousSpeciesName": "Protoperigea posticata",
+      "newSpeciesName": "Caradrina posticata",
+      "taxonChangeObsCreatedAt": "2024-01-19T14:37:00+00:00",
+      "taxonChangeId": 138124
+    },
+    {
+      "observationId": 143845346,
+      "previousSpeciesName": "Protorthodes rufula",
+      "newSpeciesName": "Trichopolia rufula",
+      "taxonChangeObsCreatedAt": "2024-01-19T14:30:53+00:00",
+      "taxonChangeId": 138115
+    },
+    {
+      "observationId": 143845344,
+      "previousSpeciesName": "Protorthodes curtica",
+      "newSpeciesName": "Trichopolia curtica",
+      "taxonChangeObsCreatedAt": "2024-01-19T14:29:47+00:00",
+      "taxonChangeId": 138112
+    },
+    {
+      "observationId": 144208063,
+      "previousSpeciesName": "Protoperigea anotha",
+      "newSpeciesName": "Caradrina anotha",
+      "taxonChangeObsCreatedAt": "2024-01-19T06:36:59-08:00",
+      "taxonChangeId": 138125
+    },
+    {
+      "observationId": 143778674,
+      "previousSpeciesName": "Mompha murtfeldtella",
+      "newSpeciesName": "Mompha albocapitella",
+      "taxonChangeObsCreatedAt": "2024-01-10T13:47:02+00:00",
+      "taxonChangeId": 137454
+    },
+    {
+      "observationId": 143778662,
+      "previousSpeciesName": "Holcocera concolor",
+      "newSpeciesName": "Holcocera immaculella",
+      "taxonChangeObsCreatedAt": "2024-01-10T13:40:45+00:00",
+      "taxonChangeId": 137452
+    },
+    {
+      "observationId": 143778639,
+      "previousSpeciesName": "Coleophora sparsiatomella",
+      "newSpeciesName": "Coleophora sparsipulvella",
+      "taxonChangeObsCreatedAt": "2024-01-10T13:35:47+00:00",
+      "taxonChangeId": 137376
+    },
+    {
+      "observationId": 143843674,
+      "previousSpeciesName": "Lobophora canavestita",
+      "newSpeciesName": "Lobophora nivigerata",
+      "taxonChangeObsCreatedAt": "2024-01-10T13:25:14+00:00",
+      "taxonChangeId": 136212
+    },
+    {
+      "observationId": 143843671,
+      "previousSpeciesName": "Lobophora simsata",
+      "newSpeciesName": "Lobophora nivigerata",
+      "taxonChangeObsCreatedAt": "2024-01-10T13:25:13+00:00",
+      "taxonChangeId": 136212
+    },
+    {
+      "observationId": 143843673,
+      "previousSpeciesName": "Lobophora magnoliatoidata",
+      "newSpeciesName": "Lobophora nivigerata",
+      "taxonChangeObsCreatedAt": "2024-01-10T13:25:13+00:00",
+      "taxonChangeId": 136212
+    },
+    {
+      "observationId": 125125703,
+      "previousSpeciesName": "Drepana bilineata",
+      "newSpeciesName": "Falcaria bilineata",
+      "taxonChangeObsCreatedAt": "2024-01-10T06:32:48-08:00",
+      "taxonChangeId": 137481
+    },
+    {
+      "observationId": 144898116,
+      "previousSpeciesName": "Lobophora montanata",
+      "newSpeciesName": "Lobophora nivigerata",
+      "taxonChangeObsCreatedAt": "2024-01-10T05:25:14-08:00",
+      "taxonChangeId": 136212
+    }
+  ],
+  "2025": []
+}
