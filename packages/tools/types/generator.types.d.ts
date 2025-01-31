@@ -106,6 +106,12 @@ export type GeneratorConfig = {
   readonly taxonChangesFilename?: string;
 
   /**
+   * Sometimes iNat curators make mistakes and taxon changes are incorrect. This optoin lets you tell the data generation
+   * script to ignore specific taxon change IDs so they don't appear in the data set.
+   */
+  readonly omitTaxonChangeIds?: number[];
+
+  /**
    * Used for debugging the generation script. This can be used after the raw packet-X.json files are generated on disk,
    * housing the response from the iNat API. Each setting lets you regenerate the corresponding data file
    */

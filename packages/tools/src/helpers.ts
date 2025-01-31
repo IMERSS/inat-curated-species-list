@@ -234,7 +234,13 @@ type TaxonChangesBySpecies = {
   [species: string]: TaxonChangeData[];
 };
 
-export const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxon[], tempFolder: string) => {
+export const parseDataFiles = (
+  numFiles: number,
+  curators: string[],
+  taxon: Taxon[],
+  omitTaxonChangeIds: number[],
+  tempFolder: string,
+) => {
   const newAdditions = {};
   const taxonsToRemove: number[] = [];
   const taxonChangeData = [];
@@ -258,12 +264,16 @@ export const parseDataFiles = (numFiles: number, curators: string[], taxon: Taxo
 
   return {
     newAdditions,
-    taxonChangeDataGroupedByYear: getTaxonChangeDataGroupedByYear(taxonChangeData),
+    taxonChangeDataGroupedByYear: getTaxonChangeDataGroupedByYear(taxonChangeData, omitTaxonChangeIds),
   };
 };
 
-export const getTaxonChangeDataGroupedByYear = (taxonChangeData: TaxonChangeData[]) => {
+export const getTaxonChangeDataGroupedByYear = (taxonChangeData: TaxonChangeData[], omitTaxonChangeIds: number[]) => {
   const taxonChangesBySpecies: TaxonChangesBySpecies = {};
+
+  // first, filter out any taxons that the user explicitly told us to ignore
+  taxonChangeData = taxonChangeData.filter(({ taxonChangeId }) => !omitTaxonChangeIds.includes(taxonChangeId));
+
   taxonChangeData.forEach((row) => {
     if (!taxonChangesBySpecies[row.previousSpeciesName]) {
       taxonChangesBySpecies[row.previousSpeciesName] = [];
@@ -271,6 +281,7 @@ export const getTaxonChangeDataGroupedByYear = (taxonChangeData: TaxonChangeData
 
     taxonChangesBySpecies[row.previousSpeciesName].push(row);
   });
+
   const sortByCreationDate = (a, b) => {
     if (a.taxonChangeObsCreatedAt > b.taxonChangeObsCreatedAt) {
       return 1;

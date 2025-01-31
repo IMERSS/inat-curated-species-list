@@ -42,8 +42,14 @@ const sortByConfirmationDate = (a, b) => {
 };
 
 export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: number, tempFolder: string) => {
-  const { curators, taxons, baselineEndDate } = config;
-  const { newAdditions, taxonChangeDataGroupedByYear } = parseDataFiles(numDataFiles, curators, taxons, tempFolder);
+  const { curators, taxons, baselineEndDate, omitTaxonChangeIds } = config;
+  const { newAdditions, taxonChangeDataGroupedByYear } = parseDataFiles(
+    numDataFiles,
+    curators,
+    taxons,
+    omitTaxonChangeIds,
+    tempFolder,
+  );
 
   const newAdditionsArray: NewAddition[] = [];
   Object.keys(newAdditions).forEach((taxonId) => {
@@ -88,11 +94,12 @@ export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: numbe
 
   // assumption here is that it's returning an object of type GeneratorConfig. Runtime check?
   const config = await import(configFile);
-  const cleanConfig = {
+  const cleanConfig: GeneratorConfig = {
     tempFolder: './temp',
     speciesDataFilename: 'species-data.json',
     newAdditionsFilename: 'new-additions-data.json',
     taxons: DEFAULT_TAXONS,
+    omitTaxonChangeIds: [],
     debug: {
       enabled: false,
       species: false,
