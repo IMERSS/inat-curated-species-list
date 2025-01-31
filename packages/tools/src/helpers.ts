@@ -89,6 +89,10 @@ export const getConfirmationDateAccountingForTaxonChanges = (
       continue;
     }
 
+    if (currIdentification.taxon.rank !== 'species') {
+      continue;
+    }
+
     if (
       // ignore the most recent curator identification on the observation - we know it's a taxon change
       i !== curatorIdentificationIndex
@@ -97,8 +101,10 @@ export const getConfirmationDateAccountingForTaxonChanges = (
         observationId: obs.id, // not strictly needed, but useful for tracing purposes. Might want to remove to reduce size of data file
         previousSpeciesName: currIdentification.taxon.name,
         newSpeciesName: lastCuratorObservation.taxon.name,
+        newSpeciesTaxonId: lastCuratorObservation.taxon_id,
         taxonChangeObsCreatedAt: lastCuratorObservation.created_at,
         taxonChangeId: lastCuratorObservation.taxon_change.id,
+        taxonChangeType: lastCuratorObservation.taxon_change.type,
       });
 
       // if this is also a taxon switch, reset the "last" curator identification to this one and keep going back through
@@ -134,9 +140,6 @@ export const getConfirmationDateAccountingForTaxonChanges = (
 
 export const getUniqueItems = (arr: number[]) => arr.filter((value, index, array) => array.indexOf(value) === index);
 
-// TODO problem: taxon ID "227436" shouldn't show up in the final list
-// https://www.inaturalist.org/observations?place_id=7085&taxon_id=227436&verifiable=any
-// the issue is that a curator has approved a higher-level taxon, but not the same as the original observation.
 const parseDataFile = (
   file: string,
   curators: string[],
@@ -309,9 +312,6 @@ export const getTaxonChangeDataGroupedByYear = (taxonChangeData: TaxonChangeData
   const yearDataSortedByReverseAdditionDate = {};
   for (let i = earliestYear; i <= currentYear; i++) {
     yearDataSortedByReverseAdditionDate[i] = [];
-
-    console.log('here... ', i);
-
     if (taxonChangeDataGroupedByYear[i]) {
       yearDataSortedByReverseAdditionDate[i] = taxonChangeDataGroupedByYear[i].sort(sortByCreationDateReversed);
     }
@@ -335,3 +335,29 @@ export const getNumINatPacketFiles = (tempFolder: string) => {
   }
   return lastPacketNum - 1;
 };
+
+/*
+
+Problems
+
+{
+  "observationId": 30212068,
+  "previousSpeciesName": "Speyeria hydaspe rhodope",
+  "newSpeciesName": "Argynnis hydaspe rhodope",
+  "taxonChangeObsCreatedAt": "2023-03-10T02:23:59+00:00",
+  "taxonChangeId": 124373
+},
+
+{
+  "observationId": 28746388,
+  "previousSpeciesName": "Speyeria",
+  "newSpeciesName": "Argynnis hesperis",
+  "taxonChangeObsCreatedAt": "2023-03-09T23:01:57+00:00",
+  "taxonChangeId": 124261
+},
+
+// TODO problem: taxon ID "227436" shouldn't show up in the final list
+// https://www.inaturalist.org/observations?place_id=7085&taxon_id=227436&verifiable=any
+// the issue is that a curator has approved a higher-level taxon, but not the same as the original observation.
+
+*/

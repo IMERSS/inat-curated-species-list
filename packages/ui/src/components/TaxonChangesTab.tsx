@@ -4,14 +4,30 @@ import { constants } from '@imerss/inat-curated-species-list-common';
 import { YearDropdown } from './YearDropdown';
 import { formatDate, getCurrentYear } from '../utils/helpers';
 import { ViewIcon } from './ViewIcon';
+import { TaxonChangeType } from '@imerss/inat-curated-species-list-tools';
 
-const { INAT_TAXON_CHANGES_URL } = constants;
+const { INAT_TAXON_CHANGES_URL, INAT_TAXON_URL } = constants;
 
 export interface TaxonChangesTabProps {
   readonly dataUrl: string;
   readonly showRowNumbers: boolean;
-  readonly tabText?: any;
+  readonly tabText?: string | JSX.Element;
 }
+
+const ChangeTypePill = ({ type }: { type: TaxonChangeType }) => {
+  const getPill = (type: TaxonChangeType) => {
+    if (type === 'TaxonMerge') {
+      return { label: 'Taxon Merge', className: 'icsl-pill-taxon-change icsl-pill-taxon-merge' };
+    } else if (type === 'TaxonSplit') {
+      return { label: 'Taxon Split', className: 'icsl-pill-taxon-change icsl-pill-taxon-split' };
+    }
+    return { label: 'Taxon Swap', className: 'icsl-pill-taxon-change icsl-pill-taxon-swap' };
+  };
+
+  const { label, className } = getPill(type);
+
+  return <span className={className}>{label}</span>;
+};
 
 export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumbers, tabText }) => {
   const [loaded, setLoaded] = useState(false);
@@ -57,15 +73,16 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
   );
   const tabTextHtml = tabText ? <div className="icsl-tab-text" dangerouslySetInnerHTML={{ __html: tabText }} /> : null;
 
-  if (records) {
+  if (records.length) {
     dataContent = (
       <table className="icsl-table" cellSpacing={0} cellPadding={2}>
         <thead>
           <tr>
             {showRowNumbers && <th></th>}
             <th>Date</th>
-            <th>Original Name</th>
+            <th>Previous Name</th>
             <th>New Name</th>
+            <th>Change Type</th>
             <th>View Details</th>
           </tr>
         </thead>
@@ -80,8 +97,15 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
                   </th>
                 )}
                 <td>{formatDate(taxonChange.taxonChangeObsCreatedAt)}</td>
-                <td>{taxonChange.previousSpeciesName}</td>
-                <td>{taxonChange.newSpeciesName}</td>
+                <td className="icsl-species-name">{taxonChange.previousSpeciesName}</td>
+                <td className="icsl-species-name">
+                  <a href={`${INAT_TAXON_URL}/${taxonChange.newSpeciesTaxonId}`} target="_blank" rel="noreferrer">
+                    {taxonChange.newSpeciesName}
+                  </a>
+                </td>
+                <td>
+                  <ChangeTypePill type={taxonChange.taxonChangeType} />
+                </td>
                 <td>
                   <a href={`${INAT_TAXON_CHANGES_URL}/${taxonChange.taxonChangeId}`}>
                     <ViewIcon />

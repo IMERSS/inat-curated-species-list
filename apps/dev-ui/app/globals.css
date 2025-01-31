@@ -99,3 +99,36 @@ svg.MuiSvgIcon-fontSizeMedium {
 .icsl-new-additions-year-filter {
   margin-bottom: 20px;
 }
+
+.icsl-pill-taxon-change {
+  border-radius: 3px;
+  font-size: 12px;
+  padding: 2px 8px;
+}
+
+.icsl-pill-taxon-merge {
+  background-color: green;
+  color: white;
+}
+
+.icsl-pill-taxon-split {
+  background-color: #336699;
+  color: white;
+}
+
+.icsl-pill-taxon-swap {
+  background-color: #671967;
+  color: white;
+}
+
+.icsl-taxon-changes-none {
+  padding: 15px;
+  color: #666666;
+  background-color: #efefef;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+}
+
+.icsl-species-name {
+  font-style: italic;
+}

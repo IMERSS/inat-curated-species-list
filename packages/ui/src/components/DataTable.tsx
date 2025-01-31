@@ -89,8 +89,12 @@ export const DataTable: FC<DataTableProps> = ({
                 return null;
               }
 
+              const className = currentRank === 'species' ? 'icsl-species-name' : '';
+
               return (
-                <td key={`${row.taxonId}-${currentRank}`}>{row.data[currentRank] ? row.data[currentRank] : ''}</td>
+                <td key={`${row.taxonId}-${currentRank}`} className={className}>
+                  {row.data[currentRank] ? row.data[currentRank] : ''}
+                </td>
               );
             })}
             {showReviewerCount && <td>({row.count})</td>}

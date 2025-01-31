@@ -152,6 +152,8 @@ export type TaxonAncestor = {
   readonly name: string;
 };
 
+export type TaxonChangeType = 'TaxonSwap' | 'TaxonSplit' | 'TaxonMerge';
+
 export type Identification = {
   taxon_id: number;
   user: {
@@ -171,7 +173,7 @@ export type Identification = {
 
   taxon_change?: {
     id: number;
-    type: 'TaxonSwap' | 'TaxonSplit' | 'TaxonMerge';
+    type: TaxonChangeType;
   };
 
   previous_observation_taxon: {
@@ -227,6 +229,8 @@ export type TaxonChangeData = {
   readonly observationId: number;
   readonly previousSpeciesName: string;
   readonly newSpeciesName: string;
+  readonly newSpeciesTaxonId: number;
   readonly taxonChangeObsCreatedAt: string;
   readonly taxonChangeId: number;
+  readonly taxonChangeType: TaxonChangeType;
 };

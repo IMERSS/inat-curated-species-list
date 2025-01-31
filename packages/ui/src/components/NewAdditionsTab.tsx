@@ -83,8 +83,13 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({ dataUrl, tabText, sh
                     </th>
                   )}
                   <td>
-                    <a href={`${INAT_OBSERVATIONS_URL}/${observationId}`} target="_blank" rel="noreferrer">
-                      <i>{speciesName}</i>
+                    <a
+                      href={`${INAT_OBSERVATIONS_URL}/${observationId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="icsl-species-name"
+                    >
+                      {speciesName}
                     </a>
                   </td>
                   <td>{observer.username}</td>
