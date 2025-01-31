@@ -100,6 +100,7 @@ export const getConfirmationDateAccountingForTaxonChanges = (
       taxonChangeData.push({
         observationId: obs.id, // not strictly needed, but useful for tracing purposes. Might want to remove to reduce size of data file
         previousSpeciesName: currIdentification.taxon.name,
+        previousSpeciesTaxonId: currIdentification.taxon.id,
         newSpeciesName: lastCuratorObservation.taxon.name,
         newSpeciesTaxonId: lastCuratorObservation.taxon_id,
         taxonChangeObsCreatedAt: lastCuratorObservation.created_at,
@@ -275,11 +276,11 @@ export const getTaxonChangeDataGroupedByYear = (taxonChangeData: TaxonChangeData
   taxonChangeData = taxonChangeData.filter(({ taxonChangeId }) => !omitTaxonChangeIds.includes(taxonChangeId));
 
   taxonChangeData.forEach((row) => {
-    if (!taxonChangesBySpecies[row.previousSpeciesName]) {
-      taxonChangesBySpecies[row.previousSpeciesName] = [];
+    // TOOD this isn't enough. Species names can change back and forth over time
+    if (!taxonChangesBySpecies[row.previousSpeciesTaxonId]) {
+      taxonChangesBySpecies[row.previousSpeciesTaxonId] = [];
     }
-
-    taxonChangesBySpecies[row.previousSpeciesName].push(row);
+    taxonChangesBySpecies[row.previousSpeciesTaxonId].push(row);
   });
 
   const sortByCreationDate = (a, b) => {

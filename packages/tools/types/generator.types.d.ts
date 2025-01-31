@@ -94,7 +94,7 @@ export type GeneratorConfig = {
   /**
    * The name of a temporary folder where all the data will be generated.
    */
-  readonly tempFolder?: string;
+  readonly tempFolder: string;
 
   // incomplete. I found the taxon change information very confusing to present. Sometimes users would do a taxon change then
   // reverse it (see changes on this observation, for example: https://www.inaturalist.org/observations/32189129). Perhaps
@@ -234,6 +234,7 @@ export type DownloadDataPacketResponse = {
 export type TaxonChangeData = {
   readonly observationId: number;
   readonly previousSpeciesName: string;
+  readonly previousSpeciesTaxonId: number;
   readonly newSpeciesName: string;
   readonly newSpeciesTaxonId: number;
   readonly taxonChangeObsCreatedAt: string;
