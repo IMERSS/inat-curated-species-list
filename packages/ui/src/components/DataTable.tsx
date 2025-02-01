@@ -103,6 +103,7 @@ export const DataTable: FC<DataTableProps> = ({
                 href={`${INAT_OBSERVATIONS_URL}?ident_user_id=${curatorUsernames.join(',')}&place_id=${placeId}&taxon_id=${row.taxonId}&verifiable=any`}
                 target="_blank"
                 rel="noreferrer"
+                className="icsl-view-link"
               >
                 <ViewIcon />
               </a>

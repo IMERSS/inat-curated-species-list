@@ -96,10 +96,6 @@ svg.MuiSvgIcon-fontSizeMedium {
   border-bottom: 3px solid #3366cc;
 }
 
-.icsl-new-additions-year-filter {
-  margin-bottom: 20px;
-}
-
 .icsl-pill-taxon-change {
   border-radius: 3px;
   font-size: 12px;
@@ -140,4 +136,41 @@ svg.MuiSvgIcon-fontSizeMedium {
 
 .icsl-inactive-taxon-change a {
   color: #999999;
+}
+
+.icsl-view-link:hover {
+  svg {
+    fill: orange;
+  }
+}
+
+.icsl-year-filter {
+  margin-bottom: 20px;
+}
+
+.icsl-year-filter label {
+  margin-right: 8px;
+}
+
+.icsl-year-filter select {
+  padding: 8px;
+  background-color: white;
+  border: 1px solid #cccccc;
+  border-right: none;
+  border-left: none;
+}
+
+.icsl-year-filter button {
+  padding: 8px;
+  background-color: white;
+  border: 1px solid #cccccc;
+}
+
+.icsl-year-filter button:hover:not(:disabled) {
+  background-color: #efefef;
+  cursor: pointer;
+}
+
+.icsl-year-filter div {
+  display: inline-flex;
 }

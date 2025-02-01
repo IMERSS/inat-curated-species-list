@@ -97,7 +97,12 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({ dataUrl, tabText, sh
                   <td>{formatDate(confirmationDate)}</td>
                   <td>{curator}</td>
                   <td>
-                    <a href={`${INAT_OBSERVATIONS_URL}/${observationId}`}>
+                    <a
+                      href={`${INAT_OBSERVATIONS_URL}/${observationId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="icsl-view-link"
+                    >
                       <ViewIcon />
                     </a>
                   </td>

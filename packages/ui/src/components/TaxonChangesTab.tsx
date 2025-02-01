@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import { constants } from '@imerss/inat-curated-species-list-common';
-import { YearDropdown } from './YearDropdown';
+import { YearNavigation } from './YearNavigation';
 import { formatDate, getCurrentYear } from '../utils/helpers';
 import { ViewIcon } from './ViewIcon';
 import { TaxonChangeType } from '@imerss/inat-curated-species-list-tools';
@@ -111,7 +111,12 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
                     <span style={{ display: 'inline-block', width: 100 }}>
                       <ChangeTypePill type={taxonChange.taxonChangeType} />
                     </span>
-                    <a href={`${INAT_TAXON_CHANGES_URL}/${taxonChange.taxonChangeId}`} target="_blank" rel="noreferrer">
+                    <a
+                      href={`${INAT_TAXON_CHANGES_URL}/${taxonChange.taxonChangeId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="icsl-view-link"
+                    >
                       <ViewIcon />
                     </a>
                   </div>
@@ -121,6 +126,7 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
                     href={`${INAT_TAXON_CHANGES_URL}?taxon_id=${taxonChange.newSpeciesTaxonId}`}
                     target="_blank"
                     rel="noreferrer"
+                    className="icsl-view-link"
                   >
                     <ViewIcon />
                   </a>
@@ -136,9 +142,7 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
   return (
     <>
       {tabTextHtml}
-      <div className="icsl-new-additions-year-filter">
-        <label>View by year:</label> <YearDropdown years={years} onChange={onChangeYear} />
-      </div>
+      <YearNavigation years={years} onChange={onChangeYear} currentYear={currentYear} />
       {dataContent}
     </>
   );
