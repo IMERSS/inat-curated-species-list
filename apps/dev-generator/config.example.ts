@@ -11,6 +11,7 @@ const config: GeneratorConfig = {
   newAdditionsFilename: 'new-additions-data.json',
   trackTaxonChanges: true,
   taxonChangesFilename: 'taxon-changes-data.json',
+  tempFolder: './temp',
 };
 
 export default config;

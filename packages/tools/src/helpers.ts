@@ -59,7 +59,7 @@ export const getConfirmationDateAccountingForTaxonChanges = (
     return { deprecatedTaxonIds: [], originalConfirmationDate: curatorConfirmationDate };
   }
 
-  // confirm that the data model is one of the known taxon change types. If not, abort.
+  // confirm that the reason for the swap is one of the known taxon change types. If not, abort with an error.
   if (
     ['TaxonSwap', 'TaxonSplit', 'TaxonMerge'].indexOf(
       obs.identifications[curatorIdentificationIndex].taxon_change.type,
@@ -94,11 +94,14 @@ export const getConfirmationDateAccountingForTaxonChanges = (
     }
 
     if (
-      // ignore the most recent curator identification on the observation - we know it's a taxon change
+      // ignore the most recent curator identification on the observation - we know it's a taxon change but it doesn't
+      // contain all the info we need to log a record: that's only determined by comparing it with the previous observation by
+      // curator
       i !== curatorIdentificationIndex
     ) {
+      if (lastCuratorObservation) console.log();
       taxonChangeData.push({
-        observationId: obs.id, // not strictly needed, but useful for tracing purposes. Might want to remove to reduce size of data file
+        observationId: obs.id, // not strictly needed, but useful for tracing purposes
         previousSpeciesName: currIdentification.taxon.name,
         previousSpeciesTaxonId: currIdentification.taxon.id,
         newSpeciesName: lastCuratorObservation.taxon.name,
@@ -106,6 +109,7 @@ export const getConfirmationDateAccountingForTaxonChanges = (
         taxonChangeObsCreatedAt: lastCuratorObservation.created_at,
         taxonChangeId: lastCuratorObservation.taxon_change.id,
         taxonChangeType: lastCuratorObservation.taxon_change.type,
+        active: lastCuratorObservation.taxon.is_active,
       });
 
       // if this is also a taxon switch, reset the "last" curator identification to this one and keep going back through
@@ -275,8 +279,8 @@ export const getTaxonChangeDataGroupedByYear = (taxonChangeData: TaxonChangeData
   // first, filter out any taxons that the user explicitly told us to ignore
   taxonChangeData = taxonChangeData.filter(({ taxonChangeId }) => !omitTaxonChangeIds.includes(taxonChangeId));
 
+  // group the taxon changes by the previous species taxon ID
   taxonChangeData.forEach((row) => {
-    // TOOD this isn't enough. Species names can change back and forth over time
     if (!taxonChangesBySpecies[row.previousSpeciesTaxonId]) {
       taxonChangesBySpecies[row.previousSpeciesTaxonId] = [];
     }
@@ -296,9 +300,9 @@ export const getTaxonChangeDataGroupedByYear = (taxonChangeData: TaxonChangeData
   const currentYear = new Date().getFullYear();
   let earliestYear = currentYear;
   const taxonChangeDataGroupedByYear = {};
-  Object.keys(taxonChangesBySpecies).forEach((species) => {
-    taxonChangesBySpecies[species].sort(sortByCreationDate);
-    const firstLoggedTaxonChangeForSpecies = taxonChangesBySpecies[species][0];
+  Object.keys(taxonChangesBySpecies).forEach((speciesTaxonId) => {
+    taxonChangesBySpecies[speciesTaxonId].sort(sortByCreationDate);
+    const firstLoggedTaxonChangeForSpecies = taxonChangesBySpecies[speciesTaxonId][0];
     const year = new Date(firstLoggedTaxonChangeForSpecies.taxonChangeObsCreatedAt).getFullYear();
 
     if (year < earliestYear) {

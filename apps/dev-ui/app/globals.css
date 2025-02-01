@@ -132,3 +132,12 @@ svg.MuiSvgIcon-fontSizeMedium {
 .icsl-species-name {
   font-style: italic;
 }
+
+.icsl-inactive-taxon-change {
+  text-decoration: line-through;
+  color: #999999;
+}
+
+.icsl-inactive-taxon-change a {
+  color: #999999;
+}

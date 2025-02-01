@@ -82,13 +82,16 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
             <th>Date</th>
             <th>Previous Name</th>
             <th>New Name</th>
-            <th>Change Type</th>
-            <th>View Details</th>
+            <th>Taxon Change Details</th>
+            <th>History</th>
           </tr>
         </thead>
         <tbody>
           {Object.keys(records).map((species, index) => {
             const taxonChange = records[species];
+            const speciesNameClass = taxonChange.active
+              ? 'icsl-species-name'
+              : 'icsl-species-name icsl-inactive-taxon-change';
             return (
               <tr key={species}>
                 {showRowNumbers && (
@@ -97,17 +100,28 @@ export const TaxonChangesTab: FC<TaxonChangesTabProps> = ({ dataUrl, showRowNumb
                   </th>
                 )}
                 <td>{formatDate(taxonChange.taxonChangeObsCreatedAt)}</td>
-                <td className="icsl-species-name">{taxonChange.previousSpeciesName}</td>
-                <td className="icsl-species-name">
+                <td className={speciesNameClass}>{taxonChange.previousSpeciesName}</td>
+                <td className={speciesNameClass}>
                   <a href={`${INAT_TAXON_URL}/${taxonChange.newSpeciesTaxonId}`} target="_blank" rel="noreferrer">
                     {taxonChange.newSpeciesName}
                   </a>
                 </td>
                 <td>
-                  <ChangeTypePill type={taxonChange.taxonChangeType} />
+                  <div style={{ display: 'flex' }}>
+                    <span style={{ display: 'inline-block', width: 100 }}>
+                      <ChangeTypePill type={taxonChange.taxonChangeType} />
+                    </span>
+                    <a href={`${INAT_TAXON_CHANGES_URL}/${taxonChange.taxonChangeId}`} target="_blank" rel="noreferrer">
+                      <ViewIcon />
+                    </a>
+                  </div>
                 </td>
                 <td>
-                  <a href={`${INAT_TAXON_CHANGES_URL}/${taxonChange.taxonChangeId}`}>
+                  <a
+                    href={`${INAT_TAXON_CHANGES_URL}?taxon_id=${taxonChange.newSpeciesTaxonId}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <ViewIcon />
                   </a>
                 </td>

@@ -4,7 +4,7 @@ const config: GeneratorConfig = {
   curators: ['oneofthedavesiknow', 'gpohl', 'crispinguppy'],
   taxonId: 47157,
   placeId: 7085,
-  speciesDataFilename: 'species-data.json', // TODO make these required
+  speciesDataFilename: 'species-data.json',
   showLastGeneratedDate: true,
   baselineEndDate: '2024-01-01',
   trackNewAdditions: true,
@@ -14,13 +14,10 @@ const config: GeneratorConfig = {
   omitTaxonChangeIds: [136709],
   tempFolder: './temp',
 
-  // TODO rename this or fix the generator logic
-  debug: {
-    enabled: true,
-    species: false,
-    newAdditions: false,
-    taxonChanges: true,
-  },
+  useLocalInatDataFiles: true,
+  // generateSpeciesFile: false,
+  // generateNewAdditionsFile: false,
+  generateTaxonChangesFile: true,
 };
 
 export default config;

@@ -52,7 +52,7 @@ export type GeneratorConfig = {
   /**
    * The name of the generated data file for the species data.
    */
-  readonly speciesDataFilename?: string;
+  readonly speciesDataFilename: string;
 
   /**
    * If enabled, generates a separate data file containing the list of "new additions". The idea is to be able to show newly
@@ -67,7 +67,7 @@ export type GeneratorConfig = {
   /**
    * The name of the generated data file for the new additions data.
    */
-  readonly newAdditionsFilename?: string;
+  readonly newAdditionsFilename: string;
 
   /**
    * Shows the date of when the data was last generated.
@@ -96,12 +96,7 @@ export type GeneratorConfig = {
    */
   readonly tempFolder: string;
 
-  // incomplete. I found the taxon change information very confusing to present. Sometimes users would do a taxon change then
-  // reverse it (see changes on this observation, for example: https://www.inaturalist.org/observations/32189129). Perhaps
-  // we could look for circular taxon changes and only present the latest change, but I think that would be incorrect in some
-  // cases: there are probably legitimate scenarios where a taxon is changed then changed back.
-  //
-  readonly trackTaxonChanges?: boolean;
+  readonly trackTaxonChanges: boolean;
 
   readonly taxonChangesFilename?: string;
 
@@ -112,36 +107,32 @@ export type GeneratorConfig = {
   readonly omitTaxonChangeIds?: number[];
 
   /**
-   * Used for debugging the generation script. This can be used after the raw packet-X.json files are generated on disk,
-   * housing the response from the iNat API. Each setting lets you regenerate the corresponding data file
+   * To reduce requests to iNat, when the script runs it generates packet JSON files for each API request which is used
+   * by the later steps to extract the necessary information. This setting lets you bypass the iNat data download step
+   * and work off the downloaded files.
    */
-  readonly debug?: {
-    /**
-     * This has to be set to true to use this feature.
-     */
-    enabled?: boolean;
+  readonly useLocalInatDataFiles?: boolean;
 
-    /**
-     * When true, will regenerate the species-data.json file.
-     */
-    species: boolean;
+  /**
+   * Generates the species data file. Defaults to true.
+   */
+  readonly generateSpeciesFile?: boolean;
 
-    /**
-     * When true, will regenerate the new-additions-data.json file.
-     */
-    newAdditions: boolean;
+  /**
+   * Generates the new additions data file. Defaults to true.
+   */
+  readonly generateNewAdditionsFile?: boolean;
 
-    /**
-     * When true, will regenerate the taxon-changes-data.json file.
-     */
-    taxonChanges: boolean;
-  };
+  /**
+   * Generates the taxon changes data file. Defaults to true.
+   */
+  readonly generateTaxonChangesFile?: boolean;
 };
 
 export type NewAddition = {
   readonly observationId: number;
   readonly speciesName: string;
-  readonly taxonId: number; // TODO this is a string right now
+  readonly taxonId: number;
   readonly confirmationDate: string;
   readonly curator: string;
   readonly dateObserved: string;
@@ -175,6 +166,7 @@ export type Identification = {
     name: string;
     rank: Taxon;
     ancestors: TaxonAncestor[];
+    is_active: boolean;
   };
 
   taxon_change?: {
@@ -240,4 +232,5 @@ export type TaxonChangeData = {
   readonly taxonChangeObsCreatedAt: string;
   readonly taxonChangeId: number;
   readonly taxonChangeType: TaxonChangeType;
+  readonly active: boolean;
 };

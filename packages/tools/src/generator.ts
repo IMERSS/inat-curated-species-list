@@ -100,24 +100,20 @@ export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: numbe
     newAdditionsFilename: 'new-additions-data.json',
     taxons: DEFAULT_TAXONS,
     omitTaxonChangeIds: [],
-    debug: {
-      enabled: false,
-      species: false,
-      newAdditions: false,
-      taxonChanges: false,
-      ...config.default.debug,
-    },
+    useLocalInatDataFiles: false,
+    generateSpeciesFile: true,
+    generateNewAdditionsFile: true,
+    generateTaxonChangesFile: true,
     ...config.default,
   };
 
   const tempFolderFullPath = path.resolve(process.cwd(), cleanConfig.tempFolder);
-  const debugMode = cleanConfig.debug.enabled;
 
   let currentStep = 1;
 
-  // when debugging is enabled, the iNat data has already been generated and is present on disk under `packet-X.json` files.
+  // when `processLocalFilesMode` is enabled, the iNat data has already been generated and is present on disk under `packet-X.json` files.
   let numPacketFiles: number;
-  if (debugMode) {
+  if (cleanConfig.useLocalInatDataFiles) {
     numPacketFiles = getNumINatPacketFiles(tempFolderFullPath);
   } else {
     clearTempFolder(tempFolderFullPath);
@@ -133,7 +129,7 @@ export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: numbe
   }
 
   const generatedFiles = [];
-  if (cleanConfig.debug.species) {
+  if (cleanConfig.generateSpeciesFile) {
     console.log(`\nStep ${currentStep}: extract species list`);
     const speciesData = extractSpeciesList(cleanConfig, tempFolderFullPath, numPacketFiles);
     currentStep++;
@@ -152,7 +148,7 @@ export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: numbe
   );
   currentStep++;
 
-  if ((cleanConfig.trackNewAdditions && !debugMode) || (cleanConfig.debug.newAdditions && debugMode)) {
+  if (cleanConfig.trackNewAdditions && cleanConfig.generateNewAdditionsFile) {
     console.log(`\nStep ${currentStep}: generate new additions data file`);
     const newAdditionsFilename = path.resolve(`${tempFolderFullPath}/${cleanConfig.newAdditionsFilename}`);
     fs.writeFileSync(newAdditionsFilename, JSON.stringify(newAdditionsArray), 'utf-8');
@@ -160,7 +156,7 @@ export const getDataFilesContent = (config: GeneratorConfig, numDataFiles: numbe
     currentStep++;
   }
 
-  if ((cleanConfig.trackTaxonChanges && !debugMode) || (cleanConfig.debug.taxonChanges && debugMode)) {
+  if (cleanConfig.trackTaxonChanges && cleanConfig.generateTaxonChangesFile) {
     console.log(`\nStep ${currentStep}: generate taxon changes data file`);
     const taxonChangesFilename = path.resolve(`${tempFolderFullPath}/${cleanConfig.taxonChangesFilename}`);
     fs.writeFileSync(taxonChangesFilename, JSON.stringify(taxonChangeDataGroupedByYear), 'utf-8');
