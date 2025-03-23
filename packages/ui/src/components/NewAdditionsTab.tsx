@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import { constants } from '@imerss/inat-curated-species-list-common';
-import { YearDropdown } from './YearDropdown';
+import { YearNavigation } from './YearNavigation';
 import { getNewAdditionDataForUI, formatDate } from '../utils/helpers';
 import { NewAddition } from '@imerss/inat-curated-species-list-tools';
 import { NewAdditionsByYear } from '../ui.types';
@@ -120,9 +120,7 @@ export const NewAdditionsTab: FC<NewAdditionsTabProps> = ({ dataUrl, tabText, sh
   return (
     <>
       {tabTextHtml}
-      <div className="icsl-new-additions-year-filter">
-        <label>Filter by year:</label> <YearDropdown years={years} onChange={onChangeYear} />
-      </div>
+      <YearNavigation years={years} onChange={onChangeYear} currentYear={currentYear} />
       {dataContent}
     </>
   );
