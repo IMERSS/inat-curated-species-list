@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid2';
 import { getMainConfig, updateMainConfig } from '../../utils/api';
 import { Spinner } from '../loading/spinner';
 
-export const MainSettings = () => {
+export const PublishSettings = () => {
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
@@ -55,16 +55,16 @@ export const MainSettings = () => {
 
   return (
     <>
-      <h2>Main Settings</h2>
+      <h2>Publish Settings</h2>
 
       {loader}
       {getAlert()}
 
-      <p></p>
+      <p>This tabs will contain all the settings for FTP info + filenames for the generated content to be uploaded.</p>
 
       <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
-          <Grid size={3}>Curators</Grid>
+          <Grid size={3}>Backup Folder</Grid>
           <Grid size={9}>
             <input
               type="text"
@@ -72,26 +72,6 @@ export const MainSettings = () => {
               value={backupFolder}
               onChange={(e) => setBackupFolder(e.target.value)}
             />
-          </Grid>
-          <Grid size={3}>Taxon ID</Grid>
-          <Grid size={9}>
-            <input type="text" value={backupFolder} onChange={(e) => setBackupFolder(e.target.value)} />
-          </Grid>
-          <Grid size={3}>Place ID</Grid>
-          <Grid size={9}>
-            <input type="text" value={backupFolder} onChange={(e) => setBackupFolder(e.target.value)} />
-          </Grid>
-          <Grid size={12}>
-            <input type="checkbox" value={backupFolder} onChange={(e) => setBackupFolder(e.target.value)} />
-            Provide baseline data
-          </Grid>
-          <Grid size={12}>
-            <input type="checkbox" value={backupFolder} onChange={(e) => setBackupFolder(e.target.value)} />
-            Track new additions
-          </Grid>
-          <Grid size={12}>
-            <input type="checkbox" value={backupFolder} onChange={(e) => setBackupFolder(e.target.value)} />
-            Track taxon changes
           </Grid>
         </Grid>
 

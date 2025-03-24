@@ -57,7 +57,7 @@ export const Navigation = () => (
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton component={(props) => <RouterLink {...props} to="/settings" />}>
+          <ListItemButton component={(props) => <RouterLink {...props} to="/settings/publish" />}>
             <ListItemIcon>
               <PublishIcon />
             </ListItemIcon>

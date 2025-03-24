@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid2';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { FileSettings } from './components/settings/FileSettings';
 import { MainSettings } from './components/settings/MainSettings';
+import { PublishSettings } from './components/settings/PublishSettings';
 
 function App() {
   const theme = createTheme({
@@ -34,6 +35,7 @@ function App() {
                 <Route path="baseline-data" element={<div>baseline</div>} />
                 <Route path="settings/main" element={<MainSettings />} />
                 <Route path="settings/files" element={<FileSettings />} />
+                <Route path="settings/publish" element={<PublishSettings />} />
               </Routes>
             </Grid>
           </Grid>
