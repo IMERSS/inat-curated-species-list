@@ -23,6 +23,16 @@ export const Navigation = () => (
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton component={(props) => <RouterLink {...props} to="/baseline-data" />}>
+            <ListItemText primary="New Additions" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton component={(props) => <RouterLink {...props} to="/baseline-data" />}>
+            <ListItemText primary="Taxon Changes" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton component={(props) => <RouterLink {...props} to="/baseline-data" />}>
             <ListItemText primary="Baseline data" />
           </ListItemButton>
         </ListItem>

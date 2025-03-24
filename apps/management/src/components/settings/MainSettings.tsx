@@ -9,7 +9,7 @@ export const MainSettings = () => {
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
-  const [backupFolder, setBackupFolder] = useState('');
+  const [settings, setSettings] = useState({});
 
   useEffect(() => {
     (async () => {
@@ -17,27 +17,34 @@ export const MainSettings = () => {
       const { config } = await resp.json();
 
       if (config.backupFolder) {
-        setBackupFolder(config.backupFolder);
+        // setBackupFolder(config.backupFolder);
       }
       setLoading(false);
     })();
   }, []);
+
+  const updateData = (key: string, value: any) => {
+    setSettings({
+      ...settings,
+      [key]: value,
+    });
+  };
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
     setSaved(false);
     setLoading(true);
 
-    const resp = await updateMainConfig({ backupFolder });
-    const { success, error: updateConfigError } = await resp.json();
-    if (success) {
-      setError('');
-      setSaved(true);
-    } else {
-      setError(updateConfigError);
-    }
+    // const resp = await updateMainConfig({ backupFolder });
+    // const { success, error: updateConfigError } = await resp.json();
+    // if (success) {
+    //   setError('');
+    //   setSaved(true);
+    // } else {
+    //   setError(updateConfigError);
+    // }
 
-    setLoading(false);
+    // setLoading(false);
   };
 
   const loader = loading ? <Spinner /> : null;
@@ -69,31 +76,55 @@ export const MainSettings = () => {
             <input
               type="text"
               style={{ width: '100%' }}
-              value={backupFolder}
-              onChange={(e) => setBackupFolder(e.target.value)}
+              value={settings.curators}
+              onChange={(e) => updateData('curators', e.target.value)}
             />
           </Grid>
           <Grid size={3}>Taxon ID</Grid>
           <Grid size={9}>
-            <input type="text" value={backupFolder} onChange={(e) => setBackupFolder(e.target.value)} />
+            <input
+              type="number"
+              style={{ width: 80 }}
+              value={settings.taxonId}
+              onChange={(e) => updateData('taxonId', e.target.value)}
+            />
           </Grid>
           <Grid size={3}>Place ID</Grid>
           <Grid size={9}>
-            <input type="text" value={backupFolder} onChange={(e) => setBackupFolder(e.target.value)} />
+            <input
+              type="number"
+              style={{ width: 80 }}
+              value={settings.placeId}
+              onChange={(e) => updateData('placeId', e.target.value)}
+            />
           </Grid>
           <Grid size={12}>
-            <input type="checkbox" value={backupFolder} onChange={(e) => setBackupFolder(e.target.value)} />
+            <input
+              type="checkbox"
+              checked={settings.provideBaselineData}
+              onChange={(e) => updateData('provideBaselineData', e.target.checked)}
+            />
             Provide baseline data
           </Grid>
           <Grid size={12}>
-            <input type="checkbox" value={backupFolder} onChange={(e) => setBackupFolder(e.target.value)} />
+            <input
+              type="checkbox"
+              checked={settings.trackNewAdditions}
+              onChange={(e) => updateData('trackNewAdditions', e.target.checked)}
+            />
             Track new additions
           </Grid>
           <Grid size={12}>
-            <input type="checkbox" value={backupFolder} onChange={(e) => setBackupFolder(e.target.value)} />
+            <input
+              type="checkbox"
+              checked={settings.trackTaxonChanges}
+              onChange={(e) => updateData('trackTaxonChanges', e.target.value)}
+            />
             Track taxon changes
           </Grid>
         </Grid>
+
+        {/* omitTaxonChangeIds */}
 
         <p>
           <Button variant="outlined" type="submit">
