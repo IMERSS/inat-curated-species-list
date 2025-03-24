@@ -1,14 +1,64 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
+import { getMainConfig, updateMainConfig } from '../../utils/api';
+import { Spinner } from '../loading/spinner';
 
 export const FileSettings = () => {
+  const [loading, setLoading] = useState(true);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState('');
   const [backupFolder, setBackupFolder] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      const resp = await getMainConfig();
+      const { config } = await resp.json();
+
+      if (config.backupFolder) {
+        setBackupFolder(config.backupFolder);
+      }
+      setLoading(false);
+    })();
+  }, []);
+
+  const onSubmit = async (e: any) => {
+    e.preventDefault();
+    setSaved(false);
+    setLoading(true);
+
+    const resp = await updateMainConfig({ backupFolder });
+    const { success, error: updateConfigError } = await resp.json();
+    if (success) {
+      setError('');
+      setSaved(true);
+    } else {
+      setError(updateConfigError);
+    }
+
+    setLoading(false);
+  };
+
+  const loader = loading ? <Spinner /> : null;
+
+  const getAlert = () => {
+    if (error) {
+      return <Alert severity="error">{error}</Alert>;
+    }
+    if (saved) {
+      return <Alert severity="success">The settings have been saved.</Alert>;
+    }
+
+    return null;
+  };
 
   return (
     <>
       <h2>File/Backup Settings</h2>
+
+      {loader}
+      {getAlert()}
 
       <p>
         This application uses a "flatfile" database, meaning the <b>configuration settings</b>,{' '}
@@ -19,13 +69,7 @@ export const FileSettings = () => {
         the New Additions list.
       </p>
 
-      {/* <Alert severity="info">
-        In this application, you can click "save" on any page to regenerate content on the server, but in order to
-        publish a new checklist you'll need to first sync the data with the git repository. That'll prevent against data
-        loss.
-      </Alert> */}
-
-      <form>
+      <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
           <Grid size={3}>Backup Folder</Grid>
           <Grid size={9}>
@@ -52,7 +96,9 @@ export const FileSettings = () => {
         </Grid>
 
         <p>
-          <Button variant="outlined">Save</Button>
+          <Button variant="outlined" type="submit">
+            Save
+          </Button>
         </p>
       </form>
     </>

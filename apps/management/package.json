@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node ./server/index.js"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -18,6 +19,10 @@
     "@mui/icons-material": "^6.4.8",
     "@mui/material": "^6.4.8",
     "@react-router/dev": "^7.4.0",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "nocache": "^4.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router": "^7.4.0",
