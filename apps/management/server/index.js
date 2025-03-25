@@ -1,6 +1,7 @@
 import express from 'express';
 import { getBackupSettings, updateBackupSettings } from './backup-settings.js';
 import { getMainSettings, updateMainSettings } from './main-settings.js';
+import { getBaselineData } from './baseline-data.js';
 import cors from 'cors';
 import nocache from 'nocache';
 import bodyParser from 'body-parser';
@@ -34,6 +35,12 @@ app.post('/main-settings', (req, res) => {
   const { success } = updateMainSettings(req.body);
   res.setHeader('Content-Type', 'application/json');
   res.end(JSON.stringify({ success }));
+});
+
+app.get('/baseline-data', (req, res) => {
+  const data = getBaselineData();
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify({ data }));
 });
 
 app.listen(port, () => {

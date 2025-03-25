@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid2';
-import { getMainConfig, updateMainConfig } from '../../utils/api';
+import { getBaselineData, updateBaselineData } from '../../utils/api';
 import { Spinner } from '../loading/spinner';
 
 export const BaselineData = () => {
@@ -13,12 +12,9 @@ export const BaselineData = () => {
 
   useEffect(() => {
     (async () => {
-      const resp = await getMainConfig();
-      const { config } = await resp.json();
+      const resp = await getBaselineData();
+      const { data } = await resp.json();
 
-      if (config.backupFolder) {
-        setBackupFolder(config.backupFolder);
-      }
       setLoading(false);
     })();
   }, []);
@@ -28,14 +24,14 @@ export const BaselineData = () => {
     setSaved(false);
     setLoading(true);
 
-    const resp = await updateMainConfig({ backupFolder });
-    const { success, error: updateConfigError } = await resp.json();
-    if (success) {
-      setError('');
-      setSaved(true);
-    } else {
-      setError(updateConfigError);
-    }
+    // const resp = await updateBaselineData({ backupFolder });
+    // const { success, error: updateConfigError } = await resp.json();
+    // if (success) {
+    //   setError('');
+    //   setSaved(true);
+    // } else {
+    //   setError(updateConfigError);
+    // }
 
     setLoading(false);
   };
@@ -70,6 +66,11 @@ export const BaselineData = () => {
       </p>
       [add "ignore list" to New Additions] [taxon ID] [Species name] [link to iNat] [number of observations confirmed by
       curators, with earliest obs date] [delete]
+      <p>
+        <Button variant="outlined" type="submit" size="small">
+          Save
+        </Button>
+      </p>
     </>
   );
 };

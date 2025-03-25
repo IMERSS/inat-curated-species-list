@@ -31,3 +31,17 @@ export const updateMainSettings = (content: any) => {
     body: JSON.stringify(content),
   });
 };
+
+export const getBaselineData = () => {
+  return fetch(getApiUrl('baseline-data'));
+};
+
+export const updateBaselineData = (content: any) => {
+  return fetch(getApiUrl('baseline-data'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(content),
+  });
+};

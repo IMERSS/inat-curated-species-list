@@ -71,8 +71,6 @@ export const MainSettings = () => {
       {loader}
       {getAlert()}
 
-      <p></p>
-
       <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
           <Grid size={3}>Curators</Grid>
