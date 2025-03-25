@@ -1,5 +1,6 @@
 import express from 'express';
-import { getMainConfig, updateMainConfig } from './main-config.js';
+import { getBackupSettings, updateBackupSettings } from './backup-settings.js';
+import { getMainSettings, updateMainSettings } from './main-settings.js';
 import cors from 'cors';
 import nocache from 'nocache';
 import bodyParser from 'body-parser';
@@ -11,16 +12,28 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(nocache());
 
-app.get('/main-config', (req, res) => {
-  const { exists, config } = getMainConfig();
+app.get('/backup-settings', (req, res) => {
+  const { exists, backupSettings } = getBackupSettings();
   res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify({ exists, config }));
+  res.end(JSON.stringify({ exists, backupSettings }));
 });
 
-app.post('/main-config', (req, res) => {
-  const { success, error } = updateMainConfig(req.body);
+app.post('/backup-settings', (req, res) => {
+  const { success, error } = updateBackupSettings(req.body);
   res.setHeader('Content-Type', 'application/json');
   res.end(JSON.stringify({ success, error }));
+});
+
+app.get('/main-settings', (req, res) => {
+  const settings = getMainSettings();
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify({ settings }));
+});
+
+app.post('/main-settings', (req, res) => {
+  const { success } = updateMainSettings(req.body);
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify({ success }));
 });
 
 app.listen(port, () => {

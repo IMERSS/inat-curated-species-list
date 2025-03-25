@@ -14,10 +14,10 @@ export const FileSettings = () => {
   useEffect(() => {
     (async () => {
       const resp = await getMainConfig();
-      const { config } = await resp.json();
+      const { backupSettings } = await resp.json();
 
-      if (config.backupFolder) {
-        setBackupFolder(config.backupFolder);
+      if (backupSettings.backupFolder) {
+        setBackupFolder(backupSettings.backupFolder);
       }
       setLoading(false);
     })();

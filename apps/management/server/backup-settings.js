@@ -5,27 +5,27 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const mainConfigFile = path.resolve(__dirname, './generated/main-config.json');
+const backupSettingsFile = path.resolve(__dirname, './generated/backup-settings.json');
 
-export const getMainConfig = () => {
-  let config;
+export const getBackupSettings = () => {
+  let backupSettings;
   let exists = false;
 
   try {
-    const content = fs.readFileSync(mainConfigFile, { encoding: 'utf8' });
-    config = JSON.parse(content);
+    const content = fs.readFileSync(backupSettingsFile, { encoding: 'utf8' });
+    backupSettings = JSON.parse(content);
     exists = true;
   } catch (e) {
-    console.log('error: ', mainConfigFile, e);
+    console.log('error: ', backupSettingsFile, e);
   }
 
   return {
     exists,
-    config,
+    backupSettings,
   };
 };
 
-export const updateMainConfig = (data) => {
+export const updateBackupSettings = (data) => {
   const { backupFolder } = data;
 
   // verify the folder exists
@@ -43,7 +43,7 @@ export const updateMainConfig = (data) => {
   }
 
   try {
-    fs.writeFileSync(mainConfigFile, JSON.stringify({ backupFolder }, null, '  '));
+    fs.writeFileSync(backupSettingsFile, JSON.stringify({ backupFolder }, null, '  '));
     return { success: true };
   } catch (e) {
     return { success: false };

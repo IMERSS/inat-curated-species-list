@@ -5,11 +5,25 @@ export const getApiUrl = (path: string) => {
 };
 
 export const getMainConfig = () => {
-  return fetch(getApiUrl('main-config'));
+  return fetch(getApiUrl('backup-settings'));
 };
 
 export const updateMainConfig = (content: any) => {
-  return fetch(getApiUrl('main-config'), {
+  return fetch(getApiUrl('backup-settings'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(content),
+  });
+};
+
+export const getMainSettings = () => {
+  return fetch(getApiUrl('main-settings'));
+};
+
+export const updateMainSettings = (content: any) => {
+  return fetch(getApiUrl('main-settings'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

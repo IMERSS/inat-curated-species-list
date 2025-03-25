@@ -2,23 +2,27 @@ import React, { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import { getMainConfig, updateMainConfig } from '../../utils/api';
+import { getMainSettings, updateMainSettings } from '../../utils/api';
 import { Spinner } from '../loading/spinner';
+
+type MainSettings = {
+  readonly curators: string;
+  readonly taxonId?: number | null;
+  readonly placeId?: number | null;
+};
 
 export const MainSettings = () => {
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
-  const [settings, setSettings] = useState({});
+  const [settings, setSettings] = useState<MainSettings>({ curators: '', taxonId: null, placeId: null });
 
   useEffect(() => {
     (async () => {
-      const resp = await getMainConfig();
-      const { config } = await resp.json();
+      const resp = await getMainSettings();
+      const { settings } = await resp.json();
 
-      if (config.backupFolder) {
-        // setBackupFolder(config.backupFolder);
-      }
+      setSettings(settings);
       setLoading(false);
     })();
   }, []);
@@ -35,16 +39,16 @@ export const MainSettings = () => {
     setSaved(false);
     setLoading(true);
 
-    // const resp = await updateMainConfig({ backupFolder });
-    // const { success, error: updateConfigError } = await resp.json();
-    // if (success) {
-    //   setError('');
-    //   setSaved(true);
-    // } else {
-    //   setError(updateConfigError);
-    // }
+    const resp = await updateMainSettings(settings);
+    const { success, error: updateSettingsError } = await resp.json();
+    if (success) {
+      setError('');
+      setSaved(true);
+    } else {
+      setError(updateSettingsError);
+    }
 
-    // setLoading(false);
+    setLoading(false);
   };
 
   const loader = loading ? <Spinner /> : null;
@@ -76,7 +80,7 @@ export const MainSettings = () => {
             <input
               type="text"
               style={{ width: '100%' }}
-              value={settings.curators}
+              value={settings.curators || ''}
               onChange={(e) => updateData('curators', e.target.value)}
             />
           </Grid>
@@ -85,7 +89,7 @@ export const MainSettings = () => {
             <input
               type="number"
               style={{ width: 80 }}
-              value={settings.taxonId}
+              value={settings.taxonId || ''}
               onChange={(e) => updateData('taxonId', e.target.value)}
             />
           </Grid>
@@ -94,11 +98,11 @@ export const MainSettings = () => {
             <input
               type="number"
               style={{ width: 80 }}
-              value={settings.placeId}
+              value={settings.placeId || ''}
               onChange={(e) => updateData('placeId', e.target.value)}
             />
           </Grid>
-          <Grid size={12}>
+          {/* <Grid size={12}>
             <input
               type="checkbox"
               checked={settings.provideBaselineData}
@@ -121,7 +125,7 @@ export const MainSettings = () => {
               onChange={(e) => updateData('trackTaxonChanges', e.target.value)}
             />
             Track taxon changes
-          </Grid>
+          </Grid> */}
         </Grid>
 
         {/* omitTaxonChangeIds */}
