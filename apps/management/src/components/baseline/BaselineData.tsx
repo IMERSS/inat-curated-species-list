@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import { getBaselineData, updateBaselineData } from '../../utils/api';
+import { AddBaselineTaxons } from './AddBaselineTaxons';
 import { Spinner } from '../loading/spinner';
 
 export const BaselineData = () => {
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
-  const [backupFolder, setBackupFolder] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -68,9 +68,10 @@ export const BaselineData = () => {
       curators, with earliest obs date] [delete]
       <p>
         <Button variant="outlined" type="submit" size="small">
-          Save
+          Add Taxon IDs
         </Button>
       </p>
+      <AddBaselineTaxons open={true} handleClose={() => {}} />
     </>
   );
 };
