@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import { getMainConfig, updateMainConfig } from '../../utils/api';
+import { getMainConfig, updateMainConfig } from '../../api/api';
 import { Spinner } from '../loading/spinner';
 
 export const PublishSettings = () => {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import { getMainSettings, updateMainSettings } from '../../utils/api';
+import { getMainSettings, updateMainSettings } from '../../api/api';
 import { Spinner } from '../loading/spinner';
 
 type MainSettings = {

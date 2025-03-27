@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import { getBaselineData, updateBaselineData } from '../../utils/api';
+import { getBaselineData, updateBaselineData } from '../../api/api';
 import { AddBaselineTaxons } from './AddBaselineTaxons';
 import { Spinner } from '../loading/spinner';
+import { BaselineInatData } from '../../api/inat';
+import { DataTable } from './DataTable';
 
 export const BaselineData = () => {
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
+  const [addBaselineTaxonDialogOpen, setBaselineTaxonDialogOpen] = useState(false);
   const [error, setError] = useState('');
+  const [baselineData, setBaselineData] = useState<BaselineInatData[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -51,6 +55,15 @@ export const BaselineData = () => {
 
   return (
     <>
+      <Button
+        variant="outlined"
+        type="submit"
+        size="small"
+        onClick={() => setBaselineTaxonDialogOpen(true)}
+        style={{ float: 'right' }}
+      >
+        Add Species
+      </Button>
       <h2>Baseline Data</h2>
       {loader}
       {getAlert()}
@@ -66,12 +79,12 @@ export const BaselineData = () => {
       </p>
       [add "ignore list" to New Additions] [taxon ID] [Species name] [link to iNat] [number of observations confirmed by
       curators, with earliest obs date] [delete]
-      <p>
-        <Button variant="outlined" type="submit" size="small">
-          Add Taxon IDs
-        </Button>
-      </p>
-      <AddBaselineTaxons open={true} handleClose={() => {}} />
+      <AddBaselineTaxons
+        open={addBaselineTaxonDialogOpen}
+        onClose={() => setBaselineTaxonDialogOpen(false)}
+        onComplete={(data: BaselineInatData[]) => setBaselineData(data)}
+      />
+      {baselineData.length && <DataTable data={baselineData} />}
     </>
   );
 };
