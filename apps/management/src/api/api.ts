@@ -32,12 +32,12 @@ export const updateMainSettings = (content: any) => {
   });
 };
 
-export const getBaselineData = () => {
-  return fetch(getApiUrl('baseline-data'));
+export const getBaselineSpecies = () => {
+  return fetch(getApiUrl('baseline-species'));
 };
 
-export const updateBaselineData = (content: any) => {
-  return fetch(getApiUrl('baseline-data'), {
+export const updateBaselineSpecies = (content: any) => {
+  return fetch(getApiUrl('baseline-species'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

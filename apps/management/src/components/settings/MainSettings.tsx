@@ -58,7 +58,11 @@ export const MainSettings = () => {
       return <Alert severity="error">{error}</Alert>;
     }
     if (saved) {
-      return <Alert severity="success">The settings have been saved.</Alert>;
+      return (
+        <Alert severity="success" style={{ marginBottom: 15 }}>
+          The settings have been saved.
+        </Alert>
+      );
     }
 
     return null;
@@ -106,7 +110,7 @@ export const MainSettings = () => {
               checked={settings.provideBaselineData}
               onChange={(e) => updateData('provideBaselineData', e.target.checked)}
             />
-            Provide baseline data
+            Provide baseline species
           </Grid>
           <Grid size={12}>
             <input
@@ -129,7 +133,7 @@ export const MainSettings = () => {
         {/* omitTaxonChangeIds */}
 
         <p>
-          <Button variant="outlined" type="submit">
+          <Button variant="outlined" type="submit" size="small">
             Save
           </Button>
         </p>

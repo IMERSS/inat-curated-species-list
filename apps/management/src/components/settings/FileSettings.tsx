@@ -62,7 +62,7 @@ export const FileSettings = () => {
 
       <p>
         This application uses a "flatfile" database, meaning the <b>configuration settings</b>,{' '}
-        <b>curated species data</b>, <b>baseline data</b> and more are stored in files on the server running this
+        <b>curated species data</b>, <b>baseline species</b> and more are stored in files on the server running this
         application. That location is then backed up in git (a code repository), at a location of your choice.{' '}
         <i>This provides a paper trail of every change that occurs and wards against data loss</i>. The data is stores
         is public in nature: no passwords or anything sensitive beyond the iNat usernames of the curators and people on
@@ -96,7 +96,7 @@ export const FileSettings = () => {
         </Grid>
 
         <p>
-          <Button variant="outlined" type="submit">
+          <Button variant="outlined" type="submit" size="small">
             Save
           </Button>
         </p>

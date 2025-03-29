@@ -2,7 +2,7 @@
 
 This is a complete, self-contained node app to allow users to log in and manage the curated species list. You can use it to:
 
-- input and customize your baseline data
+- input and customize your baseline species
 - customize the curator list,
 - ping iNat's API to generate the curated species list
 - generate the data files for use by your website (optional)

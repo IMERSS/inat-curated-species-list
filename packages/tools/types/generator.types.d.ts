@@ -76,7 +76,7 @@ export type GeneratorConfig = {
 
   /**
    * If you're using the new additions or taxon changes feature, this has to be set to specify the date at which the
-   * baseline data is considered to already be in iNaturalist. In other words, any identifications by curators made for
+   * baseline species is considered to already be in iNaturalist. In other words, any identifications by curators made for
    * species after this date will cause the species to get listed in the New Additions sections, plus it'll track taxon
    * changes made after the same date.
    * Format: YYYY-MM-DD

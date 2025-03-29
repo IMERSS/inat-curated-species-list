@@ -22,22 +22,27 @@ export const Navigation = () => (
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton component={(props) => <RouterLink {...props} to="/baseline-data" />}>
-            <ListItemText primary="New Additions" />
+          <ListItemButton component={(props) => <RouterLink {...props} to="/new-additions" />}>
+            <ListItemText primary="New additions" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton component={(props) => <RouterLink {...props} to="/baseline-data" />}>
-            <ListItemText primary="Taxon Changes" />
+          <ListItemButton component={(props) => <RouterLink {...props} to="/taxon-changes" />}>
+            <ListItemText primary="Taxon changes" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton component={(props) => <RouterLink {...props} to="/baseline-data" />}>
-            <ListItemText primary="Baseline data" />
+          <ListItemButton component={(props) => <RouterLink {...props} to="/baseline-species" />}>
+            <ListItemText primary="Baseline species" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton component={(props) => <RouterLink {...props} to="/baseline-data" />}>
+          <ListItemButton component={(props) => <RouterLink {...props} to="/unconfirmed-species" />}>
+            <ListItemText primary="Unconfirmed species" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton component={(props) => <RouterLink {...props} to="/accounts" />}>
             <ListItemText primary="Accounts" />
           </ListItemButton>
         </ListItem>

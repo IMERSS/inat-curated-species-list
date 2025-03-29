@@ -1,5 +1,20 @@
 html, body {
   margin: 0;
+  font-size: 15px;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
+
+td, p, textarea, input { 
+  font-size: 15px;
+  min-height: 23px;
+}
+
+table tr:nth-child(even) {
+  background-color: #efefef;
+}
+
+th {
+  text-align: left;
 }
 
 

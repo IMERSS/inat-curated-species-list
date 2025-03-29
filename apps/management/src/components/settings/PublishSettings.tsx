@@ -76,7 +76,7 @@ export const PublishSettings = () => {
         </Grid>
 
         <p>
-          <Button variant="outlined" type="submit">
+          <Button variant="outlined" type="submit" size="small">
             Save
           </Button>
         </p>

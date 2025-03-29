@@ -7,11 +7,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import { BaselineInatData, getInatBaselineDataForTaxonIds } from '../../api/inat';
+import { getInatBaselineSpeciesData } from '../../api/inat';
+import { BaselineSpeciesInatData } from '../../types';
 
 type AddBaselineTaxonsProps = {
   open: boolean;
-  onComplete: (data: BaselineInatData[]) => void;
+  onComplete: (data: BaselineSpeciesInatData[]) => void;
   onClose: () => void;
 };
 
@@ -36,18 +37,18 @@ export const AddBaselineTaxons = ({ open, onClose, onComplete }: AddBaselineTaxo
             onSubmit: async (event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
               setLoading(true);
-              const data = await getInatBaselineDataForTaxonIds(ids);
+              const data = await getInatBaselineSpeciesData(ids);
               setLoading(false);
               onComplete(data);
             },
           },
         }}
       >
-        <DialogTitle>Add Baseline Taxons</DialogTitle>
+        <DialogTitle>Add Baseline Species</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Enter a comma-delimited list of iNaturalist taxon IDs to be added as your baseline data. If you have
-            existing baseline data, the items added here will be appended to the list.
+            Enter a comma-delimited list of iNaturalist species (taxon) IDs to be added to your baseline species list.
+            This will append to your existing list and duplicates will be automatically removed.
           </DialogContentText>
           <textarea
             autoFocus
