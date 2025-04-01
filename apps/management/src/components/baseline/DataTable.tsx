@@ -1,8 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { INAT_SPECIES_URL } from '../../constants';
+import ClearIcon from '@mui/icons-material/Clear';
 
-export const DataTable = ({ data }) => {
+type DataTableProps = {
+  data: any;
+  onDeleteRow: (taxonId: number) => void;
+};
+
+export const DataTable = ({ data, onDeleteRow }: DataTableProps) => {
   const rows = data.map((row) => (
     <tr key={row.id}>
       <td>{row.id}</td>
@@ -12,8 +18,8 @@ export const DataTable = ({ data }) => {
         </a>
       </td>
       <td></td>
-      <td>
-        <input type="checkbox" />
+      <td width={30}>
+        <ClearIcon onClick={() => onDeleteRow(row.id)} />
       </td>
     </tr>
   ));
@@ -22,10 +28,10 @@ export const DataTable = ({ data }) => {
       <table style={{ width: '100%' }} cellSpacing={0} cellPadding={0}>
         <thead>
           <tr>
-            <th>Taxon ID</th>
+            <th style={{ width: 100 }}>Taxon ID</th>
             <th>Species</th>
             <th># curator reviews</th>
-            <th>DEL</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>

@@ -9,6 +9,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { getInatBaselineSpeciesData } from '../../api/inat';
 import { BaselineSpeciesInatData } from '../../types';
+import classes from './baseline.module.css';
 
 type AddBaselineTaxonsProps = {
   open: boolean;
@@ -21,9 +22,9 @@ export const AddBaselineTaxons = ({ open, onClose, onComplete }: AddBaselineTaxo
   const [loading, setLoading] = useState(false);
 
   const loadingOverlay = loading ? (
-    <Backdrop sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })} open={open} onClick={onClose}>
+    <div className={classes.dialogLoading}>
       <CircularProgress color="inherit" />
-    </Backdrop>
+    </div>
   ) : null;
 
   return (
@@ -45,6 +46,7 @@ export const AddBaselineTaxons = ({ open, onClose, onComplete }: AddBaselineTaxo
         }}
       >
         <DialogTitle>Add Baseline Species</DialogTitle>
+        {loadingOverlay}
         <DialogContent>
           <DialogContentText>
             Enter a comma-delimited list of iNaturalist species (taxon) IDs to be added to your baseline species list.
@@ -54,7 +56,7 @@ export const AddBaselineTaxons = ({ open, onClose, onComplete }: AddBaselineTaxo
             autoFocus
             required
             id="ids"
-            style={{ width: '100%', height: 100 }}
+            style={{ width: '100%', height: 100, marginTop: 10 }}
             value={ids}
             onChange={(e) => setIds(e.target.value)}
           />

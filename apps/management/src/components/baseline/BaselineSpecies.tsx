@@ -44,6 +44,11 @@ export const BaselineSpecies = () => {
     }
   };
 
+  const onDeleteRow = (taxonId: number) => {
+    const updatedBaselineSpecies = baselineSpecies.filter(({ id }) => id !== taxonId);
+    setBaselineSpecies(updatedBaselineSpecies);
+  };
+
   const loader = loading ? <Spinner /> : null;
 
   const getAlert = () => {
@@ -69,7 +74,7 @@ export const BaselineSpecies = () => {
 
     return (
       <>
-        <DataTable data={baselineSpecies} />
+        <DataTable data={baselineSpecies} onDeleteRow={onDeleteRow} />
         <p>
           <Button type="button" variant="outlined" size="small" onClick={onSubmit}>
             Save
