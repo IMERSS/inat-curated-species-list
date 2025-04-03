@@ -5,7 +5,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { getInatBaselineSpeciesData } from '../../api/inat';
 import { BaselineSpeciesInatData } from '../../types';
@@ -22,7 +21,7 @@ export const AddBaselineTaxons = ({ open, onClose, onComplete }: AddBaselineTaxo
   const [loading, setLoading] = useState(false);
 
   const loadingOverlay = loading ? (
-    <div className={classes.dialogLoading}>
+    <div className={classes.dialogLoadingOverlay}>
       <CircularProgress color="inherit" />
     </div>
   ) : null;
@@ -35,6 +34,7 @@ export const AddBaselineTaxons = ({ open, onClose, onComplete }: AddBaselineTaxo
         slotProps={{
           paper: {
             component: 'form',
+            className: loading ? classes.dialogLoading : '',
             onSubmit: async (event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
               setLoading(true);
@@ -46,8 +46,8 @@ export const AddBaselineTaxons = ({ open, onClose, onComplete }: AddBaselineTaxo
         }}
       >
         <DialogTitle>Add Baseline Species</DialogTitle>
-        {loadingOverlay}
         <DialogContent>
+          {loadingOverlay}
           <DialogContentText>
             Enter a comma-delimited list of iNaturalist species (taxon) IDs to be added to your baseline species list.
             This will append to your existing list and duplicates will be automatically removed.

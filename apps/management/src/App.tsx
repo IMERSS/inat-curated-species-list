@@ -9,6 +9,7 @@ import { BaselineSpecies } from './components/baseline/BaselineSpecies';
 import { FileSettings } from './components/settings/FileSettings';
 import { MainSettings } from './components/settings/MainSettings';
 import { PublishSettings } from './components/settings/PublishSettings';
+import { CuratedChecklist } from './components/checklist/CuratedChecklist';
 
 function App() {
   const theme = createTheme({
@@ -32,7 +33,8 @@ function App() {
             </Grid>
             <Grid size="grow">
               <Routes>
-                <Route index path="/" element={<div>Home content</div>} />
+                <Route index path="/" element={<div>(router - login or redirect to curated checklist page)</div>} />
+                <Route path="curated-checklist" element={<CuratedChecklist />} />
                 <Route path="baseline-species" element={<BaselineSpecies />} />
                 <Route path="settings/main" element={<MainSettings />} />
                 <Route path="settings/files" element={<FileSettings />} />

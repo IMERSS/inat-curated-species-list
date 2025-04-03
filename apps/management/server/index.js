@@ -10,7 +10,7 @@ const app = express();
 const port = 3000;
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(nocache());
 
 app.get('/backup-settings', (req, res) => {

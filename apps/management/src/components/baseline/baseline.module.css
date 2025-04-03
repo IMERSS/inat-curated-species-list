@@ -1,17 +1,20 @@
-.dialogLoading {
+.dialogLoadingOverlay {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: #333333;
-    opacity: 0.8;
+    z-index: 1000;
 }
 
-.dialogLoading span {
+.dialogLoadingOverlay span {
     position: absolute;
     left: calc(50% - 25px);
     top: calc(50% - 25px);
     bottom: 0;
     right: 0;
+}
+
+.dialogLoading {
+    background-color: #999999;
 }

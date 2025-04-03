@@ -17,7 +17,7 @@ export const Navigation = () => (
     <nav aria-label="secondary mailbox folders">
       <List>
         <ListItem disablePadding>
-          <ListItemButton component={(props) => <RouterLink {...props} to="/" />}>
+          <ListItemButton component={(props) => <RouterLink {...props} to="/curated-checklist" />}>
             <ListItemText primary="Curated checklist" />
           </ListItemButton>
         </ListItem>
