@@ -49,6 +49,8 @@ app.post('/baseline-species', (req, res) => {
   res.end(JSON.stringify({ success, error }));
 });
 
+app.post('/species-counts', (req, res) => {});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

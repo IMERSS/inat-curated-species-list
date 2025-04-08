@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { INAT_SPECIES_URL } from '../../constants';
 import ClearIcon from '@mui/icons-material/Clear';
+import classes from './baseline.module.css';
 
 type DataTableProps = {
   data: any;
@@ -18,14 +19,14 @@ export const DataTable = ({ data, onDeleteRow }: DataTableProps) => {
         </a>
       </td>
       <td></td>
-      <td width={30}>
+      <td width={30} className={classes.deleteRow}>
         <ClearIcon onClick={() => onDeleteRow(row.id)} />
       </td>
     </tr>
   ));
   return (
     <Box>
-      <table style={{ width: '100%' }} cellSpacing={0} cellPadding={0}>
+      <table cellSpacing={0} cellPadding={0} className={classes.baselineTable}>
         <thead>
           <tr>
             <th style={{ width: 100 }}>Taxon ID</th>

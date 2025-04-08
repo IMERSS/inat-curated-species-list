@@ -151,3 +151,14 @@ export const requestSpeciesData = async (ids: number[]) => {
     }
   ]
 }*/
+
+type GetRegionSpecies = {
+  readonly placeId: number;
+  readonly taxonId: number;
+};
+
+export const getRegionSpecies = ({ placeId, taxonId }: GetRegionSpecies) => {
+  const url = `${INAT_API_BASE_URL}/observations/species_counts/verifiable=true&spam=false&place_id=${placeId}&taxon_id=${taxonId}&locale=en-US&per_page=50&include_ancestors=true`;
+};
+
+export const chunkRequest = ({ url: string, onComplete, onChunkComplete, onError }) => {};

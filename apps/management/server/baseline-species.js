@@ -26,7 +26,12 @@ export const updateBaselineSpecies = (data) => {
   let error;
   let success = false;
   try {
-    fs.writeFileSync(baselineSpeciesFile, JSON.stringify(data, null, '  '));
+    const baselineData = {
+      validationDate: new Date(),
+      data,
+    };
+
+    fs.writeFileSync(baselineSpeciesFile, JSON.stringify(baselineData, null, '  '));
     success = true;
   } catch (e) {
     error = 'There was a problem writing to the baseline species file.';

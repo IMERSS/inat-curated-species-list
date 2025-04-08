@@ -1,20 +1,32 @@
 .dialogLoadingOverlay {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .dialogLoadingOverlay span {
-    position: absolute;
-    left: calc(50% - 25px);
-    top: calc(50% - 25px);
-    bottom: 0;
-    right: 0;
+  position: absolute;
+  left: calc(50% - 25px);
+  top: calc(50% - 25px);
+  bottom: 0;
+  right: 0;
 }
 
 .dialogLoading {
-    background-color: #999999;
+  background-color: #999999;
+}
+
+.deleteRow {
+  cursor: pointer;
+}
+
+.baselineTable {
+  width: 100%;
+}
+
+.baselineTable tr:hover {
+  background-color: hsl(209, 100%, 92%);
 }
