@@ -27,6 +27,10 @@
   width: 100%;
 }
 
+.baselineTable td {
+  padding: 3px;
+}
+
 .baselineTable tr:hover {
   background-color: hsl(209, 100%, 92%);
 }

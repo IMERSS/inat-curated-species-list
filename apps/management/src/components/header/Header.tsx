@@ -15,7 +15,7 @@ import Logout from '@mui/icons-material/Logout';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 export const Header = () => (
-  <AppBar position="static" elevation={0}>
+  <AppBar position="fixed" elevation={0}>
     <Toolbar>
       <Typography variant="h6" sx={{ my: 2 }}>
         Curated Checklist
@@ -35,7 +35,7 @@ export const Header = () => (
       <IconButton size="large" color="inherit">
         <AccountCircle />
       </IconButton>
-      <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+      <IconButton size="large" aria-label="" color="inherit">
         <Logout />
       </IconButton>
     </Toolbar>

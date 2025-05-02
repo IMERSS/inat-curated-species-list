@@ -1,31 +1,45 @@
 import { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import { getBaselineSpecies, updateBaselineSpecies } from '../../api/api';
-import { AddBaselineTaxons } from './AddBaselineTaxons';
+import Info from '@mui/icons-material/InfoOutlined';
+import { getBaselineSpecies, updateBaselineSpecies, getMainSettings } from '../../api/api';
+import { AddBaselineTaxonsDialog } from './AddBaselineTaxonsDialog';
+import { ValidateBaselineSpeciesDialog } from './ValidateBaselineSpeciesDialog';
 import { Spinner } from '../loading/spinner';
 import { DataTable } from './DataTable';
+import { BaselineDocDialog } from './BaselineDocDialog';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { combineSpeciesLists } from '../../utils';
 import { BaselineSpeciesInatData } from '../../types';
+import { MainSettings } from '../../types';
 
 export const BaselineSpecies = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const [mainSettings, setMainSettings] = useState<MainSettings | {}>({});
   const [addBaselineTaxonDialogOpen, setBaselineTaxonDialogOpen] = useState(false);
+  const [validateBaselineTaxonDialogOpen, setValidateBaselineTaxonDialogOpen] = useState(false);
   const [baselineSpecies, setBaselineSpecies] = useState<BaselineSpeciesInatData[]>([]);
 
   useEffect(() => {
     (async () => {
-      const resp = await getBaselineSpecies();
-      const { data } = await resp.json();
+      // TODO parallelize
+      const mainSettingsResp = await getMainSettings();
+      const { settings } = await mainSettingsResp.json();
+      setMainSettings(settings);
 
-      setBaselineSpecies(data);
+      const resp = await getBaselineSpecies();
+      const a = await resp.json();
+
+      setBaselineSpecies(a.data);
       setLoading(false);
     })();
   }, []);
+
+  console.log({ mainSettings });
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -74,6 +88,12 @@ export const BaselineSpecies = () => {
 
     return (
       <>
+        <p>
+          <input type="checkbox" />
+          Auto-remove from baseline species list when # curator reviews exceeds{' '}
+          <input type="number" style={{ width: 30 }} value={5} />
+        </p>
+
         <DataTable data={baselineSpecies} onDeleteRow={onDeleteRow} />
         <p>
           <Button type="button" variant="outlined" size="small" onClick={onSubmit}>
@@ -91,7 +111,7 @@ export const BaselineSpecies = () => {
           variant="outlined"
           type="submit"
           size="small"
-          onClick={() => setBaselineTaxonDialogOpen(true)}
+          onClick={() => setValidateBaselineTaxonDialogOpen(true)}
           style={{ float: 'right', marginTop: 10, marginLeft: 10 }}
           color="secondary"
         >
@@ -109,7 +129,9 @@ export const BaselineSpecies = () => {
         Add Species
       </Button>
 
-      <h2>Baseline Species</h2>
+      <h2>
+        Baseline Species <Info onClick={() => setShowHelp(true)} />
+      </h2>
 
       {loader}
       {getAlert()}
@@ -118,18 +140,29 @@ export const BaselineSpecies = () => {
         <small>Last validated: ...</small>
       </p>
 
-      <AddBaselineTaxons
+      <AddBaselineTaxonsDialog
         open={addBaselineTaxonDialogOpen}
         onClose={() => setBaselineTaxonDialogOpen(false)}
         onComplete={(data: BaselineSpeciesInatData[]) => {
           const updatedList = combineSpeciesLists(baselineSpecies, data);
-
           setBaselineSpecies(updatedList);
           setBaselineTaxonDialogOpen(false);
         }}
       />
+      <ValidateBaselineSpeciesDialog
+        placeId={mainSettings.placeId}
+        taxonId={mainSettings.taxonId}
+        open={validateBaselineTaxonDialogOpen}
+        onClose={() => setValidateBaselineTaxonDialogOpen(false)}
+        onComplete={(data: BaselineSpeciesInatData[]) => {
+          console.log(data);
+          // setBaselineSpecies(data);
+          // setBaselineTaxonDialogOpen(false);
+        }}
+      />
 
       {getContent()}
+      <BaselineDocDialog open={showHelp} onClose={() => setShowHelp(false)} />
     </>
   );
 };

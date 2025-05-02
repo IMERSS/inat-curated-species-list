@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import { getMainSettings, updateMainSettings } from '../../api/api';
 import { Spinner } from '../loading/spinner';
+import type { MainSettings } from '../../types';
 
-type MainSettings = {
-  readonly curators: string;
-  readonly taxonId?: number | null;
-  readonly placeId?: number | null;
-};
-
-export const MainSettings = () => {
+export const MainSettingsPage = () => {
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');

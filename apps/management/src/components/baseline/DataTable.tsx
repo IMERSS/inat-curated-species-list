@@ -19,6 +19,7 @@ export const DataTable = ({ data, onDeleteRow }: DataTableProps) => {
         </a>
       </td>
       <td></td>
+      <td></td>
       <td width={30} className={classes.deleteRow}>
         <ClearIcon onClick={() => onDeleteRow(row.id)} />
       </td>
@@ -31,7 +32,8 @@ export const DataTable = ({ data, onDeleteRow }: DataTableProps) => {
           <tr>
             <th style={{ width: 100 }}>Taxon ID</th>
             <th>Species</th>
-            <th># curator reviews</th>
+            <th>Research Grade</th>
+            <th>Curator reviews</th>
             <th></th>
           </tr>
         </thead>

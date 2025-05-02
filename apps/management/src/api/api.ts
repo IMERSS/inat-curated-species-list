@@ -45,3 +45,7 @@ export const updateBaselineSpecies = (content: any) => {
     body: JSON.stringify(content),
   });
 };
+
+export const validateBaselineSpecies = () => {
+  return fetch(getApiUrl('validate-baseline-species'));
+};

@@ -10,13 +10,13 @@ import { getInatBaselineSpeciesData } from '../../api/inat';
 import { BaselineSpeciesInatData } from '../../types';
 import classes from './baseline.module.css';
 
-type AddBaselineTaxonsProps = {
+type AddBaselineTaxonsDialogProps = {
   open: boolean;
   onComplete: (data: BaselineSpeciesInatData[]) => void;
   onClose: () => void;
 };
 
-export const AddBaselineTaxons = ({ open, onClose, onComplete }: AddBaselineTaxonsProps) => {
+export const AddBaselineTaxonsDialog = ({ open, onClose, onComplete }: AddBaselineTaxonsDialogProps) => {
   const [ids, setIds] = useState('');
   const [loading, setLoading] = useState(false);
 

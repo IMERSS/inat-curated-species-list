@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router';
 import { Header } from './components/header/Header';
 import { Navigation } from './components/navigation/Navigation';
@@ -7,7 +6,7 @@ import Grid from '@mui/material/Grid2';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { BaselineSpecies } from './components/baseline/BaselineSpecies';
 import { FileSettings } from './components/settings/FileSettings';
-import { MainSettings } from './components/settings/MainSettings';
+import { MainSettingsPage } from './components/settings/MainSettings';
 import { PublishSettings } from './components/settings/PublishSettings';
 import { CuratedChecklist } from './components/checklist/CuratedChecklist';
 
@@ -27,7 +26,7 @@ function App() {
       <Header />
       <BrowserRouter>
         <Container maxWidth="lg">
-          <Grid container spacing={3}>
+          <Grid container spacing={3} paddingTop={10}>
             <Grid size={3}>
               <Navigation />
             </Grid>
@@ -36,7 +35,7 @@ function App() {
                 <Route index path="/" element={<div>(router - login or redirect to curated checklist page)</div>} />
                 <Route path="curated-checklist" element={<CuratedChecklist />} />
                 <Route path="baseline-species" element={<BaselineSpecies />} />
-                <Route path="settings/main" element={<MainSettings />} />
+                <Route path="settings/main" element={<MainSettingsPage />} />
                 <Route path="settings/files" element={<FileSettings />} />
                 <Route path="settings/publish" element={<PublishSettings />} />
               </Routes>
