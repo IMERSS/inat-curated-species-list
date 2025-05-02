@@ -10,7 +10,7 @@ import { DataTable } from './DataTable';
 import { BaselineDocDialog } from './BaselineDocDialog';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { combineSpeciesLists } from '../../utils';
-import { BaselineSpeciesInatData } from '../../types';
+import { BaselineSpeciesInatData, RegionSpecies } from '../../types';
 import { MainSettings } from '../../types';
 
 export const BaselineSpecies = () => {
@@ -38,8 +38,6 @@ export const BaselineSpecies = () => {
       setLoading(false);
     })();
   }, []);
-
-  console.log({ mainSettings });
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -88,12 +86,6 @@ export const BaselineSpecies = () => {
 
     return (
       <>
-        <p>
-          <input type="checkbox" />
-          Auto-remove from baseline species list when # curator reviews exceeds{' '}
-          <input type="number" style={{ width: 30 }} value={5} />
-        </p>
-
         <DataTable data={baselineSpecies} onDeleteRow={onDeleteRow} />
         <p>
           <Button type="button" variant="outlined" size="small" onClick={onSubmit}>
@@ -154,10 +146,9 @@ export const BaselineSpecies = () => {
         taxonId={mainSettings.taxonId}
         open={validateBaselineTaxonDialogOpen}
         onClose={() => setValidateBaselineTaxonDialogOpen(false)}
-        onComplete={(data: BaselineSpeciesInatData[]) => {
-          console.log(data);
+        onComplete={(data: RegionSpecies) => {
           // setBaselineSpecies(data);
-          // setBaselineTaxonDialogOpen(false);
+          setValidateBaselineTaxonDialogOpen(false);
         }}
       />
 

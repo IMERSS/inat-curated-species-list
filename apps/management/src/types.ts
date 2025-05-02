@@ -11,3 +11,10 @@ export type MainSettings = {
   readonly taxonId?: number | null;
   readonly placeId?: number | null;
 };
+
+export type RegionSpecies = {
+  [taxonId: string]: {
+    count: number;
+    isActive: boolean;
+  };
+};
