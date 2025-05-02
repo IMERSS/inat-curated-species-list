@@ -40,7 +40,7 @@ app.post('/main-settings', (req, res) => {
 app.get('/baseline-species', (req, res) => {
   const data = getBaselineSpecies();
   res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify({ data }));
+  res.end(JSON.stringify(data));
 });
 
 app.post('/baseline-species', (req, res) => {

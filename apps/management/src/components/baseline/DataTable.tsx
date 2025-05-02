@@ -1,11 +1,13 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import { INAT_SPECIES_URL } from '../../constants';
 import ClearIcon from '@mui/icons-material/Clear';
 import classes from './baseline.module.css';
+import { BaselineSpeciesInatData } from '../../types';
 
 type DataTableProps = {
-  data: any;
+  data: BaselineSpeciesInatData[];
   onDeleteRow: (taxonId: number) => void;
 };
 
@@ -18,7 +20,9 @@ export const DataTable = ({ data, onDeleteRow }: DataTableProps) => {
           {row.name}
         </a>
       </td>
-      <td></td>
+      <td>
+        <Chip label={row.researchGradeReviewCount || 0} size="small" />
+      </td>
       <td></td>
       <td width={30} className={classes.deleteRow}>
         <ClearIcon onClick={() => onDeleteRow(row.id)} />

@@ -23,6 +23,7 @@ export const BaselineSpecies = () => {
   const [addBaselineTaxonDialogOpen, setBaselineTaxonDialogOpen] = useState(false);
   const [validateBaselineTaxonDialogOpen, setValidateBaselineTaxonDialogOpen] = useState(false);
   const [baselineSpecies, setBaselineSpecies] = useState<BaselineSpeciesInatData[]>([]);
+  const [validationDate, setValidationDate] = useState<string>();
 
   useEffect(() => {
     (async () => {
@@ -32,14 +33,15 @@ export const BaselineSpecies = () => {
       setMainSettings(settings);
 
       const resp = await getBaselineSpecies();
-      const a = await resp.json();
+      const { validationDate, data } = await resp.json();
 
-      setBaselineSpecies(a.data);
+      setBaselineSpecies(data);
+      setValidationDate(validationDate);
       setLoading(false);
     })();
   }, []);
 
-  const onSubmit = async (e: any) => {
+  const onSubmit = async (e?: any) => {
     e.preventDefault();
     setSaving(true);
 
@@ -129,7 +131,9 @@ export const BaselineSpecies = () => {
       {getAlert()}
 
       <p>
-        <small>Last validated: ...</small>
+        <small>
+          Last validated: <b>{validationDate}</b>
+        </small>
       </p>
 
       <AddBaselineTaxonsDialog
@@ -146,8 +150,21 @@ export const BaselineSpecies = () => {
         taxonId={mainSettings.taxonId}
         open={validateBaselineTaxonDialogOpen}
         onClose={() => setValidateBaselineTaxonDialogOpen(false)}
-        onComplete={(data: RegionSpecies) => {
-          // setBaselineSpecies(data);
+        onComplete={(latestData: RegionSpecies) => {
+          const updatedBaselineSpeciesData = baselineSpecies.map((row) => {
+            if (latestData[row.id]) {
+              return {
+                ...row,
+                isActive: latestData[row.id].isActive,
+                researchGradeReviewCount: latestData[row.id].count,
+              };
+            }
+
+            // TODO this should never occur. Remove altogether?
+            return row;
+          });
+
+          setBaselineSpecies(updatedBaselineSpeciesData);
           setValidateBaselineTaxonDialogOpen(false);
         }}
       />
