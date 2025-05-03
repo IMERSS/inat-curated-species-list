@@ -13,42 +13,38 @@ import { combineSpeciesLists } from '../../utils';
 import { BaselineSpeciesInatData, RegionSpecies } from '../../types';
 import { MainSettings } from '../../types';
 
-export const BaselineSpecies = () => {
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+export type BaselineSpeciesProps = {
+  readonly isLoading: boolean;
+  readonly isLoaded: boolean;
+  readonly data: BaselineSpeciesInatData[];
+  readonly setLoading: () => void;
+  readonly loadBaselineData: () => void;
+};
+
+export const BaselineSpecies = ({ isLoading, isLoaded, data, setLoading, loadBaselineData }: BaselineSpeciesProps) => {
+  // const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-  const [mainSettings, setMainSettings] = useState<MainSettings | {}>({});
+  // const [mainSettings, setMainSettings] = useState<MainSettings | {}>({});
   const [addBaselineTaxonDialogOpen, setBaselineTaxonDialogOpen] = useState(false);
   const [validateBaselineTaxonDialogOpen, setValidateBaselineTaxonDialogOpen] = useState(false);
-  const [baselineSpecies, setBaselineSpecies] = useState<BaselineSpeciesInatData[]>([]);
-  const [validationDate, setValidationDate] = useState<string>();
+  // const [baselineSpecies, setBaselineSpecies] = useState<BaselineSpeciesInatData[]>([]);
 
   useEffect(() => {
-    (async () => {
-      // TODO parallelize
-      const mainSettingsResp = await getMainSettings();
-      const { settings } = await mainSettingsResp.json();
-      setMainSettings(settings);
-
-      const resp = await getBaselineSpecies();
-      const { validationDate, data } = await resp.json();
-
-      setBaselineSpecies(data);
-      setValidationDate(validationDate);
-      setLoading(false);
-    })();
+    if (!isLoaded) {
+      loadBaselineData();
+    }
   }, []);
 
   const onSubmit = async (e?: any) => {
     e.preventDefault();
-    setSaving(true);
+    // setSaving(true);
 
-    const resp = await updateBaselineSpecies(baselineSpecies);
+    const resp = await updateBaselineSpecies(data);
     const { success, error: updateConfigError } = await resp.json();
 
-    setSaving(false);
+    // setSaving(false);
 
     if (success) {
       setError('');
@@ -59,11 +55,11 @@ export const BaselineSpecies = () => {
   };
 
   const onDeleteRow = (taxonId: number) => {
-    const updatedBaselineSpecies = baselineSpecies.filter(({ id }) => id !== taxonId);
+    const updatedBaselineSpecies = data.filter(({ id }) => id !== taxonId);
     setBaselineSpecies(updatedBaselineSpecies);
   };
 
-  const loader = loading ? <Spinner /> : null;
+  const loader = isLoading ? <Spinner /> : null;
 
   const getAlert = () => {
     if (error) {
@@ -78,17 +74,17 @@ export const BaselineSpecies = () => {
   };
 
   const getContent = () => {
-    if (loading) {
+    if (isLoading) {
       return 'loading...';
     }
 
-    if (!baselineSpecies.length) {
+    if (!data.length) {
       return <Alert severity="info">You haven't provided any baseline species.</Alert>;
     }
 
     return (
       <>
-        <DataTable data={baselineSpecies} onDeleteRow={onDeleteRow} />
+        <DataTable data={data} onDeleteRow={onDeleteRow} />
         <p>
           <Button type="button" variant="outlined" size="small" onClick={onSubmit}>
             Save
@@ -100,7 +96,7 @@ export const BaselineSpecies = () => {
 
   return (
     <>
-      {baselineSpecies.length > 0 && (
+      {data.length > 0 && (
         <Button
           variant="outlined"
           type="submit"
@@ -132,7 +128,7 @@ export const BaselineSpecies = () => {
 
       <p>
         <small>
-          Last validated: <b>{validationDate}</b>
+          Last validated: <b>...</b>
         </small>
       </p>
 
@@ -145,7 +141,8 @@ export const BaselineSpecies = () => {
           setBaselineTaxonDialogOpen(false);
         }}
       />
-      <ValidateBaselineSpeciesDialog
+
+      {/* <ValidateBaselineSpeciesDialog
         placeId={mainSettings.placeId}
         taxonId={mainSettings.taxonId}
         open={validateBaselineTaxonDialogOpen}
@@ -164,10 +161,10 @@ export const BaselineSpecies = () => {
             return row;
           });
 
-          setBaselineSpecies(updatedBaselineSpeciesData);
+          // setBaselineSpecies(updatedBaselineSpeciesData);
           setValidateBaselineTaxonDialogOpen(false);
         }}
-      />
+      /> */}
 
       {getContent()}
       <BaselineDocDialog open={showHelp} onClose={() => setShowHelp(false)} />

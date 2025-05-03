@@ -50,7 +50,7 @@ export const Navigation = () => {
       <nav>
         <List>
           {navItems.map(({ label, path }) => (
-            <ListItem disablePadding>
+            <ListItem disablePadding key={label}>
               <ListItemButton
                 component={(props) => <RouterLink {...props} to={path} />}
                 selected={location.pathname === path}

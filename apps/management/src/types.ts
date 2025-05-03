@@ -6,6 +6,11 @@ export type BaselineSpeciesInatData = {
   readonly curatorReviewCount?: number;
 };
 
+export type BaselineDataFileContent = {
+  data: BaselineSpeciesInatData[];
+  validationDate: string;
+};
+
 export type MainSettings = {
   readonly curators: string;
   readonly taxonId?: number | null;
@@ -18,3 +23,5 @@ export type RegionSpecies = {
     isActive: boolean;
   };
 };
+
+export type MessageType = 'success' | 'error' | 'info';
