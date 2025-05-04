@@ -15,10 +15,55 @@ export type BaselineDataState = {
   messageType: MessageType | null;
 };
 
+const getSortedTaxonIds = (data: BaselineSpeciesInatData[], sortDir: SortDir, sortCol: SortCol) =>
+  data
+    .sort((a, b) => {
+      if (sortCol === 'name') {
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
+
+        if (sortDir === 'asc') {
+          if (aName < bName) {
+            return -1;
+          }
+          if (aName > bName) {
+            return 1;
+          }
+        } else {
+          if (aName > bName) {
+            return -1;
+          }
+          if (aName < bName) {
+            return 1;
+          }
+        }
+        return 0;
+      } else if (sortCol === 'id') {
+        if (sortDir === 'asc') {
+          return a.id - b.id;
+        } else {
+          return b.id + a.id;
+        }
+      } else if (sortCol === 'researchGradeReviewCount') {
+        if (sortDir === 'asc') {
+          return (a.researchGradeReviewCount || 0) - (b.researchGradeReviewCount || 0);
+        } else {
+          return (b.researchGradeReviewCount || 0) - (a.researchGradeReviewCount || 0);
+        }
+      }
+
+      if (sortDir === 'asc') {
+        return (a.curatorReviewCount || 0) - (b.curatorReviewCount || 0);
+      } else {
+        return (b.curatorReviewCount || 0) - (a.curatorReviewCount || 0);
+      }
+    })
+    .map(({ id }) => id);
+
 const initialState: BaselineDataState = {
   data: {},
-  sortCol: 'name',
-  sortDir: 'asc',
+  sortCol: 'researchGradeReviewCount',
+  sortDir: 'desc',
   sortedTaxonIds: [],
   isLoading: false,
   isLoaded: false,
@@ -39,13 +84,16 @@ const baselineDataReducer = (state = initialState, action: any) => {
       };
 
     case actions.BASELINE_DATA_LOADED:
+      const dataArray: BaselineSpeciesInatData[] = action.payload.data;
       const dataObj: BaselineDataObj = {};
-      (action.payload.data as BaselineSpeciesInatData[]).forEach(({ id, ...other }) => (dataObj[id] = other));
+      dataArray.forEach(({ id, ...other }) => (dataObj[id] = other));
+
       return {
         ...state,
         isLoading: false,
         isLoaded: true,
         data: dataObj,
+        sortedTaxonIds: getSortedTaxonIds(dataArray, state.sortDir, state.sortCol),
       };
 
     default:

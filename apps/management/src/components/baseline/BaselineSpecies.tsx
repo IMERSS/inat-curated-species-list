@@ -6,22 +6,27 @@ import { getBaselineSpecies, updateBaselineSpecies, getMainSettings } from '../.
 import { AddBaselineTaxonsDialog } from './AddBaselineTaxonsDialog';
 import { ValidateBaselineSpeciesDialog } from './ValidateBaselineSpeciesDialog';
 import { Spinner } from '../loading/spinner';
-import { DataTable } from './DataTable';
+import DataTable from './DataTable.container';
 import { BaselineDocDialog } from './BaselineDocDialog';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { combineSpeciesLists } from '../../utils';
-import { BaselineSpeciesInatData, RegionSpecies } from '../../types';
-import { MainSettings } from '../../types';
+import { BaselineSpeciesInatData } from '../../types';
 
 export type BaselineSpeciesProps = {
   readonly isLoading: boolean;
   readonly isLoaded: boolean;
   readonly data: BaselineSpeciesInatData[];
-  readonly setLoading: () => void;
   readonly loadBaselineData: () => void;
+  readonly validationDate: string | null;
 };
 
-export const BaselineSpecies = ({ isLoading, isLoaded, data, setLoading, loadBaselineData }: BaselineSpeciesProps) => {
+export const BaselineSpecies = ({
+  isLoading,
+  isLoaded,
+  data,
+  loadBaselineData,
+  validationDate,
+}: BaselineSpeciesProps) => {
   // const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
@@ -54,11 +59,6 @@ export const BaselineSpecies = ({ isLoading, isLoaded, data, setLoading, loadBas
     }
   };
 
-  const onDeleteRow = (taxonId: number) => {
-    const updatedBaselineSpecies = data.filter(({ id }) => id !== taxonId);
-    setBaselineSpecies(updatedBaselineSpecies);
-  };
-
   const loader = isLoading ? <Spinner /> : null;
 
   const getAlert = () => {
@@ -84,7 +84,7 @@ export const BaselineSpecies = ({ isLoading, isLoaded, data, setLoading, loadBas
 
     return (
       <>
-        <DataTable data={data} onDeleteRow={onDeleteRow} />
+        <DataTable />
         <p>
           <Button type="button" variant="outlined" size="small" onClick={onSubmit}>
             Save
@@ -126,11 +126,13 @@ export const BaselineSpecies = ({ isLoading, isLoaded, data, setLoading, loadBas
       {loader}
       {getAlert()}
 
-      <p>
-        <small>
-          Last validated: <b>...</b>
-        </small>
-      </p>
+      {validationDate && (
+        <p>
+          <small>
+            Last validated: <b>...</b>
+          </small>
+        </p>
+      )}
 
       <AddBaselineTaxonsDialog
         open={addBaselineTaxonDialogOpen}

@@ -1,21 +1,19 @@
 import { connect } from 'react-redux';
 import * as actions from '../../store/baselineData/baselineData.actions';
 import * as selectors from '../../store/baselineData/baselineData.selectors';
-import { BaselineSpecies } from './BaselineSpecies';
+import { DataTable } from './DataTable';
 import { ReduxState } from '../../store/types';
 
 const mapStateToProps = (state: ReduxState) => ({
   data: selectors.getSortedBaselineData(state),
-  isLoading: selectors.isLoading(state),
-  isLoaded: selectors.isLoaded(state),
-  validationDate: selectors.getValidationDate(state),
+  sortDir: selectors.getSortDir(state),
+  sortCol: selectors.getSortCol(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  loadBaselineData: async () => dispatch(actions.loadBaselineData()),
-  saveBaselineData: (data: any) => dispatch(actions.saveBaselineData(data)),
+  onDeleteRow: () => {},
 });
 
-const container = connect(mapStateToProps, mapDispatchToProps)(BaselineSpecies);
+const container = connect(mapStateToProps, mapDispatchToProps)(DataTable);
 
 export default container;

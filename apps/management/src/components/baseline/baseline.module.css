@@ -34,3 +34,9 @@
 .baselineTable tr:hover {
   background-color: hsl(209, 100%, 92%);
 }
+
+.rowNum {
+  font-size: 10px;
+  color: #999999;
+  width: 30px;
+}

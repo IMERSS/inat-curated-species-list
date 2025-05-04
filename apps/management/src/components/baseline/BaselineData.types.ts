@@ -7,5 +7,5 @@ export type BaselineDataObj = {
   };
 };
 
-export type SortCol = 'id' | 'name';
+export type SortCol = 'id' | 'name' | 'researchGradeReviewCount' | 'curatorReviewCount';
 export type SortDir = 'asc' | 'desc';

@@ -1,6 +1,6 @@
 export type BaselineSpeciesInatData = {
   readonly id: number;
-  readonly name: number;
+  readonly name: string;
   readonly isActive: boolean;
   readonly researchGradeReviewCount?: number;
   readonly curatorReviewCount?: number;
