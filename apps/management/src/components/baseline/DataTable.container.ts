@@ -3,6 +3,7 @@ import * as actions from '../../store/baselineData/baselineData.actions';
 import * as selectors from '../../store/baselineData/baselineData.selectors';
 import { DataTable } from './DataTable';
 import { ReduxState } from '../../store/types';
+import { SortCol, SortDir } from './BaselineData.types';
 
 const mapStateToProps = (state: ReduxState) => ({
   data: selectors.getSortedBaselineData(state),
@@ -11,6 +12,7 @@ const mapStateToProps = (state: ReduxState) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
+  onSort: (sortCol: SortCol, sortDir: SortDir) => dispatch(actions.sortBaselineData(sortCol, sortDir)),
   onDeleteRow: () => {},
 });
 

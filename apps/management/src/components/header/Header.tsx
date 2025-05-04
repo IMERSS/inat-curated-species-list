@@ -18,7 +18,7 @@ export const Header = () => (
   <AppBar position="fixed" elevation={0}>
     <Toolbar>
       <Typography variant="h6" sx={{ my: 2 }}>
-        Curated Checklist
+        Checklist Manager
       </Typography>{' '}
       <Divider />
       <Box sx={{ flexGrow: 1 }} />

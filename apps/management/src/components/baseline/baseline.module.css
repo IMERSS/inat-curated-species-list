@@ -35,6 +35,10 @@
   background-color: hsl(209, 100%, 92%);
 }
 
+.baselineTable thead tr:hover {
+  background-color: white;
+}
+
 .rowNum {
   font-size: 10px;
   color: #999999;

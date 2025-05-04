@@ -25,6 +25,14 @@ const checkState = async (store: any) => {
 
 function App() {
   const theme = createTheme({
+    typography: {
+      fontFamily: 'georgia',
+    },
+    palette: {
+      primary: {
+        main: '#1d64a8',
+      },
+    },
     components: {
       MuiButtonBase: {
         defaultProps: {

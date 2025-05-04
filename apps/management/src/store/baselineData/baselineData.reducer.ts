@@ -96,6 +96,19 @@ const baselineDataReducer = (state = initialState, action: any) => {
         sortedTaxonIds: getSortedTaxonIds(dataArray, state.sortDir, state.sortCol),
       };
 
+    case actions.BASELINE_DATA_SORT: {
+      const dataArray: BaselineSpeciesInatData[] = Object.keys(state.data).map((id) => ({
+        id: parseInt(id),
+        ...state.data[id],
+      }));
+
+      return {
+        ...state,
+        sortCol: action.payload.sortCol,
+        sortDir: action.payload.sortDir,
+        sortedTaxonIds: getSortedTaxonIds(dataArray, action.payload.sortDir, action.payload.sortCol),
+      };
+    }
     default:
       return state;
   }
