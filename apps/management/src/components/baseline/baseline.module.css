@@ -25,6 +25,7 @@
 
 .baselineTable {
   width: 100%;
+  position: relative;
 }
 
 .baselineTable td {
@@ -36,6 +37,15 @@
 }
 
 .baselineTable thead tr:hover {
+  background-color: white;
+}
+.baselineTable th:hover :global(.sortIcon) {
+  visibility: visible !important;
+}
+
+.baselineTable th {
+  position: sticky;
+  top: 0;
   background-color: white;
 }
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Info from '@mui/icons-material/InfoOutlined';
-import { getBaselineSpecies, updateBaselineSpecies, getMainSettings } from '../../api/api';
+import { updateBaselineSpecies } from '../../api/api';
 import { AddBaselineTaxonsDialog } from './AddBaselineTaxonsDialog';
 import { ValidateBaselineSpeciesDialog } from './ValidateBaselineSpeciesDialog';
 import { Spinner } from '../loading/spinner';
@@ -85,54 +85,57 @@ export const BaselineSpecies = ({
     return (
       <>
         <DataTable />
-        <p>
-          <Button type="button" variant="outlined" size="small" onClick={onSubmit}>
+        <div style={{ padding: '20px 0', display: 'flex' }}>
+          <div style={{ flex: 1 }}>
+            <Button
+              variant="outlined"
+              type="submit"
+              size="medium"
+              onClick={() => setBaselineTaxonDialogOpen(true)}
+              startIcon={<AddCircleOutlineIcon />}
+              style={{ marginRight: 10 }}
+            >
+              Add Species
+            </Button>
+            {data.length > 0 && (
+              <Button
+                variant="outlined"
+                type="submit"
+                size="medium"
+                onClick={() => setValidateBaselineTaxonDialogOpen(true)}
+                color="secondary"
+              >
+                Validate
+              </Button>
+            )}
+          </div>
+
+          <Button type="button" variant="contained" size="medium" onClick={onSubmit} disabled>
             Save
           </Button>
-        </p>
+        </div>
       </>
     );
   };
 
   return (
     <>
-      {data.length > 0 && (
-        <Button
-          variant="outlined"
-          type="submit"
-          size="small"
-          onClick={() => setValidateBaselineTaxonDialogOpen(true)}
-          style={{ float: 'right', marginTop: 10, marginLeft: 10 }}
-          color="secondary"
-        >
-          Validate
-        </Button>
-      )}
-      <Button
-        variant="outlined"
-        type="submit"
-        size="small"
-        onClick={() => setBaselineTaxonDialogOpen(true)}
-        style={{ float: 'right', marginTop: 10 }}
-        startIcon={<AddCircleOutlineIcon />}
-      >
-        Add Species
-      </Button>
+      <div style={{ flex: '0 0 auto' }}>
+        <h2>
+          Baseline Species <Info onClick={() => setShowHelp(true)} />
+        </h2>
 
-      <h2>
-        Baseline Species <Info onClick={() => setShowHelp(true)} />
-      </h2>
+        {loader}
+        {getAlert()}
 
-      {loader}
-      {getAlert()}
-
-      {validationDate && (
-        <p>
-          <small>
-            Last validated: <b>...</b>
-          </small>
-        </p>
-      )}
+        {validationDate && (
+          <p>
+            <small>
+              Last validated: <b>...</b>
+            </small>
+          </p>
+        )}
+      </div>
 
       <AddBaselineTaxonsDialog
         open={addBaselineTaxonDialogOpen}

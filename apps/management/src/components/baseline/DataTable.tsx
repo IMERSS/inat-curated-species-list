@@ -46,7 +46,7 @@ const SortButton = ({ sortCol, currentSortCol, currentSortDir, onSort }: SortBut
   }
 
   return (
-    <IconButton size="small" style={style} onClick={() => onSort(sortCol, sortDir)}>
+    <IconButton size="small" style={style} onClick={() => onSort(sortCol, sortDir)} className="sortIcon">
       <SortDirComponent />
     </IconButton>
   );
@@ -84,7 +84,7 @@ export const DataTable = ({ data, onDeleteRow, sortCol, sortDir, onSort }: DataT
   }, [data]);
 
   return (
-    <Box>
+    <Box overflow="scroll" flex="0 1 auto">
       <table cellSpacing={0} cellPadding={0} className={classes.baselineTable}>
         <thead>
           <tr>

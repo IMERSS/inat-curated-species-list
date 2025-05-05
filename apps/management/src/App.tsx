@@ -48,12 +48,12 @@ function App() {
         <ThemeProvider theme={theme}>
           <Header />
           <BrowserRouter>
-            <Container maxWidth="lg">
-              <Grid container spacing={3} paddingTop={10}>
+            <Container maxWidth="lg" style={{ height: '100%' }}>
+              <Grid container spacing={3} paddingTop={10} height="100%">
                 <Grid size={3}>
                   <Navigation />
                 </Grid>
-                <Grid size="grow">
+                <Grid size="grow" style={{ display: 'flex', flexDirection: 'column', flex: 1, height: '100%' }}>
                   <Routes>
                     <Route index path="/" element={<div>(router - login or redirect to curated checklist page)</div>} />
                     <Route path="curated-checklist" element={<CuratedChecklist />} />

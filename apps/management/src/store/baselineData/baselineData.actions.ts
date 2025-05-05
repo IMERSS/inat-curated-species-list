@@ -27,3 +27,5 @@ export const sortBaselineData = (sortCol: SortCol, sortDir: SortDir) => ({
   type: BASELINE_DATA_SORT,
   payload: { sortCol, sortDir },
 });
+
+export const deleteBaselineTaxon = (taxonId) => {};

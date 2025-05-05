@@ -3,6 +3,19 @@ body {
   margin: 0;
   font-size: 15px;
   font-family: Georgia;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 td,
