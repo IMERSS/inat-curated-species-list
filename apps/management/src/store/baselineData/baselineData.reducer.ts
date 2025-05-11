@@ -42,7 +42,7 @@ const getSortedTaxonIds = (data: BaselineSpeciesInatData[], sortDir: SortDir, so
         if (sortDir === 'asc') {
           return a.id - b.id;
         } else {
-          return b.id + a.id;
+          return b.id - a.id;
         }
       } else if (sortCol === 'researchGradeReviewCount') {
         if (sortDir === 'asc') {

@@ -15,6 +15,7 @@ import { GeneratorConfig, NewAddition } from '../types/generator.types';
 import { CuratedSpeciesData } from '@imerss/inat-curated-species-list-common';
 import { performance } from 'perf_hooks';
 
+export type { GeneratorConfig };
 const { config: configFilePath } = yargs(hideBin(process.argv)).argv;
 
 const generateSpeciesDataFile = (config: GeneratorConfig, speciesData: CuratedSpeciesData, tempFolder: string) => {

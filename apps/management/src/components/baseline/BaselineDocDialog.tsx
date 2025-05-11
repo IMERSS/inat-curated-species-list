@@ -18,7 +18,7 @@ export const BaselineDocDialog = ({ open, onClose }: BaselineDocDialog) => (
     aria-labelledby="scroll-dialog-title"
     aria-describedby="scroll-dialog-description"
   >
-    <DialogTitle id="scroll-dialog-title">About Baseline Species</DialogTitle>
+    <DialogTitle id="scroll-dialog-title">Baseline Species</DialogTitle>
     <IconButton
       aria-label="close"
       onClick={onClose}
@@ -35,16 +35,15 @@ export const BaselineDocDialog = ({ open, onClose }: BaselineDocDialog) => (
       <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
         <p>
           This page lets you provide a list of species that you know are in the region, but don't have any observations
-          on iNaturalist yet. Species added here will be included with the other species that have been confirmed by
-          your curators.
+          on iNaturalist yet. These species will supplement actual observations
         </p>
         <p>
           <b>You don't need to use this feature</b>. This is only needed when you have prior knowledge of the species in
           your region and iNat is missing those species.
         </p>
         <p>
-          <b>Tip:</b> keep the list as short as possible. Only add species here that don't have actual iNat observations
-          - or have very few . Technically, iNat users can delete their own observations so if a species has very few,
+          <b>Tip:</b> keep the list as short as possible. Only add species that don't have actual iNat observations - or
+          have very few. Technically, iNat users can delete their own observations so if a species has very few.
         </p>
         <p>
           The reason that you want to keep this list short is because this area requires maintenance. Taxonomies change

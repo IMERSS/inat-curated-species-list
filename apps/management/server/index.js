@@ -2,6 +2,7 @@ import express from 'express';
 import { getBackupSettings, updateBackupSettings } from './backup-settings.js';
 import { getMainSettings, updateMainSettings } from './main-settings.js';
 import { getBaselineSpecies, updateBaselineSpecies } from './baseline-species.js';
+import { downloadDataPacket } from './observation-data.js';
 import cors from 'cors';
 import nocache from 'nocache';
 import bodyParser from 'body-parser';
@@ -50,6 +51,13 @@ app.post('/baseline-species', (req, res) => {
 });
 
 app.post('/species-counts', (req, res) => {});
+
+app.get('/obs-data', async (req, res) => {
+  const { placeId, taxonId, curators, packetNum = 1 } = req.query;
+  const resp = await downloadDataPacket({ placeId, taxonId, curators, packetNum, lastId: 1, numResults: 10 });
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify(resp));
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

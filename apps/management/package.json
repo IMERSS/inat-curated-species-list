@@ -24,6 +24,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "nocache": "^4.0.0",
+    "query-string": "^9.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-redux": "^7.2.1",

@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CircularProgress from '@mui/material/CircularProgress';
-import { getInatBaselineSpeciesData } from '../../api/inat';
+import { getInatBaselineSpeciesData } from '../../api/baselineSpecies';
 import { BaselineSpeciesInatData } from '../../types';
 import classes from './baseline.module.css';
 
